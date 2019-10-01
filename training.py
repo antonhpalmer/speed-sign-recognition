@@ -7,7 +7,6 @@ from skimage import color, exposure, transform
 NUM_CLASSES = 43
 IMG_SIZE = 48
 
-
 def preprocess_img(img):
     # Histogram normalization in v channel
     hsv = color.rgb2hsv(img)
@@ -44,7 +43,7 @@ root_dir = 'C:\\Users\\anton\\Desktop\\GTSRB\\Final_Training\\Images\\'
 imgs = []
 labels = []
 
-all_img_paths = glob.glob(os.path.join(root_dir, '*/*.ppm'))
+all_img_paths = glob.glob(os.path.join(root_dir, '*\\*.ppm'))
 np.random.shuffle(all_img_paths)
 for img_path in all_img_paths:
     img = preprocess_img(io.imread(img_path))

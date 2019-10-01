@@ -39,7 +39,7 @@ import glob
 def get_class(img_path):
     return int(img_path.split('\\')[-2])
 
-root_dir = 'C:\\Users\\anton\\Desktop\\GTSRB\\Final_Training\\Images\\'
+root_dir = 'GTSRB\\Final_Training\\Images\\'
 imgs = []
 labels = []
 

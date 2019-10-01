@@ -45,7 +45,14 @@ labels = []
 
 all_img_paths = glob.glob(os.path.join(root_dir, '*/*.ppm'))
 np.random.shuffle(all_img_paths)
+count = 1
+number_of_images = len(all_img_paths)
 for img_path in all_img_paths:
+    img_path = img_path.replace("\\", "/")
+    if count % 100 == 0 or count == number_of_images:
+        print(str(count) + "/" + str(number_of_images))
+    count += 1
+
     img = preprocess_img(io.imread(img_path))
     label = get_class(img_path)
     imgs.append(img)

@@ -4,7 +4,7 @@ PREPROCESSING FUNCTION DEFINITION
 import numpy as np
 from skimage import color, exposure, transform
 
-NUM_CLASSES = 43
+NUM_CLASSES = 8
 IMG_SIZE = 48
 
 def preprocess_img(img):

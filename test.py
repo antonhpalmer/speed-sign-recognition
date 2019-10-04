@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from skimage import io
+from keras.models import load_model
 
 import pandas as pd
 
@@ -21,6 +22,18 @@ X_test = np.array(X_test)
 y_test = np.array(y_test)
 
 # predict and evaluate
+model = load_model('model.h5')
 y_pred = model.predict_classes(X_test)
 acc = np.sum(y_pred == y_test) / np.size(y_pred)
 print("Test accuracy = {}".format(acc))
+
+
+'''
+test_image = image.load_img('frog.jpg', target_size=(32, 32))
+test_image = image.img_to_array(test_image)
+test_image = np.expand_dims(test_image, axis = 0)
+result = loaded_model.predict(test_image)
+
+# np.set_printoptions(formatter={'float_kind':'{:f}'.format})
+print(result)
+'''

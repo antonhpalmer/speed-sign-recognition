@@ -129,7 +129,7 @@ def lr_schedule(epoch):
     return lr * (0.1 ** int(epoch / 10))
 
 batch_size = 32
-epochs = 2
+epochs = 5
 model.fit(X, Y,
           batch_size=batch_size,
           epochs=epochs,

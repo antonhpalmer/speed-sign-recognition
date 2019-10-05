@@ -49,7 +49,7 @@ count = 1
 number_of_images = len(all_img_paths)
 for img_path in all_img_paths:
     img_path = img_path.replace("\\", "/")
-    if count % 1000 == 0:
+    if count % 1000 == 0 or count == number_of_images:
         print(str(count) + "/" + str(number_of_images))
 
     count += 1

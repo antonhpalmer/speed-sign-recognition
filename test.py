@@ -31,7 +31,8 @@ def preprocess_img(img):
     img = np.rollaxis(img, -1)
 
     return img
-'''
+
+
 test = pd.read_csv('GTSRB/GT-final_test.csv', sep=';')
 
 # Load test dataset
@@ -45,25 +46,13 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 
 X_test = np.array(X_test)
 y_test = np.array(y_test)
-'''
+
 model = load_model('model.h5')
-'''
+
 # predict and evaluate
 y_pred = model.predict_classes(X_test)
 acc = np.sum(y_pred == y_test) / np.size(y_pred)
 print("Test accuracy = {}".format(acc))
-'''
-testImage = image.load_img('00001.ppm', target_size=(IMG_SIZE, IMG_SIZE))
-testImage = image.img_to_array(testImage)
-testImage = np.expand_dims(testImage, axis=0)
-result = model.predict(testImage)
-print(result)
-'''
-test_image = image.load_img('frog.jpg', target_size=(32, 32))
-test_image = image.img_to_array(test_image)
-test_image = np.expand_dims(test_image, axis = 0)
-result = loaded_model.predict(test_image)
 
-# np.set_printoptions(formatter={'float_kind':'{:f}'.format})
-print(result)
-'''
+
+

@@ -81,8 +81,6 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 
-
-
 '''
 THE ACTUAL TRAINING
 '''

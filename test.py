@@ -47,7 +47,7 @@ for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
 X_test = np.array(X_test)
 y_test = np.array(y_test)
 
-model = load_model('model.h5')
+model = load_model('model1.h5')
 
 # predict and evaluate
 y_pred = model.predict_classes(X_test)

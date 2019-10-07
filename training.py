@@ -4,7 +4,6 @@ PREPROCESSING FUNCTION DEFINITION
 import numpy as np
 from skimage import color, exposure, transform
 
-from Models.cnn_model import cnn_model
 from Models.model1 import model1
 
 NUM_CLASSES = 8

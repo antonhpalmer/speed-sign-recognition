@@ -7,11 +7,7 @@ class PixySnapper:
         subprocess.call(['./get_raw_frame'])
 
     def crop_image(self, path, x1, y1, x2, y2):
-        image_object = Image.open(path)
-
-        cropped = image_object.crop((x1, y1, x2, y2))
-
-        cropped.save("cropped.ppm")
+        Image.open(path).image_object.crop((x1, y1, x2, y2)).save("cropped.ppm")
 
     def get_cropped_image(self, x, y, width, height):
         self.snap_image()

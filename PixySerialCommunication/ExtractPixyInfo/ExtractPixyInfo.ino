@@ -12,15 +12,13 @@ void setup()
 void loop()
 { 
   int i; 
-  int ageNeeded = 100;
+  int ageNeeded = 50;
   // grab blocks!
   pixy.ccc.getBlocks();
   
   // If there are detect blocks, print them!
   if (pixy.ccc.numBlocks)
   {
-    //Serial.print("Detected ");
-    //Serial.println(pixy.ccc.numBlocks);
     for (i=0; i<pixy.ccc.numBlocks; i++)
     {
       if(pixy.ccc.blocks[i].m_age > ageNeeded) { //We first send the data to the serial when the block has been seen more than 100 frames. 

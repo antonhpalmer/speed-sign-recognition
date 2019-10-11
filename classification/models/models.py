@@ -1,3 +1,7 @@
+#  Copyright (c) 2019.
+#  AAU, Student project group sw504e19, 2019.
+#  Use this as reference to coding conventions in Python: https://github.com/kengz/python
+
 from keras import backend as K
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten

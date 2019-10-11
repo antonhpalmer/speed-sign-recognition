@@ -1,58 +1,72 @@
 import os
+
 import numpy as np
+import pandas as pd
+from keras.models import load_model
 from keras.preprocessing import image
 from skimage import io
-from keras.models import load_model
 
-import pandas as pd
-from skimage import color, exposure, transform
-
-NUM_CLASSES = 8
-IMG_SIZE = 48
+from classification import definitions, preprocessing
 
 
-def preprocess_img(img):
-    # Histogram normalization in v channel
-    hsv = color.rgb2hsv(img)
-    hsv[:, :, 2] = exposure.equalize_hist(hsv[:, :, 2])
-    img = color.hsv2rgb(hsv)
+class ModelTester:
 
-    # central square crop
-    min_side = min(img.shape[:-1])
-    centre = img.shape[0] // 2, img.shape[1] // 2
-    img = img[centre[0] - min_side // 2:centre[0] + min_side // 2,
-          centre[1] - min_side // 2:centre[1] + min_side // 2,
-          :]
+    def __init__(self, model_path, dataset_path, csv_path):
+        self.model_path = model_path
+        self.dataset_path = dataset_path
+        self.csv_path = csv_path
 
-    # rescale to standard size
-    img = transform.resize(img, (IMG_SIZE, IMG_SIZE))
+    def get_label_name(self, class_indexes):
+        str = ""
+        for i in class_indexes:
+            str += definitions.ID_SWITCHER.get(i, "Invalid class_id")
+            str += ', '
+        if len(str) > 0:
+            return str[:-2]
+        else:
+            return str
 
-    # roll color axis to axis 0
-    img = np.rollaxis(img, -1)
+    def transform_test_image(self, image_path):
+        img = image.load_img(image_path, target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
+        img = preprocessing.preprocess_img(img)
+        img = np.expand_dims(img, axis=0)
+        return img
 
-    return img
+    def test_single_image(self, image_path):
+        model = load_model(self.model_path)
+        img = self.transform_test_image(image_path)
+        result = model.predict_classes(img)
+        print(self.get_label_name(result))
 
+    def test_multiple_images(self, *args):
+        model = load_model(self.model_path)
+        imgs = []
+        for image_path in args:
+            imgs.append(self.transform_test_image(image_path))
+        result = model.predict_classes(imgs)
+        print(self.get_label_name(result))
 
-test = pd.read_csv('GTSRB/GT-final_test.csv', sep=';')
+    def test_using_dataset(self):
+        test = pd.read_csv(self.csv_path, sep=';')
 
-# Load test dataset
-X_test = []
-y_test = []
-i = 0
-for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    img_path = os.path.join('GTSRB/Final_Test/Images/', file_name)
-    X_test.append(preprocess_img(io.imread(img_path)))
-    y_test.append(class_id)
+        # Load test dataset
+        x_test = []
+        y_test = []
 
-X_test = np.array(X_test)
-y_test = np.array(y_test)
+        for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+            img_path = os.path.join(self.dataset_path, file_name)
+            x_test.append(preprocessing.preprocess_img(io.imread(img_path)))
+            y_test.append(class_id)
 
-model = load_model('model1.h5')
+        x_test = np.array(x_test)
+        y_test = np.array(y_test)
+        model = load_model('model.h5')
 
-# predict and evaluate
-y_pred = model.predict_classes(X_test)
-acc = np.sum(y_pred == y_test) / np.size(y_pred)
-print("Test accuracy = {}".format(acc))
+        # predict and evaluate
+        y_pred = model.predict_classes(x_test)
+        acc = np.sum(y_pred == y_test) / np.size(y_pred)
+        print("Test accuracy = {}".format(acc))
 
-
-
+    def print_model_summary(self):
+        model = load_model(self.model_path)
+        print(model.summary())

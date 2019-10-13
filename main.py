@@ -23,6 +23,6 @@ class Main:
     #         writer.writerow([str(epoch), str(accuracy)])
     #     model = load_model(h5_filename)
 
-    model = load_model('classification/models/cnn_model/cnn_model1.h5')
+    model = load_model('model.h5')
     trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.1)
     trainer.train_model(model, 'classification/models/cnn_model/new_cnn_model1.h5', 1)

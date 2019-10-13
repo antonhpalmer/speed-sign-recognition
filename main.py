@@ -29,5 +29,5 @@ class Main:
     #     model = load_model(h5_filename)
 
     model = models.get_cnn_model()
-    trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.1)
+    trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.01)
     trainer.train_model(model, 'model.h5', 10)

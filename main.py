@@ -13,7 +13,7 @@ class Main:
         writer.writerow(['Epoch', 'Accuracy'])
 
     for epoch in range(1, 30):
-        h5_filename = 'cnn_model' + str(epoch) + '.h5'
+        h5_filename = 'models/cnn_model' + str(epoch) + '.h5'
         trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.1)
         trainer.train_model(model, h5_filename, 1)
 

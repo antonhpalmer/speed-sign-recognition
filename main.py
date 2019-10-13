@@ -1,5 +1,9 @@
+import csv
+
 from keras.models import load_model
 
+from classification.models import models
+from classification.test.test import ModelTester
 from classification.training.training import ModelTrainer
 
 
@@ -21,8 +25,9 @@ class Main:
     #     with open(csv_path, mode='a') as results_file:
     #         writer = csv.writer(results_file, delimiter=';')
     #         writer.writerow([str(epoch), str(accuracy)])
+    #
     #     model = load_model(h5_filename)
 
-    model = load_model('model.h5')
+    model = models.get_cnn_model()
     trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.1)
-    trainer.train_model(model, 'classification/models/cnn_model/new_cnn_model1.h5', 1)
+    trainer.train_model(model, 'model.h5', 10)

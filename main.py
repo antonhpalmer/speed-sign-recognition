@@ -1,5 +1,7 @@
 import csv
 
+from keras.models import load_model
+
 from classification.models import models
 from classification.test.test import ModelTester
 from classification.training.training import ModelTrainer
@@ -24,3 +26,4 @@ class Main:
             writer = csv.writer(results_file, delimiter=';')
             writer.writerow([str(epoch), str(accuracy)])
 
+        model = load_model(h5_filename)

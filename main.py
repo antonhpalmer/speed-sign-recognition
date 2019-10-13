@@ -16,7 +16,7 @@ class Main:
 
     for epoch in range(1, 30):
         h5_filename = 'classification/models/cnn_model/cnn_model' + str(epoch) + '.h5'
-        trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.1)
+        trainer = ModelTrainer('GTSRB/Final_Training/Images/', 0.01)
         trainer.train_model(model, h5_filename, 1)
 
         tester = ModelTester(model, 'GTSRB/Final_Test/Images/', 'GTSRB/GT-final_test.csv')

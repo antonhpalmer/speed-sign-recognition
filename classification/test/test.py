@@ -6,7 +6,6 @@ import os
 
 import numpy as np
 import pandas as pd
-from keras.models import load_model
 from keras.preprocessing import image
 from skimage import io
 
@@ -15,8 +14,8 @@ from classification import definitions, preprocessing
 
 class ModelTester:
 
-    def __init__(self, model_path, dataset_path, csv_path):
-        self.model_path = model_path
+    def __init__(self, model, dataset_path, csv_path):
+        self.model = model
         self.dataset_path = dataset_path
         self.csv_path = csv_path
 
@@ -37,17 +36,15 @@ class ModelTester:
         return img
 
     def test_single_image(self, image_path):
-        model = load_model(self.model_path)
         img = self.__transform_test_image(image_path)
-        result = model.predict_classes(img)
+        result = self.model.predict_classes(img)
         print(self.__get_label_name(result))
 
     def test_multiple_images(self, *args):
-        model = load_model(self.model_path)
         imgs = []
         for image_path in args:
             imgs.append(self.__transform_test_image(image_path))
-        result = model.predict_classes(imgs)
+        result = self.model.predict_classes(imgs)
         print(self.__get_label_name(result))
 
     def test_using_dataset(self):
@@ -64,14 +61,12 @@ class ModelTester:
 
         x_test = np.array(x_test)
         y_test = np.array(y_test)
-        model = load_model('model.h5')
 
         # predict and evaluate
-        y_pred = model.predict_classes(x_test)
+        y_pred = self.model.predict_classes(x_test)
         acc = np.sum(y_pred == y_test) / np.size(y_pred)
         print("Test accuracy = {}".format(acc))
         return acc
 
     def print_model_summary(self):
-        model = load_model(self.model_path)
-        print(model.summary())
+        print(self.model.summary())

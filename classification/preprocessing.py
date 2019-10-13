@@ -6,7 +6,10 @@ from skimage import color, exposure, transform
 from skimage import io
 
 from classification import definitions
-from classification.training.training import ModelTrainer
+
+
+def get_class(img_path):
+    return int(img_path.split('/')[-2])
 
 
 def preprocess_img(img):
@@ -41,7 +44,7 @@ def preprocess_all_images(images_dir_path, imgs, labels):
         if count % 1000 == 0 or count == number_of_images:
             print(str(count) + "/" + str(number_of_images))
         img = preprocess_img(io.imread(img_path))
-        label = ModelTrainer.get_class(img_path)
         imgs.append(img)
+        label = get_class(img_path)
         labels.append(label)
         count += 1

@@ -16,7 +16,7 @@ class ModelTester:
         self.dataset_path = dataset_path
         self.csv_path = csv_path
 
-    def get_label_name(self, class_indexes):
+    def __get_label_name(self, class_indexes):
         str = ""
         for i in class_indexes:
             str += definitions.ID_SWITCHER.get(i, "Invalid class_id")
@@ -26,7 +26,7 @@ class ModelTester:
         else:
             return str
 
-    def transform_test_image(self, image_path):
+    def __transform_test_image(self, image_path):
         img = image.load_img(image_path, target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
         img = preprocessing.preprocess_img(img)
         img = np.expand_dims(img, axis=0)
@@ -34,17 +34,17 @@ class ModelTester:
 
     def test_single_image(self, image_path):
         model = load_model(self.model_path)
-        img = self.transform_test_image(image_path)
+        img = self.__transform_test_image(image_path)
         result = model.predict_classes(img)
-        print(self.get_label_name(result))
+        print(self.__get_label_name(result))
 
     def test_multiple_images(self, *args):
         model = load_model(self.model_path)
         imgs = []
         for image_path in args:
-            imgs.append(self.transform_test_image(image_path))
+            imgs.append(self.__transform_test_image(image_path))
         result = model.predict_classes(imgs)
-        print(self.get_label_name(result))
+        print(self.__get_label_name(result))
 
     def test_using_dataset(self):
         test = pd.read_csv(self.csv_path, sep=';')
@@ -66,6 +66,7 @@ class ModelTester:
         y_pred = model.predict_classes(x_test)
         acc = np.sum(y_pred == y_test) / np.size(y_pred)
         print("Test accuracy = {}".format(acc))
+        return acc
 
     def print_model_summary(self):
         model = load_model(self.model_path)

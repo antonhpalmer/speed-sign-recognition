@@ -10,10 +10,7 @@ class ModelTrainer:
         self.images_dir_path = images_dir_path
         self.learning_rate = learning_rate
 
-    def get_class(self, img_path):
-        return int(img_path.split('/')[-2])
-
-    def lr_schedule(self, epoch):
+    def __lr_schedule(self, epoch):
         return self.learning_rate * (0.1 ** int(epoch / 10))
 
     def train_model(self, model, new_model_path, epochs):
@@ -34,6 +31,6 @@ class ModelTrainer:
                   batch_size=definitions.BATCH_SIZE,
                   epochs=epochs,
                   validation_split=0.2,
-                  callbacks=[LearningRateScheduler(self.lr_schedule),
-                             ModelCheckpoint(new_model_path, save_best_only=True)]
+                  callbacks=[LearningRateScheduler(self.__lr_schedule),
+                             ModelCheckpoint(new_model_path, save_best_only=False)]
                   )

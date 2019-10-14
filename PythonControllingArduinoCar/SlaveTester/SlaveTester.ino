@@ -35,9 +35,9 @@ void loop()
   else if (data == '5')
     runMotor(80);
   else if (data == '6')
-    runMotor(100);
+    runMotor(90);
   else if (data == '7')
-    runMotor(120);
+    runMotor(100);
 
 }
 

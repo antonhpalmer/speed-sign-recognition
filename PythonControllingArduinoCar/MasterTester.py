@@ -31,7 +31,6 @@ def stop_motor():
 
 arduinoData = serial.Serial('com11', 115200)
 img = "C:\Users\frede\OneDrive\Dokumenter\GitHub\speed-sign-recognition\GTSRB\Final_Training\Images\00000\00000_00000.ppm"
-x = 90
 
 while true:    
     x = classify_single_image(img)

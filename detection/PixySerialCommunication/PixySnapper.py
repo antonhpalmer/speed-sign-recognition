@@ -8,13 +8,13 @@ from pathlib import Path
 
 
 def snap_image():
-    subprocess.call(['./PixySerialCommunication/get_raw_frame'])
+    subprocess.call(['./detection/PixySerialCommunication/get_raw_frame'])
     return Path("out.ppm")
 
 
 def crop_image(path, x1, y1, x2, y2):
     Image.open(path).crop((x1, y1, x2, y2)).save("cropped.ppm")
-    return Path("cropped.ppm")
+    return Image.open("cropped.ppm")
 
 
 def get_cropped_image(x, y, width, height):

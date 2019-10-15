@@ -7,6 +7,11 @@ classifier = ModelTester(load_model("classification/models/cnn_model/cnn_model8.
 
 while True:
     detected_img = detect()
-    if validate(detected_img):
-        new_speed = classifier.classify_single_image(detected_img)
+    print("Object was detected")
+    validated = validate(detected_img)
+    print("Object was validated: ", validated)
+    if validated:
+        new_speed = classifier.classify_single_image(detected_img.filename)
+        print("detected sign is: ", new_speed)
+        break;
         # update_speed(new_speed)

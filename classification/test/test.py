@@ -89,7 +89,7 @@ class ModelTester:
         # Create csv results file
         with open(csv_path, mode='w') as results_file:
             writer = csv.writer(results_file, delimiter=';')
-            writer.writerow(['Epoch', 'Accuracy'])
+            writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
 
         # Testing the model for each of the saved h5 files (so for each epoch)
         for epoch in range(1, epochs):
@@ -101,6 +101,6 @@ class ModelTester:
             # Outputs test result to csv file
             with open(csv_path, mode='a') as results_file:
                 writer = csv.writer(results_file, delimiter=';')
-                writer.writerow([str(epoch), str(accuracy)])
+                writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
 
 

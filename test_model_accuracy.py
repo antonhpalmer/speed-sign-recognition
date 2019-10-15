@@ -9,13 +9,11 @@ from classification.test.test import ModelTester
 from classification.training.training import ModelTrainer
 
 
-
-
 class TestModelAccuracy:
-    model = models.get_model1()
-    model_name = "model1"
+    model = models.get_cnn_model()
+    model_name = "cnn_model1"
     epochs = 10
-    learning_rate = 0.01
+    learning_rate = 0.005
 
     tester = ModelTester(model)
     tester.create_test_files_for_model(model_name, epochs, learning_rate)

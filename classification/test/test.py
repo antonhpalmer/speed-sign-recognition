@@ -39,7 +39,7 @@ class ModelTester:
         img = self.__transform_test_image(image_path)
         result = self.model.predict_classes(img)
         print(str(result[0]))
-        return str(result[0])
+        return result[0]
 
     def classify_multiple_images(self, *args):
         imgs = []

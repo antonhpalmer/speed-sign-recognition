@@ -1,27 +1,27 @@
 #include <Pixy2.h>
 
-// This is the main Pixy object 
+// This is the main Pixy object
 Pixy2 pixy;
 
 void setup()
 {
-  Serial.begin(115200);  
+  Serial.begin(115200);
   pixy.init();
 }
 
 void loop()
-{ 
-  int i; 
+{
+  int i;
   int ageNeeded = 50;
   // grab blocks!
   pixy.ccc.getBlocks();
-  
+
   // If there are detect blocks, print them!
   if (pixy.ccc.numBlocks)
   {
     for (i=0; i<pixy.ccc.numBlocks; i++)
     {
-      if(pixy.ccc.blocks[i].m_age > ageNeeded) { //We first send the data to the serial when the block has been seen more than 100 frames. 
+      if(pixy.ccc.blocks[i].m_age > ageNeeded) { //We first send the data to the serial when the block has been seen more than 100 frames.
         //Serial.print(i);
         Serial.print("x:");
         Serial.print(pixy.ccc.blocks[i].m_x);
@@ -36,7 +36,7 @@ void loop()
       }
       //pixy.ccc.blocks[i].print();
     }
-  }  
+  }
 }
 
 
@@ -51,5 +51,5 @@ void waitForSignal(){
       if(data == 'd') {
         return;
       }
-  }  
+  }
 }

@@ -16,7 +16,6 @@ while True:
     if validated:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
-        ser.write(b'd')
-        break;
+    ser.write(b'd')
         # update_speed(new_speed)
 

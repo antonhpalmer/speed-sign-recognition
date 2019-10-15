@@ -20,8 +20,10 @@ class ModelTrainer:
     def train_model(self, model, new_model_path, epochs):
         imgs = []
         labels = []
-
         preprocessing.preprocess_all_images(self.images_dir_path, imgs, labels)
+        self.train_model(imgs, labels, model, new_model_path, epochs)
+
+    def train_model(self, imgs, labels, model, new_model_path, epochs):
         X = np.array(imgs, dtype='float32')
         Y = np.eye(definitions.NUM_CLASSES, dtype='uint8')[labels]
 

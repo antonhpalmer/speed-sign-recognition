@@ -43,6 +43,7 @@ void loop()
 
 void waitForSignal(){
   int data = 0;
+  Serial.write("Waiting for signal");
   while(true) {
       if(Serial.available() > 0) {
          data = Serial.read();

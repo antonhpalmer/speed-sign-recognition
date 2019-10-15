@@ -1,5 +1,6 @@
 import serial
 from classification.test.test import ModelTester
+from keras.models import load_model
 
 def speed_zero():
     arduinoData.write(b'0')
@@ -29,14 +30,24 @@ def stop_motor():
     arduinoData.write(b'8')
 
 
-arduinoData = serial.Serial('com11', 115200)
-img = "C:\Users\frede\OneDrive\Dokumenter\GitHub\speed-sign-recognition\GTSRB\Final_Training\Images\00000\00000_00000.ppm"
+arduinoData = serial.Serial('com5', 115200)
+img_one = "C:/Users/anton/PycharmProjects/speed-sign-recognition/GTSRB/Final_Training/Images/00000/00000_00000.ppm"
+img_two = "C:/Users/anton/PycharmProjects/speed-sign-recognition/GTSRB/Final_Test/Images/00011.ppm"
 
-while true:    
-    x = classify_single_image(img)
+model_path = 'C:/Users/anton/PycharmProjects/speed-sign-recognition/classification/models/cnn_model/cnn_model8.h5'
+while True:
+
+    tester = ModelTester(load_model(model_path))
+    y = input()
+
+    if (y == '1'):
+        x = tester.classify_single_image(img_one)
+    elif (y == '2'):
+        x = tester.classify_single_image(img_two)
+
 
     if x == '0':
-        speed_zero()2
+        speed_zero()
         print("speed: 20")
     elif x == '1':
         speed_one()

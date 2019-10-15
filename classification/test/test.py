@@ -14,10 +14,8 @@ from classification import definitions, preprocessing
 
 class ModelTester:
 
-    def __init__(self, model, dataset_path, csv_path):
+    def __init__(self, model):
         self.model = model
-        self.dataset_path = dataset_path
-        self.csv_path = csv_path
 
     def __get_label_name(self, class_indexes):
         str = ""
@@ -35,27 +33,28 @@ class ModelTester:
         img = np.expand_dims(img, axis=0)
         return img
 
-    def test_single_image(self, image_path):
+    def classify_single_image(self, image_path):
         img = self.__transform_test_image(image_path)
         result = self.model.predict_classes(img)
-        print(self.__get_label_name(result))
+        print(str(result[0]))
+        return str(result[0])
 
-    def test_multiple_images(self, *args):
+    def classify_multiple_images(self, *args):
         imgs = []
         for image_path in args:
             imgs.append(self.__transform_test_image(image_path))
         result = self.model.predict_classes(imgs)
         print(self.__get_label_name(result))
 
-    def test_using_dataset(self):
-        test = pd.read_csv(self.csv_path, sep=';')
+    def test_using_dataset(self, dataset_path, csv_path):
+        test = pd.read_csv(csv_path, sep=';')
 
         # Load test dataset
         x_test = []
         y_test = []
 
         for file_name, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-            img_path = os.path.join(self.dataset_path, file_name)
+            img_path = os.path.join(dataset_path, file_name)
             x_test.append(preprocessing.preprocess_img(io.imread(img_path)))
             y_test.append(class_id)
 

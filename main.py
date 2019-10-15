@@ -2,8 +2,11 @@ from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
 from keras.models import load_model
+import serial
+
 
 classifier = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
+ser = serial.Serial('/dev/ttyACM0', 115200)
 
 while True:
     detected_img = detect()
@@ -13,5 +16,7 @@ while True:
     if validated:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
+        ser.write(b'd')
         break;
         # update_speed(new_speed)
+

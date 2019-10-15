@@ -32,8 +32,24 @@ void loop()
         Serial.print(", h:");
         Serial.print(pixy.ccc.blocks[i].m_height);
         Serial.print(",\n");
+        waitForSignal();
       }
       //pixy.ccc.blocks[i].print();
     }
+  }  
+}
+
+
+
+void waitForSignal(){
+  int data = 0;
+  while(true) {
+      if(Serial.available() > 0) {
+         data = Serial.read();
+      }
+
+      if(data == 'd') {
+        return;
+      }
   }  
 }

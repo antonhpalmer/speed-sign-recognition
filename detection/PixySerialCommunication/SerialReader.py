@@ -15,7 +15,7 @@ def get_string_from_pattern(pattern, data_string):
     else:
         return ""
 
-
+# TODO: få lavet så den tager en serial ind i stedet.
 def get_serial_data(serial_number):
     ser = serial.Serial('/dev/ttyACM0', serial_number)
     print("Ready to read serial: ", serial_number)

@@ -13,12 +13,11 @@ def get_string_from_pattern(pattern, data_string):
     if info:
         return info.group(1)
     else:
-        return ""
+        return "1"
 
 # TODO: få lavet så den tager en serial ind i stedet.
-def get_serial_data(serial_number):
-    ser = serial.Serial('/dev/ttyACM0', serial_number)
-    print("Ready to read serial: ", serial_number)
+def get_serial_data(ser):
+    #print("Ready to read serial: ", serial_number)
     # We have an error msg on the first line which we ignore.
     ser.readline()
 

@@ -2,10 +2,8 @@
 #  AAU, Student project group sw504e19, 2019.
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
-import serial
 import re
 from detection.PixySerialCommunication.SerialException import SerialInputException
-from detection.PixySerialCommunication.PixySnapper import get_cropped_image
 
 
 def get_string_from_pattern(pattern, data_string):
@@ -30,9 +28,4 @@ def get_serial_data(ser):
         except SerialInputException as e:
             print(e)
         else:
-            print("x:", x, "y:", y, "w:", w, "h:", h)
-            return get_cropped_image(int(x), int(y), int(w), int(h))
-
-
-ser1 = serial.Serial('COM4', 115200)
-get_serial_data(ser1)
+            return int(x), int (y), int(w), int(h)

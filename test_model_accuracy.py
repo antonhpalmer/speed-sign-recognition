@@ -18,4 +18,3 @@ class TestModelAccuracy:
     tester = ModelTester(model)
     tester.create_test_files_for_model(model_name, epochs, learning_rate)
 
-

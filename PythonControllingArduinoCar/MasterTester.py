@@ -3,7 +3,8 @@ from classification.test.test import ModelTester
 from keras.models import load_model
 
 arduino_data = serial.Serial('com5', 115200)
-
+mg_one = "C:/Users/anton/PycharmProjects/speed-sign-recognition/GTSRB/Final_Training/Images/00000/00000_00000.ppm"
+img_two = "C:/Users/anton/PycharmProjects/speed-sign-recognition/GTSRB/Final_Test/Images/00011.ppm"
 
 def speed_zero():
     arduino_data.write(b'0')
@@ -39,7 +40,6 @@ def speed_seven():
 
 def stop_motor():
     arduino_data.write(b'8')
-
 
 def control_speed(sign_class_id):
     if sign_class_id == 0:

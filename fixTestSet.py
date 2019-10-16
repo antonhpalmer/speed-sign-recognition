@@ -2,10 +2,6 @@
 #  AAU, Student project group sw504e19, 2019.
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
-import pandas as pd
-import csv
-import os
-
 '''
 imagesPath = 'GTSRB/Final_Test/Images/'
 inputCsvPath = 'GTSRB/GT-final_test_fixed.csv'
@@ -41,4 +37,3 @@ with open(outputCsvPath, mode='w', newline='') as outputFile:
             else:
                 print('the file ' + fileName + ' does not exist')
 '''
-

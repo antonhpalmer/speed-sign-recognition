@@ -1,3 +1,5 @@
+#include <SPI.h>
+
 #include <Pixy2.h>
 
 // This is the main Pixy object 
@@ -22,7 +24,7 @@ void loop()
     for (i=0; i<pixy.ccc.numBlocks; i++)
     {
       if(pixy.ccc.blocks[i].m_age > ageNeeded) { //We first send the data to the serial when the block has been seen more than 100 frames. 
-        //Serial.print(i);
+        //Serial.print(i);  
         Serial.print("x:");
         Serial.print(pixy.ccc.blocks[i].m_x);
         Serial.print(", y:");
@@ -32,8 +34,19 @@ void loop()
         Serial.print(", h:");
         Serial.print(pixy.ccc.blocks[i].m_height);
         Serial.print(",\n");
+        waitForSignal();
       }
       //pixy.ccc.blocks[i].print();
     }
   }  
+}
+
+
+
+void waitForSignal(){
+  char target = '9';
+  char array[] = "9";
+  
+  // WE DO NOT LEAVE THIS LOOP
+  //while(!Serial.find(array)) {}
 }

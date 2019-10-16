@@ -1,6 +1,7 @@
 import serial
 from keras.models import load_model
 
+from PythonControllingArduinoCar.MasterNew import change_motor_speed
 from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
@@ -25,7 +26,4 @@ while True:
     if validated:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
-
-        # update_speed(new_speed)
-
-    send_signal(ser)
+        change_motor_speed(new_speed)

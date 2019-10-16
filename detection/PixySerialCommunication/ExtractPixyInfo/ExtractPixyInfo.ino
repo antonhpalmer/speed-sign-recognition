@@ -45,8 +45,12 @@ void loop()
 
 void waitForSignal(){
   char target = '9';
-  char array[] = "9";
   
-  // WE DO NOT LEAVE THIS LOOP
-  //while(!Serial.find(array)) {}
+  while(true){
+    char r = Serial.read();
+    
+    if(r == target){
+      break;
+    }
+  }
 }

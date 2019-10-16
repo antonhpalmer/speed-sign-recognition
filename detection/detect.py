@@ -1,6 +1,5 @@
-from detection.PixySerialCommunication.SerialReader import get_serial_data
 from detection.PixySerialCommunication.PixySnapper import get_cropped_image
-import serial
+from detection.PixySerialCommunication.SerialReader import get_serial_data
 
 
 def detect(ser):

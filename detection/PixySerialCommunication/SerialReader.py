@@ -3,6 +3,7 @@
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
 import re
+
 from detection.PixySerialCommunication.SerialException import SerialInputException
 
 
@@ -28,4 +29,4 @@ def get_serial_data(ser):
         except SerialInputException as e:
             print(e)
         else:
-            return int(x), int (y), int(w), int(h)
+            return int(x), int(y), int(w), int(h)

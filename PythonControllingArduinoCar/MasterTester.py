@@ -1,30 +1,40 @@
 import serial
-from classification.test.test import ModelTester
 from keras.models import load_model
+
+from classification.test.test import ModelTester
+
 
 def speed_zero():
     arduinoData.write(b'0')
 
+
 def speed_one():
     arduinoData.write(b'1')
+
 
 def speed_two():
     arduinoData.write(b'2')
 
+
 def speed_three():
     arduinoData.write(b'3')
+
 
 def speed_four():
     arduinoData.write(b'4')
 
+
 def speed_five():
     arduinoData.write(b'5')
+
 
 def speed_six():
     arduinoData.write(b'6')
 
+
 def speed_seven():
     arduinoData.write(b'7')
+
 
 def stop_motor():
     arduinoData.write(b'8')
@@ -44,7 +54,6 @@ while True:
         x = tester.classify_single_image(img_one)
     elif (y == '2'):
         x = tester.classify_single_image(img_two)
-
 
     if x == '0':
         speed_zero()
@@ -69,4 +78,4 @@ while True:
         print("speed: 100")
     elif x == '7':
         speed_seven()
-        print("speed: 120")    
+        print("speed: 120")

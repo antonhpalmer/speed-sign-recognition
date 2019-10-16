@@ -4,13 +4,11 @@ import os
 from keras.models import load_model
 
 from classification import preprocessing
-from classification.models import models
 from classification.test.test import ModelTester
 from classification.training.training import ModelTrainer
 
 
 class TestModelAccuracy:
-
 
     def create_test_for_model(self, model, model_name, epochs, learning_rate):
         model_path = 'classification/models/' + model_name + '/'
@@ -42,4 +40,3 @@ class TestModelAccuracy:
             with open(csv_path, mode='a') as results_file:
                 writer = csv.writer(results_file, delimiter=';')
                 writer.writerow([str(epoch), str(accuracy)])
-

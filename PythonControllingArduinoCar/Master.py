@@ -4,6 +4,7 @@
 
 import serial
 
+
 def high_speed():
     arduinoData.write(b'1')
 
@@ -24,7 +25,7 @@ arduinoData = serial.Serial('com11', 115200)
 
 x = 90
 
-while x != 9:    
+while x != 9:
     x = input()
 
     if x == '1':
@@ -35,4 +36,3 @@ while x != 9:
         low_speed()
     elif x == '4':
         stop_motor()
-    

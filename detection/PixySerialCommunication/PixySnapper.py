@@ -2,11 +2,12 @@
 #  AAU, Student project group sw504e19, 2019.
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
-from PIL import Image
 import subprocess
-from pathlib import Path
+
+from PIL import Image
 
 EXTRA_PIXELS = 15
+
 
 def snap_image():
     subprocess.call(['./detection/PixySerialCommunication/get_raw_frame'])
@@ -16,6 +17,7 @@ def snap_image():
 def crop_image(img, x1, y1, x2, y2):
     img.crop((x1, y1, x2, y2)).save("cropped.ppm")
     return Image.open("cropped.ppm")
+
 
 def crop_image_test(img, x1, y1, x2, y2):
     img.crop((x1, y1, x2, y2)).save("croppedDefault.ppm")

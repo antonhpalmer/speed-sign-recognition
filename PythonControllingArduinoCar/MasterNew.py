@@ -2,6 +2,9 @@ import serial
 from classification.test.test import ModelTester
 from keras.models import load_model
 
+arduinoData = serial.Serial('/dev/ttyACM0', 115200)
+
+
 def speed_zero():
     arduinoData.write(b'0')
 
@@ -30,7 +33,7 @@ def stop_motor():
     arduinoData.write(b'8')
 
 
-def change_motor_speed(str data)
+def change_motor_speed(data):
         x = data
 
         if x == '0':

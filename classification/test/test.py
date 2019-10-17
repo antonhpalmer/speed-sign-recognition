@@ -74,7 +74,7 @@ class ModelTester:
 
     def create_test_files_for_model(self, model_name, epochs, learning_rate):
         model_path = 'classification/models/' + model_name + '/'
-        os.mkdir(model_path)
+        os.makedirs(model_path, exist_ok=True)
         csv_path = model_path + model_name + '.csv'
 
         # Training the model and saving a h5 file for each epoch
@@ -87,13 +87,17 @@ class ModelTester:
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
 
         # Create csv results file
-        with open(csv_path, mode='w') as results_file:
-            writer = csv.writer(results_file, delimiter=';')
-            writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
+        if not os.path.exists(csv_path):
+            with open(csv_path, mode='w', newline='') as results_file:
+                writer = csv.writer(results_file, delimiter=';')
+                writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
 
         # Testing the model for each of the saved h5 files (so for each epoch)
         for epoch in range(1, epochs):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
+            if not os.path.exists(h5_filename):
+                continue
+
             loaded_model = load_model(h5_filename)
             tester = ModelTester(loaded_model)
             accuracy = tester.test_using_dataset('GTSRB/Final_Test/Images/', 'GTSRB/GT-final_test.csv')

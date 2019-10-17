@@ -83,13 +83,19 @@ class ModelTester:
             if ".h5" in filename and model_name in filename:
                 epoch = filename[len(model_name):-3]
                 epochs.append(int(epoch))
-        return max(epochs)
+
+        if len(epochs) > 0:
+            return max(epochs)
+        else:
+            return 0
 
     def create_test_files_for_model(self, model_name, epochs, learning_rate):
         model_path = 'classification/models/' + model_name + '/'
         os.makedirs(model_path, exist_ok=True)
         csv_path = model_path + model_name + '.csv'
         current_epoch = self.__get_current_epoch(model_path, model_name)
+        if current_epoch > 0:
+            self.model = load_model(model_path + model_name + str(current_epoch) + '.h5')
 
         # Training the model and saving a h5 file for each epoch
         imgs = []

@@ -95,7 +95,7 @@ class ModelTester:
         imgs = []
         labels = []
         preprocessing.preprocess_all_images('GTSRB/Final_Training/Images/', imgs, labels)
-        for epoch in range(current_epoch + 1, current_epoch + epochs):
+        for epoch in range(current_epoch + 1, current_epoch + epochs + 1):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
             trainer = ModelTrainer('GTSRB/Final_Training/Images/', learning_rate)
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
@@ -107,7 +107,7 @@ class ModelTester:
                 writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
 
         # Testing the model for each of the saved h5 files (so for each epoch)
-        for epoch in range(current_epoch + 1, current_epoch + epochs):
+        for epoch in range(current_epoch + 1, current_epoch + epochs + 1):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
             if not os.path.exists(h5_filename):
                 continue

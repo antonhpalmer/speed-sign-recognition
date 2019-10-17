@@ -10,11 +10,18 @@ from classification.training.training import ModelTrainer
 
 
 class TestModelAccuracy:
-    model = models.get_model4()
-    model_name = "model4_"
+    model = models.get_model5()
+    model_name = "model5_"
     epochs = 10
     learning_rate = 0.01
 
     tester = ModelTester(model)
     tester.create_test_files_for_model(model_name, epochs, learning_rate)
 
+    model = models.get_model6()
+    model_name = "model6_"
+    epochs = 10
+    learning_rate = 0.01
+
+    tester = ModelTester(model)
+    tester.create_test_files_for_model(model_name, epochs, learning_rate)

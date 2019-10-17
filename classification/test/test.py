@@ -72,16 +72,30 @@ class ModelTester:
     def print_model_summary(self):
         print(self.model.summary())
 
+    def __get_current_epoch(self, model_path, model_name):
+        files = []
+        for dirpath, dirnames, filenames in os.walk(model_path):
+            files.extend(filenames)
+            break
+
+        epochs = []
+        for filename in files:
+            if ".h5" in filename and model_name in filename:
+                epoch = filename[len(model_name):-3]
+                epochs.append(int(epoch))
+        return max(epochs)
+
     def create_test_files_for_model(self, model_name, epochs, learning_rate):
         model_path = 'classification/models/' + model_name + '/'
         os.makedirs(model_path, exist_ok=True)
         csv_path = model_path + model_name + '.csv'
+        current_epoch = self.__get_current_epoch(model_path, model_name)
 
         # Training the model and saving a h5 file for each epoch
         imgs = []
         labels = []
         preprocessing.preprocess_all_images('GTSRB/Final_Training/Images/', imgs, labels)
-        for epoch in range(1, epochs):
+        for epoch in range(current_epoch + 1, current_epoch + epochs):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
             trainer = ModelTrainer('GTSRB/Final_Training/Images/', learning_rate)
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
@@ -93,7 +107,7 @@ class ModelTester:
                 writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
 
         # Testing the model for each of the saved h5 files (so for each epoch)
-        for epoch in range(1, epochs):
+        for epoch in range(current_epoch + 1, current_epoch + epochs):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
             if not os.path.exists(h5_filename):
                 continue

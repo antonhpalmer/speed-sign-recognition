@@ -26,5 +26,5 @@ while True:
     if validated:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
-        change_motor_speed(new_speed)
+        change_motor_speed(ser, new_speed)
     send_signal(ser)

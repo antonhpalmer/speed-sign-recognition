@@ -7,9 +7,9 @@ from detection.detect import detect
 from validation.validator import validate
 
 
-def send_signal(ser):
+def wakeup_arduino(ser):
     ser.write(b'9')
-    print("Signal written to serial")
+    print("Waking up arduino...")
 
 
 classifier = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
@@ -17,6 +17,7 @@ ser = serial.Serial('/dev/ttyACM1', 115200)
 print("Ready to read from serial 115200")
 
 while True:
+    wakeup_arduino(ser)
     detected_img = detect(ser)
     print("Object was detected")
 
@@ -27,4 +28,3 @@ while True:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
         change_motor_speed(ser, new_speed)
-    send_signal(ser)

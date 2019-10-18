@@ -13,11 +13,12 @@ class TestModelAccuracy:
 
     model = models.get_model7()
     model_name = "model7_"
-    epochs = 8
+    epochs = 5
     learning_rate = 0.01
 
     tester = ModelTester(model)
     tester.create_test_files_for_model(model_name, epochs, learning_rate)
+
 
 
 

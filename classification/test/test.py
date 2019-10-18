@@ -123,7 +123,7 @@ class ModelTester:
             accuracy = tester.test_using_dataset('GTSRB/Final_Test/Images/', 'GTSRB/GT-final_test.csv')
 
             # Outputs test result to csv file
-            with open(csv_path, mode='a') as results_file:
+            with open(csv_path, mode='a', newline='') as results_file:
                 writer = csv.writer(results_file, delimiter=';')
                 writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
 

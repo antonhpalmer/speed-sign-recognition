@@ -13,7 +13,7 @@ def send_signal(ser):
 
 
 classifier = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
-ser = serial.Serial('/dev/ttyACM0', 115200)
+ser = serial.Serial('/dev/ttyACM1', 115200)
 print("Ready to read from serial 115200")
 
 while True:
@@ -27,3 +27,4 @@ while True:
         new_speed = classifier.classify_single_image(detected_img.filename)
         print("detected sign is: ", new_speed)
         change_motor_speed(new_speed)
+    send_signal(ser)

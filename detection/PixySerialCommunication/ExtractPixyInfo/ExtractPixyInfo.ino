@@ -1,6 +1,12 @@
 #include <SPI.h>
 
 #include <Pixy2.h>
+#include <Wire.h>
+#include <EVShield.h>
+
+EVShield evshield(0x34,0x36);
+
+int data;
 
 // This is the main Pixy object 
 Pixy2 pixy;
@@ -9,6 +15,11 @@ void setup()
 {
   Serial.begin(115200);  
   pixy.init();
+  
+  evshield.init(); // the default is SH_HardwareI2C
+
+  evshield.bank_a.motorReset();
+  evshield.bank_b.motorReset();
 }
 
 void loop()
@@ -18,6 +29,7 @@ void loop()
   // grab blocks!
   pixy.ccc.getBlocks();
   
+ 
   // If there are detect blocks, print them!
   if (pixy.ccc.numBlocks)
   {
@@ -41,16 +53,34 @@ void loop()
   }  
 }
 
-
-
 void waitForSignal(){
-  char target = '9';
-  
   while(true){
-    char r = Serial.read();
+    data = Serial.read();
     
-    if(r == target){
+    if (data == '0')
+      runMotor(20);
+    else if (data == '1')
+      runMotor(30);
+    else if (data == '2')
+      runMotor(50);
+    else if (data == '3')
+      runMotor(60);
+    else if (data == '4')
+      runMotor(70);
+    else if (data == '5')
+      runMotor(80);
+    else if (data == '6')
+      runMotor(90);
+    else if (data == '7')
+      runMotor(100);
+    else if(data == '9'){
       break;
     }
   }
+}
+
+void runMotor (int power)
+{
+  evshield.bank_b.motorRunUnlimited(SH_Motor_1, SH_Direction_Reverse, power);
+  evshield.bank_a.motorRunUnlimited(SH_Motor_1, SH_Direction_Reverse, power); 
 }

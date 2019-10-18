@@ -38,7 +38,6 @@ class ModelTester:
     def classify_single_image(self, image_path):
         img = self.__transform_test_image(image_path)
         result = self.model.predict_classes(img)
-        print(str(result[0]))
         return result[0]
 
     def classify_multiple_images(self, *args):
@@ -46,7 +45,7 @@ class ModelTester:
         for image_path in args:
             imgs.append(self.__transform_test_image(image_path))
         result = self.model.predict_classes(imgs)
-        print(self.__get_label_name(result))
+        return result
 
     def test_using_dataset(self, dataset_path, csv_path):
         test = pd.read_csv(csv_path, sep=';')

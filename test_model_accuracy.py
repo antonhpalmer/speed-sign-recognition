@@ -11,8 +11,8 @@ from classification.training.training import ModelTrainer
 
 class TestModelAccuracy:
 
-    model = models.get_model7()
-    model_name = "model7_"
+    model = models.get_model8()
+    model_name = "model8_"
     epochs = 4
     learning_rate = 0.01
 

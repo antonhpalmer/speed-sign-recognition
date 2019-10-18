@@ -89,14 +89,7 @@ class ModelTester:
         else:
             return 0
 
-    def create_test_files_for_model(self, model_name, epochs, learning_rate):
-        model_path = 'classification/models/' + model_name + '/'
-        os.makedirs(model_path, exist_ok=True)
-        csv_path = model_path + model_name + '.csv'
-        current_epoch = self.__get_current_epoch(model_path, model_name)
-        if current_epoch > 0:
-            self.model = load_model(model_path + model_name + str(current_epoch) + '.h5')
-
+    def train_model_in_epoch_steps(self, model_path, model_name, learning_rate, current_epoch, epochs):
         # Training the model and saving a h5 file for each epoch
         imgs = []
         labels = []
@@ -106,6 +99,16 @@ class ModelTester:
             trainer = ModelTrainer('GTSRB/Final_Training/Images/', learning_rate)
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
 
+    def create_test_files_for_model(self, model_name, epochs, learning_rate):
+        model_path = 'classification/models/' + model_name + '/'
+        os.makedirs(model_path, exist_ok=True)
+        csv_path = model_path + model_name + '.csv'
+        current_epoch = self.__get_current_epoch(model_path, model_name)
+        if current_epoch > 0:
+            self.model = load_model(model_path + model_name + str(current_epoch) + '.h5')
+
+        self.train_model_in_epoch_steps(model_path, model_name, learning_rate, current_epoch, epochs)
+
         # Create csv results file
         if not os.path.exists(csv_path):
             with open(csv_path, mode='w', newline='') as results_file:
@@ -114,11 +117,11 @@ class ModelTester:
 
         # Testing the model for each of the saved h5 files (so for each epoch)
         for epoch in range(current_epoch + 1, current_epoch + epochs + 1):
-            h5_filename = model_path + model_name + str(epoch) + '.h5'
-            if not os.path.exists(h5_filename):
+            h5_filepath = model_path + model_name + str(epoch) + '.h5'
+            if not os.path.exists(h5_filepath):
                 continue
 
-            loaded_model = load_model(h5_filename)
+            loaded_model = load_model(h5_filepath)
             tester = ModelTester(loaded_model)
             accuracy = tester.test_using_dataset('GTSRB/Final_Test/Images/', 'GTSRB/GT-final_test.csv')
 

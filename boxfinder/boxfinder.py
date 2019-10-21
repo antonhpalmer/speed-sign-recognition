@@ -101,6 +101,6 @@ def return_coordinates(image, center_coordinate):
     (x, y) = center_coordinate
 
     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = find_box(pix, x, y, width, height)
-    im1 = im.crop((top_left_x, top_left_y, bottom_right_x + 1, bottom_right_y + 1))
+    im1 = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x + 1, bottom_right_y + 1))
     im1.show()
         

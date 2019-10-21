@@ -49,7 +49,6 @@ def find_box(pix, x, y, width, height):
     (left_red_x, left_red_y) = red_left(pix, x, y)
     (up_red_x, up_red_y) = red_up(pix, x, y)
     (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
-
     (start_x, start_y) = (left_red_x, up_red_y)
     x_origin = start_x
 
@@ -93,23 +92,15 @@ def find_box(pix, x, y, width, height):
             
 def return_coordinates(image, center_coordinate):
     im = Image.open(image)
+    im2 = ImageEnhance.Contrast(im)
+    im2.enhance(1.5).save("contraster1.ppm")
+
+    im = Image.open("contraster1.ppm")
     pix = im.load()
+    
     (width, height) = im.size
     (x, y) = center_coordinate
 
-    #imc = im
-    #im1 = ImageEnhance.Brightness(imc)
-    #im1.enhance(2).save("brigther.ppm")
-    
-    #im2 = ImageEnhance.Sharpness(imc)
-    #im2.enhance(4).save("sharper.ppm")
-    
-    #im3 = ImageEnhance.Contrast(imc)
-    #im3.enhance(1.5).save("contraster.ppm")
-
-    #im4 = ImageEnhance.Color(imc)
-    #im4.enhance(1.5).save("colorer.ppm")
-    
     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = find_box(pix, x, y, width, height)
     
     cropped = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x + 1, bottom_right_y + 1))

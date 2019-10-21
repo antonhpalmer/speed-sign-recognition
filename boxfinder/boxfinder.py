@@ -1,9 +1,6 @@
 from PIL import Image
 from PIL import ImageEnhance
 
-#READ! : Just call 'return_coordinates' with appropriate input and it does the job.
-
-#returns True if pixel is red, False if pixel is not red.
 def is_pixel_red (r, g, b):
     if (r > 30 and 10 > g and 10 > b):
         return True
@@ -100,7 +97,21 @@ def return_coordinates(image, center_coordinate):
     (width, height) = im.size
     (x, y) = center_coordinate
 
+    #imc = im
+    #im1 = ImageEnhance.Brightness(imc)
+    #im1.enhance(2).save("brigther.ppm")
+    
+    #im2 = ImageEnhance.Sharpness(imc)
+    #im2.enhance(4).save("sharper.ppm")
+    
+    #im3 = ImageEnhance.Contrast(imc)
+    #im3.enhance(1.5).save("contraster.ppm")
+
+    #im4 = ImageEnhance.Color(imc)
+    #im4.enhance(1.5).save("colorer.ppm")
+    
     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = find_box(pix, x, y, width, height)
-    im1 = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x + 1, bottom_right_y + 1))
-    im1.show()
+    
+    cropped = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x + 1, bottom_right_y + 1))
+    cropped.save("cropped final.ppm")
         

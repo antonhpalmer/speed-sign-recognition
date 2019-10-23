@@ -13,7 +13,7 @@ def wakeup_arduino(ser):
 ser = serial.Serial('/dev/ttyACM1', 115200)
 
 
-with open('testdata_file.csv', mode='w') as testdata_file:
+with open('trainingdata_file.csv', mode='w') as testdata_file:
     file_writer = csv.writer(testdata_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
     file_writer.writerow(['Filename', 'ClassId'])
@@ -26,15 +26,15 @@ with open('testdata_file.csv', mode='w') as testdata_file:
         test_img = detect(ser)
         if validate(test_img):
             file_name = str(i) + ".ppm"
-            test_img.save("Images/" + file_name)
+            test_img.save("training_images/" + file_name)
 
             file_writer.writerow([file_name, str(sign_type)])
             i += 1
-        if i % 100 == 0:
+        if i % 100 == 0 and i % 700 != 0:
             print("CHANGE SIGN")
             input()
             sign_type += 1
         if i % 700 == 0:
-            print("CHANGE ENVIRONMENT")
+            print("CHANGE ENVIRONMENT AND SIGN")
             input()
             sign_type = 1

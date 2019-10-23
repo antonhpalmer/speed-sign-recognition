@@ -9,13 +9,13 @@ from validation.validator import validate
 
 def wakeup_arduino(ser):
     ser.write(b'9')
-    print("Waking up arduino...")
 
 
 def main_print(ser, classifier):
     print("Ready to read from serial 115200")
     while True:
         wakeup_arduino(ser)
+        print("Waking up arduino...")
         detected_img = detect(ser)
         print("Object was detected")
 
@@ -25,6 +25,17 @@ def main_print(ser, classifier):
         if validated:
             new_speed = classifier.classify_single_image(detected_img.filename)
             print("detected sign is: ", new_speed)
+            change_motor_speed(ser, new_speed)
+
+
+def main(ser, classifier):
+    while True:
+        wakeup_arduino(ser)
+        detected_img = detect(ser)
+
+        validated = validate(detected_img)
+        if validated:
+            new_speed = classifier.classify_single_image(detected_img.filename)
             change_motor_speed(ser, new_speed)
 
 

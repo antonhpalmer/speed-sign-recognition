@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Read image.
-img = cv2.imread('img/Speed60.jpg', cv2.IMREAD_COLOR)
+img = cv2.imread('img/0.ppm', cv2.IMREAD_COLOR)
 
 height, width, channels = img.shape
 
@@ -19,7 +19,7 @@ gray_blurred = cv2.blur(gray, (3, 3))
 # Apply Hough transform on the blurred image.
 detected_circles = cv2.HoughCircles(gray_blurred,
                                     cv2.HOUGH_GRADIENT, 1, 20, param1=50,
-                                    param2=largest_dimension / 3, minRadius=0, maxRadius=0)
+                                    param2=largest_dimension / 3, minRadius=5, maxRadius=20)
 # Draw circles that are detected.
 if detected_circles is not None:
     print("NUMBER OF DETECTED CIRCLES : " + str(len(detected_circles[0])))

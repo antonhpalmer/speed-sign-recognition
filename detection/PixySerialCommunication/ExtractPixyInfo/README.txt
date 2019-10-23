@@ -1,4 +1,4 @@
-required libraries:
+Required libraries:
 
 EVShield for Arduino
 Download: https://github.com/mindsensors/EVShield

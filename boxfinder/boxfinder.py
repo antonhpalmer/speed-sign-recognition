@@ -11,6 +11,14 @@ def is_pixel_red (r, g, b):
     else:
         return False
 
+def is_pixel_black (r, g, b):
+    if (r < 20 and g < 20 and b < 20):
+        return True
+    elif (b > (r + g)):
+        return True
+    else:
+        return False
+
 def red_right (pix, x, y, loop_range):
     for i in range(loop_range):
         (r, g, b) = pix[x, y]
@@ -70,7 +78,8 @@ def find_box(pix, x, y, width, height):
     #Runs through every pixel in the detected speed sign and finds the top most, left most, right most and bottom most black pixel
     for i in range(bottom_red_y - up_red_y):
         for k in range(right_red_x - left_red_x):
-            if (pix[start_x, start_y] == (0, 0, 0)):
+            (r, g, b) = pix[start_x, start_y]
+            if (is_pixel_black(r,g,b)):
                 if (start_y < top_most_y):
                     (top_most_x, top_most_y) = (start_x, start_y)
                     continue
@@ -97,9 +106,31 @@ def find_box(pix, x, y, width, height):
     top_right_corner = (right_most_x, top_most_y)
     bottom_right_corner = (right_most_x, bottom_most_y)
 
-    print (top_left_corner, bottom_left_corner, top_right_corner, bottom_right_corner)
+    right_x = remove_last_digit(pix, top_most_y, bottom_most_y, right_most_x, left_most_x)
+    
+    return left_most_x, top_most_y, right_x, bottom_most_y
 
-    return left_most_x, top_most_y, right_most_x, bottom_most_y
+def remove_last_digit(pix, top_y, bottom_y, right_x, left_x):
+    first_line_detected = False
+    white_space_detected = False
+
+    search_range = right_x - left_x
+    start_x = right_x
+    start_y = abs((top_y + bottom_y) / 2)
+
+    for i in range (search_range):
+        (r,g,b) = pix[start_x, start_y]
+        black_pixel = is_pixel_black(r,g,b)
+        print ("xy:", start_x, start_y, "is black:", black_pixel)
+        if (first_line_detected == False and black_pixel == True):
+            first_line_detected = True
+
+        if (first_line_detected == True and white_space_detected == False and black_pixel == False):
+            white_space_detected = True
+
+        if (white_space_detected == True and black_pixel == True):
+            return start_x
+        start_x -= 1
 
 def centrum_calibration(x, y, width, height, pix):
     right_edge_distance = distance_to_right_edge (x, width)
@@ -120,10 +151,8 @@ def return_coordinates(image, center_coordinate):
     #Enhances the contrast in the image
     im2 = ImageEnhance.Contrast(im)
     im2.enhance(1.5).save("contraster1.ppm")
-
     im = Image.open("contraster1.ppm")
     pix = im.load()
-    
     (width, height) = im.size
     (x, y) = center_coordinate
     (x, y) = centrum_calibration(x, y, width, height, pix)
@@ -132,6 +161,6 @@ def return_coordinates(image, center_coordinate):
     (top_left_x, top_left_y, bottom_right_x, bottom_right_y) = find_box(pix, x, y, width, height)
 
     #crops the image and saves it as a new image, only containing the numbers in the speed sign with 1 extra pixel on each side.
-    cropped = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x + 1, bottom_right_y + 1))
+    cropped = im.crop((top_left_x - 1, top_left_y - 1, bottom_right_x - 2, bottom_right_y + 1))
     cropped.save("cropped final.ppm")
-        
+    

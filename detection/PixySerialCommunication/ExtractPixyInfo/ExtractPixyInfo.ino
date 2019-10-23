@@ -50,8 +50,9 @@ void loop()
       }
       //pixy.ccc.blocks[i].print();
     }
-  }  
+  }
 }
+
 
 void waitForSignal(){
   while(true){

@@ -3,7 +3,9 @@ import numpy as np
 
 # Read image.
 img = cv2.imread('img/Speed60.jpg', cv2.IMREAD_COLOR)
+
 height, width, channels = img.shape
+
 largest_dimension = max(width, height)
 
 print(str(height) + "," + str(width))

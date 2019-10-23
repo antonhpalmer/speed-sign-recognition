@@ -15,7 +15,6 @@ def get_string_from_pattern(pattern, data_string):
         raise SerialInputException('We did find the pattern:', pattern, ", in our data string: ", data_string)
 
 
-# TODO: få lavet så den tager en serial ind i stedet.
 def get_serial_data(ser):
     while True:
         data = ser.readline()

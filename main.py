@@ -12,19 +12,22 @@ def wakeup_arduino(ser):
     print("Waking up arduino...")
 
 
-classifier = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
-ser = serial.Serial('/dev/ttyACM1', 115200)
-print("Ready to read from serial 115200")
+def main_print(ser, classifier):
+    print("Ready to read from serial 115200")
+    while True:
+        wakeup_arduino(ser)
+        detected_img = detect(ser)
+        print("Object was detected")
 
-while True:
-    wakeup_arduino(ser)
-    detected_img = detect(ser)
-    print("Object was detected")
+        validated = validate(detected_img)
+        print("Object was validated: ", validated)
 
-    validated = validate(detected_img)
-    print("Object was validated: ", validated)
+        if validated:
+            new_speed = classifier.classify_single_image(detected_img.filename)
+            print("detected sign is: ", new_speed)
+            change_motor_speed(ser, new_speed)
 
-    if validated:
-        new_speed = classifier.classify_single_image(detected_img.filename)
-        print("detected sign is: ", new_speed)
-        change_motor_speed(ser, new_speed)
+
+serial_115200 = serial.Serial('/dev/ttyACM1', 115200)
+classifierModel = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
+main_print(serial_115200, classifierModel)

@@ -20,21 +20,22 @@ with open('trainingdata_file.csv', mode='w') as testdata_file:
 
     i = 0
     sign_type = 1
+    current_environment = 'a'
 
     while True:
         wakeup_arduino(ser)
         test_img = detect(ser)
         if validate(test_img):
-            file_name = str(i) + ".ppm"
+            file_name = current_environment + str(i) + ".ppm"
             test_img.save("training_images/" + file_name)
 
             file_writer.writerow([file_name, str(sign_type)])
             i += 1
-        if i % 100 == 0 and i % 700 != 0:
+        if i % 250 == 0 and i % 1750 != 0:
             print("CHANGE SIGN")
             input()
             sign_type += 1
-        if i % 700 == 0:
+        if i % 1750 == 0:
             print("CHANGE ENVIRONMENT AND SIGN")
-            input()
+            current_environment = input()
             sign_type = 1

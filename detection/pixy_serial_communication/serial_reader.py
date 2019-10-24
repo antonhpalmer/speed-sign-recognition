@@ -4,7 +4,7 @@
 
 import re
 
-from detection.PixySerialCommunication.SerialException import SerialInputException
+from detection.pixy_serial_communication.serial_exception import SerialInputException
 
 
 def get_string_from_pattern(pattern, data_string):
@@ -29,3 +29,8 @@ def get_serial_data(ser):
             print(e)
         else:
             return int(x), int(y), int(w), int(h)
+
+
+def change_motor_speed(serial, data):
+    byte = str(data).encode('utf-8')
+    serial.write(byte)

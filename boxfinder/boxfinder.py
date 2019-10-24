@@ -1,6 +1,8 @@
 from PIL import Image
 from PIL import ImageEnhance
 
+# TODO Clean up duplicate code and trim to increase readability
+
 
 def is_pixel_red(r, g, b):
     if r > 80 and 15 > g and 15 > b:
@@ -74,7 +76,7 @@ def find_box(pix, x, y, width, height):
     (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
 
     # sets the start coordinate to the top left corner by combining the left most red pixels x coordinate with the
-    # highest most red pixels y coordinate
+    # upper most red pixels y coordinate
     (start_x, start_y) = (left_red_x, up_red_y)
 
     x_origin = start_x

@@ -12,30 +12,31 @@ def wakeup_arduino(ser):
 
 ser = serial.Serial('/dev/ttyACM1', 115200)
 
+with open('trainingdata_file.csv', mode='a+') as csv_file:
+    file_writer = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-with open('trainingdata_file.csv', mode='w') as testdata_file:
-    file_writer = csv.writer(testdata_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    print("Specify first sign type (1: 30, 2: 50, 3: 60, 4: 70, 5: 80, 6: 100, 7: 120): ")
+    sign_type = int(input())
 
-    file_writer.writerow(['Filename', 'ClassId'])
+    print("Give the name of the current environment: ")
+    current_environment = input()
 
-    i = 0
-    sign_type = 1
-    current_environment = 'a'
+    print("Specify the first image number (usually 0, unless appending to existing environment): ")
+    i = int(input())
 
     while True:
         wakeup_arduino(ser)
         test_img = detect(ser)
-        if validate(test_img):
-            file_name = current_environment + str(i) + ".ppm"
-            test_img.save("training_images/" + file_name)
 
-            file_writer.writerow([file_name, str(sign_type)])
-            i += 1
-        if i % 250 == 0 and i % 1750 != 0:
+        file_name = current_environment + str(i) + ".ppm"
+        test_img.save("training_images/" + file_name)
+
+        file_writer.writerow([file_name, str(sign_type)])
+        i += 1
+
+        print("current frame: ", i)
+
+        if i % 250 == 0:
             print("CHANGE SIGN")
-            input()
-            sign_type += 1
-        if i % 1750 == 0:
-            print("CHANGE ENVIRONMENT AND SIGN")
-            current_environment = input()
-            sign_type = 1
+            print("Specify next sign type (1: 30, 2: 50, 3: 60, 4: 70, 5: 80, 6: 100, 7: 120): ")
+            sign_type = int(input())

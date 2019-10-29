@@ -1,16 +1,6 @@
-import re
-from test_data.image_transformer.path_exception import PathException
-
+from path_transformer.output_path_creator import create_output_path
 from PIL import Image
 from PIL import ImageEnhance
-
-
-def create_output_image_path(path_to_image_before, appended_name):
-    info = re.search('(.+?).ppm', path_to_image_before)
-    if info:
-        return str(info.group(1) + appended_name + ".ppm")
-    else:
-        raise PathException('The given path:', path_to_image_before, ", did not end on .ppm")
 
 
 def transform_brightness(path_to_image):
@@ -21,7 +11,7 @@ def transform_brightness(path_to_image):
 
     for brightness in brightness_list:
         appended_name = "(b=" + str(brightness) + ")"
-        path_to_output_image = create_output_image_path(path_to_image, appended_name)
+        path_to_output_image = create_output_path(path_to_image, ".ppm", appended_name)
         brightness_enhancer.enhance(brightness).save(path_to_output_image)
 
 

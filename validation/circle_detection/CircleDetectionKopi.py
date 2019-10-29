@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Read image.
-img = cv2.imread('img/Speed60.jpg', cv2.IMREAD_COLOR)
+img = cv2.imread('C:/Users/sujee/PycharmProjects/speed-sign-recognition/GTSRB/Final_Training/Images/00001/00000_00007.ppm', cv2.IMREAD_COLOR)
 height, width, channels = img.shape
 largest_dimension = max(width, height)
 
@@ -16,8 +16,8 @@ gray_blurred = cv2.blur(gray, (3, 3))
 
 # Apply Hough transform on the blurred image.
 detected_circles = cv2.HoughCircles(gray_blurred,
-                                    cv2.HOUGH_GRADIENT, 1, 20, param1=50,
-                                    param2=largest_dimension / 3, minRadius=0, maxRadius=0)
+                                    cv2.HOUGH_GRADIENT, 1, 40, param1=50,
+                                    param2=30, minRadius=5, maxRadius=0)
 # Draw circles that are detected.
 if detected_circles is not None:
     print("NUMBER OF DETECTED CIRCLES : " + str(len(detected_circles[0])))
@@ -33,7 +33,8 @@ if detected_circles is not None:
 
         # Draw a small circle (of radius 1) to show the center.
         cv2.circle(img, (a, b), 1, (0, 0, 255), 3)
-    cv2.imshow("Detected Circle", img)
+    #cv2.imshow("Detected Circle", img)
+    cv2.imwrite('img/test1.ppm', img)
     cv2.waitKey(0)
 
 else:

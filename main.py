@@ -1,7 +1,7 @@
 import serial
 from keras.models import load_model
 
-from PythonControllingArduinoCar.MasterNew import change_motor_speed
+from detection.pixy_serial_communication.serial_reader import change_motor_speed
 from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate

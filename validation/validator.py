@@ -1,4 +1,4 @@
-from validation.dimvalidator import valid_dimensions
+from validation.dim_validator import valid_dimensions
 
 
 def validate(img):

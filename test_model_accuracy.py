@@ -1,12 +1,5 @@
-import csv
-import os
-import matplotlib.pyplot as plt
-from keras.models import load_model
-from skimage import io
-from classification import preprocessing
 from classification.models import models
 from classification.test.test import ModelTester
-from classification.training.training import ModelTrainer
 
 
 class TestModelAccuracy:

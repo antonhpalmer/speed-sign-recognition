@@ -1,5 +1,6 @@
 #Image files
-*.ppm
+cropped.ppm
+out.ppm
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

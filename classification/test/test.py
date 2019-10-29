@@ -128,5 +128,3 @@ class ModelTester:
             with open(csv_path, mode='a', newline='') as results_file:
                 writer = csv.writer(results_file, delimiter=';')
                 writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
-
-

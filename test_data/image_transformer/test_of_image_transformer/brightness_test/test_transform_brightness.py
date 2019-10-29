@@ -1,3 +1,9 @@
 from test_data.image_transformer.brigthness_transformer import transform_brightness
 
-transform_brightness("test_image/test.ppm")
+output_path_list = transform_brightness("test_image/test.ppm")
+
+assert (output_path_list[0] == "test_image/test(b=0.3).ppm")
+assert (output_path_list[1] == "test_image/test(b=0.5).ppm")
+assert (output_path_list[2] == "test_image/test(b=1.5).ppm")
+assert (output_path_list[3] == "test_image/test(b=2.0).ppm")
+assert (output_path_list[4] == "test_image/test(b=2.3).ppm")

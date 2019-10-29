@@ -15,5 +15,4 @@ def transform_brightness(path_to_image):
         brightness_enhancer.enhance(brightness).save(path_to_output_image)
 
 
-transform_brightness("test_images/1.ppm")
 

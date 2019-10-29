@@ -17,6 +17,3 @@ def transform_all_images_in_csv_file(csv_input_file_path):
                     line_count += 1
             print('We read a total of:', line_count, "lines")
             print(output_csv_path)
-
-
-transform_all_images_in_csv_file('testdata_file.csv')

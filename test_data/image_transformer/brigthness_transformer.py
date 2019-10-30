@@ -21,12 +21,6 @@ def create_new_file_name(file_name, appended_name, file_type):
     return temp + appended_name + file_type
 
 
-def create_image_output_path(image_name, output_folder_path, appended_name):
-    image_type = ".ppm"
-    new_file_name = create_new_file_name(image_name, appended_name, image_type)
-    return output_folder_path + new_file_name
-
-
 def transform_brightness(image_name, folder_path):
     path_to_image = folder_path + image_name
     image_before = Image.open(path_to_image)
@@ -36,14 +30,17 @@ def transform_brightness(image_name, folder_path):
 
     output_folder_path = create_output_folder(folder_path)
 
-    output_path_list = []
+    output_image_names = []
     for brightness in brightness_list:
         appended_name = "(b=" + str(brightness) + ")"
-        path_to_output_image = create_image_output_path(image_name, output_folder_path, appended_name)
-        output_path_list.append(path_to_output_image)
+
+        # We create the name of the output file where we should save it
+        output_image_name = create_new_file_name(image_name, appended_name, ".ppm")
+        output_image_names.append(output_image_name)
+        path_to_output_image = output_folder_path + output_image_name
         brightness_enhancer.enhance(brightness).save(path_to_output_image)
 
-    return output_path_list
+    return output_image_names
 
 
 

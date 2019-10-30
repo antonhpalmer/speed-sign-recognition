@@ -5,11 +5,6 @@ from test_data.image_transformer.brigthness_transformer import transform_brightn
 from path_transformer.path_exception import PathException
 
 
-def remove_folder_from_path(path, folder_path):
-    # This method call removes the folder_path from the left side of the string
-    return path.lstrip(folder_path)
-
-
 def transform_all_images_in_csv_file(csv_input_file_path, image_folder_path):
     with open(csv_input_file_path, mode='r+') as input_file:
         csv_input_reader = csv.reader(input_file, delimiter= ';')
@@ -25,12 +20,8 @@ def transform_all_images_in_csv_file(csv_input_file_path, image_folder_path):
                     csv_output_writer.writerow(row)
                     line_count += 1
                 else:
-                    # We here write the original image to the new csv. file
-                    csv_output_writer.writerow(row)
-                    output_path_list = transform_brightness(row[0], image_folder_path)
+                    output_image_names = transform_brightness(row[0], image_folder_path)
                     # We here write all the new images to the csv file
-                    for output_path in output_path_list:
-                        updated_output_path = remove_folder_from_path(output_path, image_folder_path)
-                        csv_output_writer.writerow([updated_output_path, row[1]])
+                    for output_name in output_image_names:
+                        csv_output_writer.writerow([output_name, row[1]])
                     line_count += 1
-

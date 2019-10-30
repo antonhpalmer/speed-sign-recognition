@@ -26,7 +26,7 @@ def transform_all_images_in_csv_file(csv_input_file_path, image_folder_path):
                 else:
                     # We here write the original image to the new csv. file
                     csv_output_writer.writerow(row)
-                    output_path_list = transform_brightness(image_folder_path + row[0])
+                    output_path_list = transform_brightness(row[0], image_folder_path)
                     # We here write all the new images to the csv file
                     for output_path in output_path_list:
                         updated_output_path = remove_folder_from_path(output_path, image_folder_path)

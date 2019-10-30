@@ -6,6 +6,7 @@ from path_transformer.path_exception import PathException
 
 
 def remove_folder_from_path(path, folder_path):
+    # This method call removes the folder_path from the left side of the string
     return path.lstrip(folder_path)
 
 

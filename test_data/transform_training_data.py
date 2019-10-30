@@ -16,4 +16,4 @@ with open(output_csv_path, mode='w', newline='') as output_file:
         if os.path.exists(image_dir_path + filename):
             writer.writerow([filename, class_id])
 
-transform_all_images_in_csv_file(output_csv_path, image_dir_path)
+# transform_all_images_in_csv_file(output_csv_path, image_dir_path)

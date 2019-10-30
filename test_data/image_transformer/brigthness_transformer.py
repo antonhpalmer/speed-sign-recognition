@@ -3,11 +3,12 @@ from PIL import Image
 from PIL import ImageEnhance
 
 
-def transform_brightness(path_to_image):
+def transform_brightness(image_name, folder_path):
+    path_to_image = folder_path + image_name
     image_before = Image.open(path_to_image)
     brightness_enhancer = ImageEnhance.Brightness(image_before)
 
-    brightness_list = [0.3, 0.5, 1.5, 2.0, 2.3]
+    brightness_list = [0.3, 0.5, 1.0, 1.5, 2.0, 2.3]
 
     output_path_list = []
     for brightness in brightness_list:
@@ -17,4 +18,8 @@ def transform_brightness(path_to_image):
         brightness_enhancer.enhance(brightness).save(path_to_output_image)
 
     return output_path_list
+
+
+
+
 

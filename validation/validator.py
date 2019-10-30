@@ -9,5 +9,9 @@ def validate(img):
     validated_image = cd.ValidatedImage(img)
     validated_image.circle_detection()
     if validated_image.is_valid:
-        return True
+        return True, validated_image.circle_center
+    else:
+        return False, None
+
+
 

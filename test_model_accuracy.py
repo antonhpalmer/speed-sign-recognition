@@ -71,15 +71,20 @@ class TestModelAccuracy:
 
     model_switcher = {
         0: [models.get_cnn_model(), 'cnn_model_newdata'],
-        1: []
+        1: [models.get_model1(), 'model1_newdata'],
+        2: [models.get_model2(), 'model2_newdata'],
+        3: [models.get_model2(), 'model3_newdata'],
+        4: [models.get_model2(), 'model4_newdata'],
+        5: [models.get_model2(), 'model5_newdata'],
+        6: [models.get_model2(), 'model6_newdata'],
+        7: [models.get_model2(), 'model7_newdata'],
+        8: [models.get_model2(), 'model8_newdata'],
+        9: [models.get_model2(), 'model9_newdata'],
+        10: [models.get_model2(), 'model10_newdata'],
     }
 
     for model_number in range(0, 11):
-        if model_number == 0:
-            model = models.get_cnn_model()
-            model_name = 'cnn_model_newdata'
-        else:
-            model = models.get
+        model, model_name = model_switcher.get(model_number)
         tester = ModelTester(model)
         tester.train_and_test_model(model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
                                 test_csv_path)

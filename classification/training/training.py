@@ -33,6 +33,8 @@ class ModelTrainer:
                       optimizer=sgd,
                       metrics=['accuracy'])
 
+        model.fit_generator()
+
         model.fit(X, Y,
                   batch_size=definitions.BATCH_SIZE,
                   epochs=epochs,

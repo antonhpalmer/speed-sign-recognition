@@ -88,26 +88,19 @@ class ModelTester:
         else:
             return 0
 
-    def train_model_in_epoch_steps(self, model_path, model_name, learning_rate, current_epoch, epochs):
+    def __train_model_in_epoch_steps(self, model_path, model_name, learning_rate, current_epoch, epochs,
+                                     training_dataset_path):
         # Training the model and saving a h5 file for each epoch
         imgs = []
         labels = []
-        preprocessing.preprocess_all_images('GTSRB/Final_Training/Images/', imgs, labels)
+        preprocessing.preprocess_all_images(training_dataset_path, imgs, labels)
         for epoch in range(current_epoch + 1, current_epoch + epochs + 1):
             h5_filename = model_path + model_name + str(epoch) + '.h5'
-            trainer = ModelTrainer('GTSRB/Final_Training/Images/', learning_rate)
+            trainer = ModelTrainer(training_dataset_path, learning_rate)
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
 
-    def create_test_files_for_model(self, model_name, epochs, learning_rate):
-        model_path = 'classification/models/' + model_name + '/'
-        os.makedirs(model_path, exist_ok=True)
-        csv_path = model_path + model_name + '.csv'
-        current_epoch = self.__get_current_epoch(model_path, model_name)
-        if current_epoch > 0:
-            self.model = load_model(model_path + model_name + str(current_epoch) + '.h5')
-
-        self.train_model_in_epoch_steps(model_path, model_name, learning_rate, current_epoch, epochs)
-
+    def __test_and_output_results(self, csv_path, model_path, model_name, start_epoch, epochs, learning_rate,
+                                  test_dataset_path, test_csv_path):
         # Create csv results file
         if not os.path.exists(csv_path):
             with open(csv_path, mode='w', newline='') as results_file:
@@ -115,16 +108,33 @@ class ModelTester:
                 writer.writerow(['Epoch', 'Accuracy', 'Learning rate'])
 
         # Testing the model for each of the saved h5 files (so for each epoch)
-        for epoch in range(current_epoch + 1, current_epoch + epochs + 1):
+        for epoch in range(start_epoch + 1, start_epoch + epochs + 1):
             h5_filepath = model_path + model_name + str(epoch) + '.h5'
             if not os.path.exists(h5_filepath):
                 continue
 
             loaded_model = load_model(h5_filepath)
             tester = ModelTester(loaded_model)
-            accuracy = tester.test_using_dataset('GTSRB/Final_Test/Images/', 'GTSRB/GT-final_test.csv')
+            accuracy = tester.test_using_dataset(test_dataset_path, test_csv_path)
 
             # Outputs test result to csv file
             with open(csv_path, mode='a', newline='') as results_file:
                 writer = csv.writer(results_file, delimiter=';')
                 writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
+
+    def train_and_test_model(self, model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
+                             test_csv_path):
+        model_path = 'classification/models/' + model_name + '/'
+        os.makedirs(model_path, exist_ok=True)
+        csv_path = model_path + model_name + '.csv'
+        current_epoch = self.__get_current_epoch(model_path, model_name)
+        if current_epoch > 0:
+            self.model = load_model(model_path + model_name + str(current_epoch) + '.h5')
+
+        self.__train_model_in_epoch_steps(model_path, model_name, learning_rate, current_epoch, epochs,
+                                          training_dataset_path)
+
+        self.__test_and_output_results(csv_path, model_path, model_name, current_epoch, epochs, learning_rate,
+                                       test_dataset_path, test_csv_path)
+
+

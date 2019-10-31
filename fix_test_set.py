@@ -1,29 +1,59 @@
-#  Copyright (c) 2019.
-#  AAU, Student project group sw504e19, 2019.
-#  Use this as reference to coding conventions in Python: https://github.com/kengz/python
+# #  Copyright (c) 2019.
+# #  AAU, Student project group sw504e19, 2019.
+# #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
-# import pandas as pd
-# import csv
-# import os
-#
-#
-# imagesPath = 'GTSRB/Final_Test/Images/'
-# inputCsvPath = 'GTSRB/Final_Training/Images/00007/GT-00008.csv'
-# outputCsvPath = 'GT-00007.csv'
-#
+import pandas as pd
+import csv
+import os
+
 # classIds = [0, 1, 2, 3, 4, 5]
-#
-# with open(outputCsvPath, mode='w', newline='') as outputFile:
-#     writer = csv.writer(outputFile, delimiter=';')
-#     writer.writerow(['Filename', 'Width', 'Height', 'Roi.X1', 'Roi.Y1', 'Roi.X2', 'Roi.Y2', 'ClassId'])
-#
-#     test = pd.read_csv(inputCsvPath, sep=';')
-#     for fileName, width, height, roiX1, roiY1, roiX2, roiY2, classId in zip(list(test['Filename']),
-#                                                                             list(test['Width']), list(test['Height']),
-#                                                                             list(test['Roi.X1']), list(test['Roi.Y1']),
-#                                                                             list(test['Roi.X2']), list(test['Roi.Y2']),
-#                                                                             list(test['ClassId'])):
-#         writer.writerow([fileName, width, height, roiX1, roiY1, roiX2, roiY2, '7'])
-#
 
+# import os
+# import csv
+# import pandas as pd
+# image_dir_path = 'path/to/image/'
+# input_csv_path = 'path/to/csv.csv'
+# output_csv_path = 'path/to/new_csv.csv'
+#
+# with open(output_csv_path, mode='w', newline='') as output_file:
+#     writer = csv.writer(output_file, delimiter=';')
+#     writer.writerow(['Filename', 'ClassId'])
+#
+#     input_file = pd.read_csv(input_csv_path, sep=';')
+#     for filename, class_id in zip(list(input_file['Filename']), list(input_file['ClassId'])):
+#         if os.path.exists(image_dir_path + filename):
+#             writer.writerow([filename, class_id])
+
+
+# training_images_path = 'test_data/training_images/transformed/'
+# training_output_path = 'test_data/training_images/'
+# test_images_path = 'test_data/test_images/'
+# input_csv_path = 'test_data/trimmed_training_data(transformed).csv'
+# test_output_csv_path = 'test_data/test_file.csv'
+#
+#
+# with open(test_output_csv_path, mode='w', newline='') as output_csv_file:
+#     writer = csv.writer(output_csv_file, delimiter=';')
+#     writer.writerow(['Filename', 'ClassId'])
+#
+#     test = pd.read_csv(input_csv_path, sep=';')
+#     pic_count = 0
+#     for filename, classId in zip(list(test['Filename']), list(test['ClassId'])):
+#         file_path = training_images_path + filename
+#         if not os.path.exists(file_path):
+#             continue
+#         pic_count += 1
+#         print('Pic ' + str(pic_count))
+#         if pic_count % 5 == 0:
+#             # every 5th pic, make it a test pic
+#             os.makedirs(test_images_path, exist_ok=True)
+#             os.replace(file_path, test_images_path + filename)
+#             writer.writerow([filename, classId])
+#
+#         else:
+#             os.makedirs(training_output_path + str(classId) + '/', exist_ok=True)
+#             os.replace(file_path, training_output_path + str(classId) + '/' + filename)
+#
+#
+#
 

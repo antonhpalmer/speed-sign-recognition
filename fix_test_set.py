@@ -28,7 +28,7 @@ import os
 # training_images_path = 'test_data/training_images/transformed/'
 # training_output_path = 'test_data/training_images/'
 # test_images_path = 'test_data/test_images/'
-# input_csv_path = 'test_data/trimmed_training_data(transformed).csv'
+# input_csv_path = 'test_data/new_training_data.csv'
 # test_output_csv_path = 'test_data/test_file.csv'
 #
 #

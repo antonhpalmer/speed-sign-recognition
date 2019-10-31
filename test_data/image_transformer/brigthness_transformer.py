@@ -26,7 +26,7 @@ def transform_brightness(image_name, folder_path):
     image_before = Image.open(path_to_image)
     brightness_enhancer = ImageEnhance.Brightness(image_before)
 
-    brightness_list = [0.3, 0.5, 1.0, 1.5, 2.0, 2.3]
+    brightness_list = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3]
 
     output_folder_path = create_output_folder(folder_path)
 

@@ -15,13 +15,15 @@ ser = serial.Serial('/dev/ttyACM1', 115200)
 with open('trainingdata_file.csv', mode='a+') as csv_file:
     file_writer = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-    print("Specify first sign type (30, 50, 60, 70, 80, 90, 100, 110, 120): ")
+    print("Specify first sign type "
+          "(30, 50, 60, 70, 80, 90, 100, 110, 120): ")
     sign_type = int(input())
 
     print("Give the name of the current environment: ")
     current_environment = input()
 
-    print("Specify the first image number (usually 0, unless appending to existing environment): ")
+    print("Specify the first image number "
+          "(usually 0, unless appending to existing environment): ")
     i = int(input())
 
     while True:
@@ -38,5 +40,6 @@ with open('trainingdata_file.csv', mode='a+') as csv_file:
 
         if i % 250 == 0:
             print("CHANGE SIGN")
-            print("Specify next sign type (30, 50, 60, 70, 80, 90, 100, 110, 120): ")
+            print("Specify next sign type "
+                  "(30, 50, 60, 70, 80, 90, 100, 110, 120): ")
             sign_type = int(input())

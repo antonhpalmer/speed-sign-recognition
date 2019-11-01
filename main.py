@@ -19,7 +19,7 @@ def main_print(ser, classifier):
         detected_img = detect(ser)
         print("Object was detected")
 
-        validated = validate(detected_img)
+        validated, coordinates = validate(detected_img)
         print("Object was validated: ", validated)
 
         if validated:

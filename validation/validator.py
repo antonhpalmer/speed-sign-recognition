@@ -1,4 +1,4 @@
-from validation.dimvalidator import valid_dimensions
+from validation.dim_validator import valid_dimensions
 import validation.circle_detection.CircleDetection as cd
 from PIL import Image
 

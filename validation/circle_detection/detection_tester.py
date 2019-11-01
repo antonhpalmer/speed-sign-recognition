@@ -19,7 +19,7 @@ for i in range(0, 700):
         if circle_detection(img, dest_path, dest_name, i):
             validated_counter += 1
         else:
-            rejected_counter +=1
+            rejected_counter += 1
 
 print('Validated images: ' + str(validated_counter))
 print('Rejected images: ' + str(rejected_counter))

@@ -75,12 +75,12 @@ class TestModelAccuracy:
         2: [models.get_model2(), 'model2_newdata'],
         3: [models.get_model3(), 'model3_newdata'],
         4: [models.get_model4(), 'model4_newdata'],
-        5: [models.get_model5(), 'model5_newdata'],
-        6: [models.get_model6(), 'model6_newdata'],
-        7: [models.get_model7(), 'model7_newdata'],
-        8: [models.get_model8(), 'model8_newdata'],
-        9: [models.get_model9(), 'model9_newdata'],
-        10: [models.get_model10(), 'model10_newdata'],
+        5: [models.get_model5(), 'model5_newdata']
+        # 6: [models.get_model6(), 'model6_newdata'],
+        # 7: [models.get_model7(), 'model7_newdata'],
+        # 8: [models.get_model8(), 'model8_newdata'],
+        # 9: [models.get_model9(), 'model9_newdata'],
+        # 10: [models.get_model10(), 'model10_newdata'],
     }
 
     for model_number in range(1, 6):

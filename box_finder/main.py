@@ -1,4 +1,5 @@
-from box_finder.boxfinder import return_coordinates
+from PIL import Image
 
-return_coordinates('C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/Images/602.ppm',
-                   (31, 34))
+from boxfinder import crop_image
+
+crop_image ('C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/training_images/30/grouproom_floor_light100(b=0.8).ppm', (41, 48), str(23))

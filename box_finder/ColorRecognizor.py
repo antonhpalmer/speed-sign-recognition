@@ -10,7 +10,7 @@ def color_recognizor(r, g, b):
 
 def black_validator(x, y, pix_gray):
     l = pix_gray[x, y]
-    bound = 75
+    bound = 100
     if l < bound:
         return True
     else:
@@ -28,10 +28,10 @@ def white_validator(s, v):
 
 
 def red_validator(h, s, v):
-    red1_lower = [0, 75, 20]
+    red1_lower = [0, 50, 20]
     red1_upper = [10, 100, 100]
 
-    red2_lower = [280, 75, 20]
+    red2_lower = [280, 50, 20]
     red2_upper = [360, 100, 100]
 
     if (is_value_between(h, red1_lower[0], red1_upper[0]) and

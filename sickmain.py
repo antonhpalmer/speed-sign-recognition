@@ -11,6 +11,5 @@ for elem in os.listdir(path):
     goodness, (x,y) = validate(image)
 
     if goodness is True:
-        print(x,y)
         crop_image(path + elem, (x,y), str(elem))
         i += 1

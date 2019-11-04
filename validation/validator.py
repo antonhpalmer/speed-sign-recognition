@@ -11,7 +11,7 @@ def validate(img):
     if validated_image.is_valid:
         return True, validated_image.circle_center
     else:
-        return False, None
+        return False, (None, None)
 
 
 

@@ -68,8 +68,8 @@ class ModelTester:
         print("Test accuracy = {}".format(acc))
         return acc
 
-    def print_model_summary(self):
-        print(self.model.summary())
+    def write_model_summary_to_file(self, file):
+        return self.model.summary(print_fn=lambda x: file.write(x + '\n'))
 
     def __get_current_epoch(self, model_path, model_name):
         files = []
@@ -124,7 +124,7 @@ class ModelTester:
 
     def train_and_test_model(self, model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
                              test_csv_path):
-        model_path = 'classification/models/' + model_name + '/'
+        model_path = 'classification/models_new_dataset/' + model_name + '/'
         os.makedirs(model_path, exist_ok=True)
         csv_path = model_path + model_name + '.csv'
         current_epoch = self.__get_current_epoch(model_path, model_name)

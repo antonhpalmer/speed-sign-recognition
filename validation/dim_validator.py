@@ -1,5 +1,3 @@
-import cv2
-
 
 def valid_dimensions(image):
     width, height = image.size

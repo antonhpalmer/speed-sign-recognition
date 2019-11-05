@@ -6,8 +6,6 @@
 
 EVShield evshield(0x34,0x36);
 
-int data;
-
 // This is the main Pixy object 
 Pixy2 pixy;
 
@@ -35,7 +33,12 @@ void loop()
   if (pixy.ccc.numBlocks)
   {
     Block detectedObject = pixy.ccc.blocks[0];
-    if(detectedObject.m_age > ageNeeded) { //We first send the data to the serial when the block has been seen more than age needed amount of frames. 
+    //We first send the data to the serial 
+    //when the block has been seen more than 
+    //age needed amount of frames.
+
+        
+    if(detectedObject.m_age > ageNeeded) { 
       Serial.print("x:");
       Serial.print(detectedObject.m_x);
       Serial.print(", y:");
@@ -46,11 +49,13 @@ void loop()
       Serial.print(detectedObject.m_height);
       Serial.print(",\n");
       waitForSignal();
+      
     }
   }  
 }
 
 void waitForSignal(){
+  int data;
   while(true){
     data = Serial.read();
     
@@ -70,9 +75,8 @@ void waitForSignal(){
       runMotor(90);
     else if (data == '7')
       runMotor(100);
-    else if(data == '9'){
+    else if (data == '9')
       break;
-    }
   }
 }
 

@@ -73,21 +73,25 @@ class TestModelAccuracy:
         0: [models.get_cnn_model(), 'cnn_model_newdata'],
         1: [models.get_model1(), 'model1_newdata'],
         2: [models.get_model2(), 'model2_newdata'],
-        3: [models.get_model2(), 'model3_newdata'],
-        4: [models.get_model2(), 'model4_newdata'],
-        5: [models.get_model2(), 'model5_newdata'],
-        6: [models.get_model2(), 'model6_newdata'],
-        7: [models.get_model2(), 'model7_newdata'],
-        8: [models.get_model2(), 'model8_newdata'],
-        9: [models.get_model2(), 'model9_newdata'],
-        10: [models.get_model2(), 'model10_newdata'],
+        3: [models.get_model3(), 'model3_newdata'],
+        4: [models.get_model4(), 'model4_newdata'],
+        5: [models.get_model5(), 'model5_newdata']
+        # 6: [models.get_model6(), 'model6_newdata'],
+        # 7: [models.get_model7(), 'model7_newdata'],
+        # 8: [models.get_model8(), 'model8_newdata'],
+        # 9: [models.get_model9(), 'model9_newdata'],
+        # 10: [models.get_model10(), 'model10_newdata'],
     }
 
-    for model_number in range(0, 11):
+    for model_number in range(1, 6):
         model, model_name = model_switcher.get(model_number)
         tester = ModelTester(model)
         tester.train_and_test_model(model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
-                                test_csv_path)
+                                    test_csv_path)
+        info_file_path = 'classification/models_new_dataset/' + model_name + '/model_info.txt'
+        with open(info_file_path, mode='w', newline='') as info_file:
+            tester.write_model_summary_to_file(info_file)
+
 
 
 

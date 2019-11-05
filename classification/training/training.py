@@ -43,8 +43,6 @@ class ModelTrainer:
                              ModelCheckpoint(new_model_path, save_best_only=False)]
                   )
 
-
-
     # create a data generator
     def train(self, model):
         data_generator = ImageDataGenerator()

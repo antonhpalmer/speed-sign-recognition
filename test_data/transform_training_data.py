@@ -5,9 +5,9 @@ import pandas as pd
 
 image_dir_path = 'training_images/'
 input_csv_path = 'trainingdata_file.csv'
-output_csv_path = 'trimmed_training_data.csv'
+trimmed_csv_path = 'trimmed_training_data.csv'
 
-with open(output_csv_path, mode='w', newline='') as output_file:
+with open(trimmed_csv_path, mode='w', newline='') as output_file:
     writer = csv.writer(output_file, delimiter=';')
     writer.writerow(['Filename', 'ClassId'])
 
@@ -16,4 +16,4 @@ with open(output_csv_path, mode='w', newline='') as output_file:
         if os.path.exists(image_dir_path + filename):
             writer.writerow([filename, class_id])
 
-# transform_all_images_in_csv_file(output_csv_path, image_dir_path)
+transform_all_images_in_csv_file(trimmed_csv_path, image_dir_path)

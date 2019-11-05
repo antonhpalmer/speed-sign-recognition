@@ -93,5 +93,7 @@ class TestModelAccuracy:
             tester.write_model_summary_to_file(info_file)
 
 
-
+    # trainer = ModelTrainer('test_data/training_images/', 0.01)
+    # trainer.train(models.get_model1())
+    #
 

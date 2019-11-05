@@ -8,38 +8,26 @@ import numpy
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):
+    neighbours = []
+
     if red_pixels is None:
         red_pixels = []
 
-    red_neighbours = 0
+    if len(red_pixels) >= 10:
+        return red_pixels
 
-    (r, g, b) = pix[x + 1, y]
-    if color_recognizor(r, g, b) == "Red" and (x + 1, y) not in red_pixels:
-        red_pixels.append((x + 1, y))
-        check_neighbour_pixels(pix, x + 1, y, red_pixels)
-        red_neighbours += 1
+    neighbours.append((x + 1, y))
+    neighbours.append((x - 1, y))
+    neighbours.append((x, y + 1))
+    neighbours.append((x, y - 1))
 
-    (r, g, b) = pix[x - 1, y]
-    if color_recognizor(r, g, b) == "Red" and (x - 1, y) not in red_pixels:
-        red_pixels.append((x - 1, y))
-        check_neighbour_pixels(pix, x - 1, y, red_pixels)
-        red_neighbours += 1
-
-    (r, g, b) = pix[x, y + 1]
-    if color_recognizor(r, g, b) == "Red" and (x, y + 1) not in red_pixels:
-        red_pixels.append((x, y + 1))
-        check_neighbour_pixels(pix, x, y + 1, red_pixels)
-        red_neighbours += 1
-
-    (r, g, b) = pix[x + 1, y]
-    if color_recognizor(r, g, b) == "Red" and (x, y - 1) not in red_pixels:
-        red_pixels.append((x, y - 1))
-        check_neighbour_pixels(pix, x, y - 1, red_pixels)
-        red_neighbours += 1
-
-    if red_neighbours == 0 or len(red_pixels) >= 10:
-        return len(red_pixels)
-    return len(red_pixels)
+    for neighbour in neighbours:
+        (x, y) = neighbour
+        (r, g, b) = pix[x, y]
+        if color_recognizor(r, g, b) == "Red" and (x, y) not in red_pixels:
+            red_pixels.append((x, y))
+            red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
+    return red_pixels
 
 
 def red_right(pix, x, y, loop_range):
@@ -48,8 +36,8 @@ def red_right(pix, x, y, loop_range):
         (r, g, b) = pix[x, y]
         if color_recognizor(r, g, b) == "Red":
             red_pixel_list.append((x, y))
-            len = check_neighbour_pixels(pix, x, y, red_pixel_list)
-            if len > 10:
+            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+            if l > 10:
                 return x, y
         x += 1
     return x, y
@@ -61,8 +49,8 @@ def red_left(pix, x, y):
         (r, g, b) = pix[x, y]
         if color_recognizor(r, g, b) == "Red":
             red_pixel_list.append((x, y))
-            len = check_neighbour_pixels(pix, x, y, red_pixel_list)
-            if len > 10:
+            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+            if l > 10:
                 return x, y
         x -= 1
     return x, y
@@ -74,8 +62,8 @@ def red_up(pix, x, y):
         (r, g, b) = pix[x, y]
         if color_recognizor(r, g, b) == "Red":
             red_pixel_list.append((x, y))
-            len = check_neighbour_pixels(pix, x, y, red_pixel_list)
-            if len > 10:
+            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+            if l > 10:
                 return x, y
         y -= 1
     return x, y
@@ -87,8 +75,8 @@ def red_bottom(pix, x, y, loop_range):
         (r, g, b) = pix[x, y]
         if color_recognizor(r, g, b) == "Red":
             red_pixel_list.append((x, y))
-            len = check_neighbour_pixels(pix, x, y, red_pixel_list)
-            if len > 10:
+            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+            if l > 10:
                 return x, y
         y += 1
     return x, y
@@ -143,7 +131,7 @@ def center_calibration(center_coordinate, width, height, pix):
     (left_red_x, left_red_y) = red_left(pix, x, y)
     (up_red_x, up_red_y) = red_up(pix, x, y)
     (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
-    print((right_red_x,right_red_y),(left_red_x,left_red_y),(up_red_x,up_red_y),(bottom_red_x,bottom_red_y))
+    print((right_red_x, right_red_y), (left_red_x, left_red_y), (up_red_x, up_red_y), (bottom_red_x, bottom_red_y))
 
     center_x = int((left_red_x + right_red_x) / 2)
     center_y = int((up_red_y + bottom_red_y) / 2)
@@ -188,7 +176,7 @@ def crop_image(image, center_coordinate, filename):
     (up_red_x, up_red_y) = red_up(pix, x, y)
     (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
 
-    print((right_red_x,right_red_y),(left_red_x,left_red_y),(up_red_x,up_red_y),(bottom_red_x,bottom_red_y))
+    print((right_red_x, right_red_y), (left_red_x, left_red_y), (up_red_x, up_red_y), (bottom_red_x, bottom_red_y))
     diameter = ((right_red_x - left_red_x) + (bottom_red_y - up_red_y)) / 2
 
     # Initializing 4 coordinates which will be used to store the coordinates for the black pixels
@@ -238,8 +226,9 @@ def crop_image(image, center_coordinate, filename):
         start_x = x_origin
         start_y += 1
 
-    print((right_most_x,right_most_y),(left_most_x,left_most_y),(top_most_x,top_most_y),(bottom_most_x,bottom_most_y))
-    l = pix_gray[31,29]
+    print((right_most_x, right_most_y), (left_most_x, left_most_y), (top_most_x, top_most_y),
+          (bottom_most_x, bottom_most_y))
+    l = pix_gray[31, 29]
     print(l)
     # Marks the x value in which to crop to remove the last digit from the speed sign
     right_x = remove_last_digit(pix_gray, top_most_y, bottom_most_y, right_most_x, left_most_x)
@@ -273,7 +262,8 @@ def crop_image(image, center_coordinate, filename):
     # on each side.
     if right_x != None and left_most_x != right_x and top_most_y != bottom_y:
         cropped = img1.crop((left_most_x, top_most_y, right_x, bottom_y))
-        cropped.save("C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/boxfinder/digits/" + filename + ".ppm")
+        cropped.save(
+            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename + ".ppm")
     else:
         print("Image failed:", image)
 

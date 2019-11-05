@@ -5,6 +5,7 @@
 import pandas as pd
 import csv
 import os
+from classification.definitions import SIGN_TO_ID_SWITCHER
 
 # classIds = [0, 1, 2, 3, 4, 5]
 
@@ -25,11 +26,11 @@ import os
 #             writer.writerow([filename, class_id])
 
 
-training_images_path = 'test_data/new_training_images/'
-training_output_path = 'test_data/training_images/'
-test_images_path = 'test_data/test_images/'
-input_csv_path = 'test_data/new_training_data.csv'
-test_output_csv_path = 'test_data/test_file.csv'
+# training_images_path = 'test_data/new_training_images/'
+# training_output_path = 'test_data/training_images/'
+# test_images_path = 'test_data/test_images/'
+input_csv_path = 'test_data/test_file.csv'
+test_output_csv_path = 'test_data/test_file_new.csv'
 
 
 with open(test_output_csv_path, mode='w', newline='') as output_csv_file:
@@ -38,22 +39,9 @@ with open(test_output_csv_path, mode='w', newline='') as output_csv_file:
 
     test = pd.read_csv(input_csv_path, sep=';')
     pic_count = 0
-    for filename, classId in zip(list(test['Filename']), list(test['ClassId'])):
-        file_path = training_images_path + filename
-        if not os.path.exists(file_path):
-            continue
-        pic_count += 1
-        if pic_count % 100 == 0:
-            print('Pic ' + str(pic_count))
-        if pic_count % 5 == 0:
-            # every 5th pic, make it a test pic
-            os.makedirs(test_images_path, exist_ok=True)
-            os.replace(file_path, test_images_path + filename)
-            writer.writerow([filename, classId])
+    for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+        writer.writerow([filename, SIGN_TO_ID_SWITCHER.get(class_id)])
 
-        else:
-            os.makedirs(training_output_path + str(classId) + '/', exist_ok=True)
-            os.replace(file_path, training_output_path + str(classId) + '/' + filename)
 
 
 

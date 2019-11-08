@@ -8,7 +8,9 @@ class ValidatedImage:
         self.is_valid = None
         self.circle_center = None
         self.radius = None
+        self.img_red = None
 
+    #Checks whether the inputted circle fits within the picture
     def __is_inside_image(self, a, b, r):
         height, width, channels = self.img.shape
         a = int(a)
@@ -34,7 +36,26 @@ class ValidatedImage:
             r_max = None
         return a_max, b_max, r_max
 
+    #Extract only the red color pixels from the inputted image
+    def __extract_red(self):
+        image_orig = self.img
+        image_result = image_orig.copy()
+        image_orig = cv2.cvtColor(image_orig, cv2.COLOR_BGR2HSV)
+
+        mask1 = cv2.inRange(image_orig, (0,0,0), (20,255,255))
+        mask2 = cv2.inRange(image_orig, (150,0,0), (180,255,255))
+
+        mask = cv2.bitwise_or(mask1, mask2 )
+        image_result = cv2.bitwise_and(image_result, image_result, mask=mask)
+        self.img_red = image_result
+        return image_result
+
+
     def circle_detection(self):
+        self.circle_detection_with_params(14, 90, 27, 9, 0)
+
+
+    def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
         # Convert to grayscale.
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
@@ -43,8 +64,8 @@ class ValidatedImage:
 
         # Apply Hough transform on the blurred image.
         detected_circles = cv2.HoughCircles(gray_blurred,
-                                            cv2.HOUGH_GRADIENT, 1, 20, param1=50,
-                                            param2=30, minRadius=10, maxRadius=0)
+                                            cv2.HOUGH_GRADIENT, 1, min_distance, param1=param1,
+                                            param2=param2, minRadius=min_radius, maxRadius=max_radius)
         # Draw circles that are detected.
         if detected_circles is not None:
 
@@ -53,7 +74,7 @@ class ValidatedImage:
 
             a, b, r = self.__find_largest_circle_within_image(detected_circles)
 
-            if r is not None and (a,b) is not None:
+            if r is not None and (a, b) is not None:
                 self.is_valid = True
                 self.circle_center = a, b
                 self.radius = r
@@ -69,3 +90,7 @@ class ValidatedImage:
             cv2.circle(self.img, self.circle_center, 1, (0, 0, 255), 3)
 
             cv2.imwrite(dest_path + file_name, self.img)
+
+    def draw_red_picture(self, dest_path, file_name):
+        self.__extract_red()
+        cv2.imwrite(dest_path + file_name, self.img_red)

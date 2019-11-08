@@ -43,55 +43,55 @@ class TestModelAccuracy:
     #         writer = csv.writer(results_file, delimiter=';')
     #         writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
 
-    # models_path = 'classification/models/'
-    # for root, dirs, files in os.walk(models_path):
-    #     basename = os.path.basename(root)
-    #     if 'model' not in basename:
-    #         continue
+    models_path = 'classification/models_new_dataset/'
+    for root, dirs, files in os.walk(models_path):
+        basename = os.path.basename(root)
+        if 'model' not in basename:
+            continue
+
+        number_of_h5_files = 0
+        for file in files:
+            if '.h5' in file:
+                number_of_h5_files += 1
+
+        print(basename + ':')
+        model_name = basename
+        model_path = models_path + model_name + '/'
+        csv_path = model_path + model_name + '.csv'
+        tester = ModelTester(models.get_cnn_model())
+        tester.test_and_output_results(csv_path, model_path, model_name, 0, number_of_h5_files, 0.01,
+                                       'test_data/test_images/', 'test_data/trimmed_test_data(transformed).csv')
+
+
+    # epochs = 10
+    # learning_rate = 0.01
+    # training_dataset_path = 'test_data/training_images/'
+    # test_dataset_path = 'test_data/test_images/'
+    # test_csv_path = 'test_data/trimmed_test_data(transformed).csv'
     #
-    #     number_of_h5_files = 0
-    #     for file in files:
-    #         if '.h5' in file:
-    #             number_of_h5_files += 1
+    # model_switcher = {
+    #     0: [models.get_cnn_model(), 'cnn_model_newdata'],
+    #     1: [models.get_model1(), 'model1_newdata'],
+    #     2: [models.get_model2(), 'model2_newdata'],
+    #     3: [models.get_model3(), 'model3_newdata'],
+    #     4: [models.get_model4(), 'model4_newdata'],
+    #     5: [models.get_model5(), 'model5_newdata']
+    #     # 6: [models.get_model6(), 'model6_newdata'],
+    #     # 7: [models.get_model7(), 'model7_newdata'],
+    #     # 8: [models.get_model8(), 'model8_newdata'],
+    #     # 9: [models.get_model9(), 'model9_newdata'],
+    #     # 10: [models.get_model10(), 'model10_newdata'],
+    # }
     #
-    #     print(basename + ':')
-    #     model_name = basename
-    #     model_path = models_path + model_name + '/'
-    #     csv_path = model_path + model_name + '_pixy_dataset' + '.csv'
-    #     tester = ModelTester(models.get_cnn_model())
-    #     tester.test_and_output_results(csv_path, model_path, model_name, 0, number_of_h5_files, 0.01,
-    #                                    'testdata/Images/', 'testdata/testdata_file.csv')
-
-
-    epochs = 10
-    learning_rate = 0.01
-    training_dataset_path = 'test_data/training_images/'
-    test_dataset_path = 'test_data/test_images/'
-    test_csv_path = 'test_data/test_file.csv'
-
-    model_switcher = {
-        0: [models.get_cnn_model(), 'cnn_model_newdata'],
-        1: [models.get_model1(), 'model1_newdata'],
-        2: [models.get_model2(), 'model2_newdata'],
-        3: [models.get_model3(), 'model3_newdata'],
-        4: [models.get_model4(), 'model4_newdata'],
-        5: [models.get_model5(), 'model5_newdata']
-        # 6: [models.get_model6(), 'model6_newdata'],
-        # 7: [models.get_model7(), 'model7_newdata'],
-        # 8: [models.get_model8(), 'model8_newdata'],
-        # 9: [models.get_model9(), 'model9_newdata'],
-        # 10: [models.get_model10(), 'model10_newdata'],
-    }
-
-    for model_number in range(1, 6):
-        model, model_name = model_switcher.get(model_number)
-        tester = ModelTester(model)
-        tester.train_and_test_model(model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
-                                    test_csv_path)
-        info_file_path = 'classification/models_new_dataset/' + model_name + '/model_info.txt'
-        with open(info_file_path, mode='w', newline='') as info_file:
-            tester.write_model_summary_to_file(info_file)
-
+    # for model_number in range(1, 6):
+    #     model, model_name = model_switcher.get(model_number)
+    #     tester = ModelTester(model)
+    #     tester.train_and_test_model(model_name, epochs, learning_rate, training_dataset_path, test_dataset_path,
+    #                                 test_csv_path)
+    #     info_file_path = 'classification/models_new_dataset/' + model_name + '/model_info.txt'
+    #     with open(info_file_path, mode='w', newline='') as info_file:
+    #         tester.write_model_summary_to_file(info_file)
+    #
 
     # trainer = ModelTrainer('test_data/training_images/', 0.01)
     # trainer.train(models.get_model1())

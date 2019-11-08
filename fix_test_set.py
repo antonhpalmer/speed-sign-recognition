@@ -26,23 +26,37 @@ from classification.definitions import SIGN_TO_ID_SWITCHER
 #             writer.writerow([filename, class_id])
 
 
-# training_images_path = 'test_data/new_training_images/'
+# training_images_path = 'test_data/training_images/'
 # training_output_path = 'test_data/training_images/'
 # test_images_path = 'test_data/test_images/'
-input_csv_path = 'test_data/test_file.csv'
-test_output_csv_path = 'test_data/test_file_new.csv'
+# input_csv_path = 'test_data/test_file.csv'
+# test_output_csv_path = 'test_data/test_file_new.csv'
+#
+#
+# with open(test_output_csv_path, mode='w', newline='') as output_csv_file:
+#     writer = csv.writer(output_csv_file, delimiter=';')
+#     writer.writerow(['Filename', 'ClassId'])
+#
+#     test = pd.read_csv(input_csv_path, sep=';')
+#     pic_count = 0
+#     for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+#         writer.writerow([filename, SIGN_TO_ID_SWITCHER.get(class_id)])
 
 
-with open(test_output_csv_path, mode='w', newline='') as output_csv_file:
-    writer = csv.writer(output_csv_file, delimiter=';')
-    writer.writerow(['Filename', 'ClassId'])
-
-    test = pd.read_csv(input_csv_path, sep=';')
-    pic_count = 0
-    for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-        writer.writerow([filename, SIGN_TO_ID_SWITCHER.get(class_id)])
+training_images_path = 'test_data/training_images/transformed/'
+training_output_path = 'test_data/training_images/'
+# test_images_path = 'test_data/test_images/'
+input_csv_path = 'test_data/trimmed_training_data(transformed).csv'
+# test_output_csv_path = 'test_data/test_file.csv'
 
 
+test = pd.read_csv(input_csv_path, sep=';')
+for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
+    if os.path.exists(training_images_path + filename):
+        output_dir = training_output_path + str(SIGN_TO_ID_SWITCHER.get(class_id)) + '/'
+        os.makedirs(output_dir, exist_ok=True)
+        os.replace(training_images_path + filename,
+                   output_dir + filename)
 
 
 

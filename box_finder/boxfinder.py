@@ -2,6 +2,7 @@ from PIL import Image
 from PIL import ImageEnhance
 from ColorRecognizor import color_recognizor
 from ColorRecognizor import black_validator
+from ColorRecognizor import gray_validator
 from ColorRecognizor import rgb_to_hsv
 import math
 import numpy
@@ -22,63 +23,83 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
     neighbours.append((x, y - 1))
 
     for neighbour in neighbours:
-        (x, y) = neighbour
-        (r, g, b) = pix[x, y]
-        if color_recognizor(r, g, b) == "Red" and (x, y) not in red_pixels:
-            red_pixels.append((x, y))
-            red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
+        try:
+            (x, y) = neighbour
+            (r, g, b) = pix[x, y]
+            if color_recognizor(r, g, b) == "Red" and (x, y) not in red_pixels:
+                red_pixels.append((x, y))
+                red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
+        except IndexError:
+            print("pixel out of bounds")
+
     return red_pixels
 
 
 def red_right(pix, x, y, loop_range):
     red_pixel_list = []
     for i in range(loop_range):
-        (r, g, b) = pix[x, y]
-        if color_recognizor(r, g, b) == "Red":
-            red_pixel_list.append((x, y))
-            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-            if l > 10:
-                return x, y
-        x += 1
+        try:
+            (r, g, b) = pix[x, y]
+            if color_recognizor(r, g, b) == "Red":
+                red_pixel_list.append((x, y))
+                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+                if l > 10:
+                    return x, y
+            red_pixel_list.clear()
+            x += 1
+        except IndexError:
+            print("pixel out of bounds")
     return x, y
 
 
 def red_left(pix, x, y):
     red_pixel_list = []
     for i in range(x - 1):
-        (r, g, b) = pix[x, y]
-        if color_recognizor(r, g, b) == "Red":
-            red_pixel_list.append((x, y))
-            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-            if l > 10:
-                return x, y
-        x -= 1
+        try:
+            (r, g, b) = pix[x, y]
+            if color_recognizor(r, g, b) == "Red":
+                red_pixel_list.append((x, y))
+                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+                if l > 10:
+                    return x, y
+            red_pixel_list.clear()
+            x -= 1
+        except IndexError:
+            print("index out of bounds")
     return x, y
 
 
 def red_up(pix, x, y):
     red_pixel_list = []
     for i in range(y - 1):
-        (r, g, b) = pix[x, y]
-        if color_recognizor(r, g, b) == "Red":
-            red_pixel_list.append((x, y))
-            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-            if l > 10:
-                return x, y
-        y -= 1
+        try:
+            (r, g, b) = pix[x, y]
+            if color_recognizor(r, g, b) == "Red":
+                red_pixel_list.append((x, y))
+                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+                if l > 10:
+                    return x, y
+            red_pixel_list.clear()
+            y -= 1
+        except IndexError:
+            print("index out of bounds")
     return x, y
 
 
 def red_bottom(pix, x, y, loop_range):
     red_pixel_list = []
     for i in range(loop_range):
-        (r, g, b) = pix[x, y]
-        if color_recognizor(r, g, b) == "Red":
-            red_pixel_list.append((x, y))
-            l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-            if l > 10:
-                return x, y
-        y += 1
+        try:
+            (r, g, b) = pix[x, y]
+            if color_recognizor(r, g, b) == "Red":
+                red_pixel_list.append((x, y))
+                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+                if l > 10:
+                    return x, y
+            red_pixel_list.clear()
+            y += 1
+        except IndexError:
+            print("out of bounds")
     return x, y
 
 
@@ -140,7 +161,7 @@ def center_calibration(center_coordinate, width, height, pix):
 
 def is_point_within_circle(center_x, center_y, diameter, pixel_x, pixel_y):
     # pythagoras to determine whether or not a given point is within the red circle.
-    radius = (diameter / 2)
+    radius = int(diameter / 2) - 1
     distance = math.sqrt((pixel_x - center_x) ** 2 + (pixel_y - center_y) ** 2)
     return distance < radius
 
@@ -189,18 +210,6 @@ def crop_image(image, center_coordinate, filename):
     # highest most red pixels y coordinate
     (start_x, start_y) = (left_red_x, up_red_y)
 
-    # Adjusts the start coordinates make sure it starts searching while it's inside the circle, and not outside.
-    loop_range = (bottom_red_y - up_red_y) if (bottom_red_y - up_red_y) < (right_red_x - left_red_x) else (
-            right_red_x - left_red_x)
-    for i in range(loop_range):
-        if is_point_within_circle(x, y, diameter, start_x, start_y):
-            start_x += 1
-            start_y += 1
-            break
-        else:
-            start_x += 1
-            start_y += 1
-
     # Saves the original values
     x_origin = start_x
     y_origin = start_y
@@ -209,7 +218,8 @@ def crop_image(image, center_coordinate, filename):
     # most black pixel
     for i in range(bottom_red_y - y_origin):
         for k in range(right_red_x - x_origin):
-            if black_validator(start_x, start_y, pix_gray) and is_point_within_circle(x, y, diameter, start_x, start_y):
+            r,g,b = pix[start_x,start_y]
+            if black_validator(start_x, start_y, pix_gray) and is_point_within_circle(x, y, diameter, start_x, start_y) and color_recognizor(r,g,b) != "Red":
                 if start_y < top_most_y:
                     (top_most_x, top_most_y) = (start_x, start_y)
 
@@ -228,10 +238,11 @@ def crop_image(image, center_coordinate, filename):
 
     print((right_most_x, right_most_y), (left_most_x, left_most_y), (top_most_x, top_most_y),
           (bottom_most_x, bottom_most_y))
-    l = pix_gray[31, 29]
-    print(l)
     # Marks the x value in which to crop to remove the last digit from the speed sign
     right_x = remove_last_digit(pix_gray, top_most_y, bottom_most_y, right_most_x, left_most_x)
+    print(right_x)
+    if right_x is None:
+        return 0
 
     # Arrayet
     start_x, start_y = (left_most_x, bottom_most_y)
@@ -256,14 +267,14 @@ def crop_image(image, center_coordinate, filename):
         bottom_y = y_origin
 
     # Colors the image black/white without noise
-    perfect_image(pix_gray, left_most_x, top_most_y, bottom_y, right_x)
+    #perfect_image(pix_gray, left_most_x, top_most_y, bottom_y, right_x)
 
     # Crops the image and saves it as a new image, only containing the numbers in the speed sign with 1 extra pixel
     # on each side.
     if right_x != None and left_most_x != right_x and top_most_y != bottom_y:
         cropped = img1.crop((left_most_x, top_most_y, right_x, bottom_y))
         cropped.save(
-            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename + ".ppm")
+            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/test_images_digits/" + filename)
     else:
         print("Image failed:", image)
 

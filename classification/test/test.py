@@ -99,7 +99,7 @@ class ModelTester:
             trainer = ModelTrainer(training_dataset_path, learning_rate)
             trainer.train_model(imgs, labels, self.model, h5_filename, 1)
 
-    def __test_and_output_results(self, csv_path, model_path, model_name, start_epoch, epochs, learning_rate,
+    def test_and_output_results(self, csv_path, model_path, model_name, start_epoch, epochs, learning_rate,
                                   test_dataset_path, test_csv_path):
         # Create csv results file
         if not os.path.exists(csv_path):
@@ -134,7 +134,7 @@ class ModelTester:
         self.__train_model_in_epoch_steps(model_path, model_name, learning_rate, current_epoch, epochs,
                                           training_dataset_path)
 
-        self.__test_and_output_results(csv_path, model_path, model_name, current_epoch, epochs, learning_rate,
+        self.test_and_output_results(csv_path, model_path, model_name, current_epoch, epochs, learning_rate,
                                        test_dataset_path, test_csv_path)
 
 

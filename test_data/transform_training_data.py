@@ -3,9 +3,9 @@ import os
 import csv
 import pandas as pd
 
-image_dir_path = 'training_images/'
-input_csv_path = 'trainingdata_file.csv'
-trimmed_csv_path = 'trimmed_training_data.csv'
+image_dir_path = 'test_images/'
+input_csv_path = 'test_file.csv'
+trimmed_csv_path = 'trimmed_test_data.csv'
 
 with open(trimmed_csv_path, mode='w', newline='') as output_file:
     writer = csv.writer(output_file, delimiter=';')

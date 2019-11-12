@@ -124,13 +124,6 @@ def center_calibration(center_coordinate, width, height, pix):
     return center_x, center_y
 
 
-def is_point_within_circle(center_x, center_y, diameter, pixel_x, pixel_y):
-    # pythagoras to determine whether or not a given point is within the red circle.
-    radius = int(diameter / 2) - 1
-    distance = math.sqrt((pixel_x - center_x) ** 2 + (pixel_y - center_y) ** 2)
-    return distance < radius
-
-
 def enhance_contrast(image):
     im = Image.open(image)
     im2 = ImageEnhance.Contrast(im)
@@ -161,7 +154,7 @@ def crop_image(image, center_coordinate, filename):
     try:
         cropped = img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y))
         cropped.save(
-            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/training_images_gray/8/" + filename)
+            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename)
         could_crop += 1
     except:
         couldnt_crop += 1

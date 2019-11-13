@@ -43,24 +43,24 @@ class TestModelAccuracy:
     #         writer = csv.writer(results_file, delimiter=';')
     #         writer.writerow([str(epoch), str(accuracy), str(learning_rate)])
 
-    models_path = 'classification/models_new_dataset/'
-    for root, dirs, files in os.walk(models_path):
-        basename = os.path.basename(root)
-        if 'model' not in basename:
-            continue
-
-        number_of_h5_files = 0
-        for file in files:
-            if '.h5' in file:
-                number_of_h5_files += 1
-
-        print(basename + ':')
-        model_name = basename
-        model_path = models_path + model_name + '/'
-        csv_path = model_path + model_name + '.csv'
-        tester = ModelTester(models.get_cnn_model())
-        tester.test_and_output_results(csv_path, model_path, model_name, 0, number_of_h5_files, 0.01,
-                                       'test_data/test_images/', 'test_data/trimmed_test_data(transformed).csv')
+    # models_path = 'classification/models_new_dataset/'
+    # for root, dirs, files in os.walk(models_path):
+    #     basename = os.path.basename(root)
+    #     if 'model' not in basename:
+    #         continue
+    #
+    #     number_of_h5_files = 0
+    #     for file in files:
+    #         if '.h5' in file:
+    #             number_of_h5_files += 1
+    #
+    #     print(basename + ':')
+    #     model_name = basename
+    #     model_path = models_path + model_name + '/'
+    #     csv_path = model_path + model_name + '.csv'
+    #     tester = ModelTester(models.get_cnn_model())
+    #     tester.test_and_output_results(csv_path, model_path, model_name, 0, number_of_h5_files, 0.01,
+    #                                    'test_data/test_images/', 'test_data/trimmed_test_data(transformed).csv')
 
 
     # epochs = 10
@@ -96,4 +96,34 @@ class TestModelAccuracy:
     # trainer = ModelTrainer('test_data/training_images/', 0.01)
     # trainer.train(models.get_model1())
     #
+
+
+    # train_dir_path = 'test_data/training_images/'
+    # val_dir_path = 'test_data/val_images/'
+    # trainer = ModelTrainer(train_dir_path, 0.01)
+    # trainer.train(models.get_model4(), train_dir_path, val_dir_path)
+
+    # test_datagen = ImageDataGenerator()
+    # test_iterator = test_datagen.flow_from_directory('test_data/test_images/',
+    #                                                  class_mode='categorical',
+    #                                                  target_size=(IMG_SIZE, IMG_SIZE)
+    #                                                  )
+
+
+    model = load_model('test_data/new_model.h5')
+    # evaluation = model.evaluate(test_iterator)
+    # print(evaluation)
+
+    # datagen = ImageDataGenerator()
+    # iterator = datagen.flow_from_directory('test_data/test_images', target_size=(IMG_SIZE, IMG_SIZE))
+    #
+    # loss = model.evaluate_generator(iterator)
+    # print(loss)
+    tester = ModelTester(model)
+    result = tester.classify_single_image('test_data/test_images/30/grouproom_floor_light4.ppm')
+    print(result)
+    # print(classes[0])
+    # print(definitions.ID_TO_SIGN_SWITCHER.get(np.argmax(classes[0])))
+
+
 

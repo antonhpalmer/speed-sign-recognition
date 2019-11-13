@@ -3,6 +3,7 @@
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
 import numpy as np
+import matplotlib.pyplot as plt
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 from keras.optimizers import SGD
 from keras_preprocessing.image import ImageDataGenerator
@@ -43,24 +44,55 @@ class ModelTrainer:
                              ModelCheckpoint(new_model_path, save_best_only=False)]
                   )
 
-    # create a data generator
-    def train(self, model):
-        data_generator = ImageDataGenerator()
-        training_iterator = data_generator.flow_from_directory(self.images_dir_path,
-                                                               class_mode='categorical',
-                                                               batch_size=BATCH_SIZE,
-                                                               target_size=(IMG_SIZE, IMG_SIZE))
+    def train(self, model, train_dir, val_dir):
+        training_datagen = ImageDataGenerator(
+            rotation_range=15,
+            zoom_range=0.15,
+            width_shift_range=0.15,
+            height_shift_range=0.15,
+            shear_range=0.15,
+            horizontal_flip=False,
+            fill_mode="nearest"
+        )
+        val_datagen = ImageDataGenerator()
+        training_iterator = training_datagen.flow_from_directory(train_dir,
+                                                                 class_mode='categorical',
+                                                                 batch_size=BATCH_SIZE,
+                                                                 target_size=(IMG_SIZE, IMG_SIZE)
+                                                               )
+
+        val_iterator = val_datagen.flow_from_directory(val_dir,
+                                                       class_mode='categorical',
+                                                       batch_size=BATCH_SIZE,
+                                                       target_size=(IMG_SIZE, IMG_SIZE)
+                                                       )
 
         new_model_path = 'test_data/new_model.h5'
-        number_of_training_imgs = 21096
-        steps_per_epoch = number_of_training_imgs / BATCH_SIZE
-
         sgd = SGD(lr=self.learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
         model.compile(loss='categorical_crossentropy',
                       optimizer=sgd,
                       metrics=['accuracy'])
-        model.fit_generator(training_iterator, steps_per_epoch=steps_per_epoch, epochs=10,
-                            callbacks=[LearningRateScheduler(self.__lr_schedule),
-                                       ModelCheckpoint(new_model_path, save_best_only=False)]
-                            )
+        history = model.fit_generator(training_iterator, epochs=20, shuffle=True,
+                                      callbacks=[ModelCheckpoint(new_model_path, save_best_only=True)],
+                                      validation_data=val_iterator
+                                      )
+
+        print(history.history.keys())
+        # Plot training & validation accuracy values
+        plt.plot(history.history['accuracy'])
+        plt.plot(history.history['val_accuracy'])
+        plt.title('Model accuracy training vs validation')
+        plt.ylabel('Accuracy')
+        plt.xlabel('Epoch')
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+
+        # Plot training & validation loss values
+        plt.plot(history.history['loss'])
+        plt.plot(history.history['val_loss'])
+        plt.title('Model loss training vs validation')
+        plt.ylabel('Loss')
+        plt.xlabel('Epoch')
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
 

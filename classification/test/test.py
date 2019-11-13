@@ -31,14 +31,13 @@ class ModelTester:
 
     def __transform_test_image(self, image_path):
         img = image.load_img(image_path, target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
-        img = preprocessing.preprocess_img(img)
+        #img = preprocessing.preprocess_img(img)
         img = np.expand_dims(img, axis=0)
         return img
 
     def classify_single_image(self, image_path):
-        img = self.__transform_test_image(image_path)
-        result = self.model.predict_classes(img)
-        return result[0]
+        classes = self.model.predict(self.__transform_test_image(image_path))
+        return np.argmax(classes[0])
 
     def classify_multiple_images(self, *args):
         imgs = []

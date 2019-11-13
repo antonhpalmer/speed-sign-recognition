@@ -45,7 +45,7 @@ def red_right(pix, x, y, loop_range):
             x += 1
         except IndexError:
             print("pixel out of bounds")
-    return x, y
+    return x
 
 
 def red_left(pix, x, y):
@@ -62,7 +62,7 @@ def red_left(pix, x, y):
             x -= 1
         except IndexError:
             print("index out of bounds")
-    return x, y
+    return x
 
 
 def red_up(pix, x, y):
@@ -79,7 +79,7 @@ def red_up(pix, x, y):
             y -= 1
         except IndexError:
             print("index out of bounds")
-    return x, y
+    return y
 
 
 def red_bottom(pix, x, y, loop_range):
@@ -96,7 +96,7 @@ def red_bottom(pix, x, y, loop_range):
             y += 1
         except IndexError:
             print("out of bounds")
-    return x, y
+    return y
 
 
 def distance_to_right_edge(center_x, width):
@@ -114,10 +114,10 @@ def center_calibration(center_coordinate, width, height, pix):
     right_edge_distance = distance_to_right_edge(x, width)
     bottom_edge_distance = distance_to_bottom_edge(y, height)
 
-    (right_red_x, right_red_y) = red_right(pix, x, y, right_edge_distance)
-    (left_red_x, left_red_y) = red_left(pix, x, y)
-    (up_red_x, up_red_y) = red_up(pix, x, y)
-    (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
+    right_red_x = red_right(pix, x, y, right_edge_distance)
+    left_red_x = red_left(pix, x, y)
+    up_red_y = red_up(pix, x, y)
+    bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
 
     center_x = int((left_red_x + right_red_x) / 2)
     center_y = int((up_red_y + bottom_red_y) / 2)
@@ -126,8 +126,7 @@ def center_calibration(center_coordinate, width, height, pix):
 
 def enhance_contrast(image):
     im = Image.open(image)
-    im2 = ImageEnhance.Contrast(im)
-    im2.enhance(1.5).save("contraster1.ppm")
+    ImageEnhance.Contrast(im).enhance(1.5).save("contraster1.ppm")
 
     return "contraster1.ppm"
 
@@ -144,17 +143,16 @@ def crop_image(image, center_coordinate, filename):
     right_edge_distance = distance_to_right_edge(x, width)
     bottom_edge_distance = distance_to_bottom_edge(y, height)
 
-    (right_red_x, right_red_y) = red_right(pix, x, y, right_edge_distance)
-    (left_red_x, left_red_y) = red_left(pix, x, y)
-    (up_red_x, up_red_y) = red_up(pix, x, y)
-    (bottom_red_x, bottom_red_y) = red_bottom(pix, x, y, bottom_edge_distance)
+    right_red_x = red_right(pix, x, y, right_edge_distance)
+    left_red_x = red_left(pix, x, y)
+    up_red_y = red_up(pix, x, y)
+    bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
 
     couldnt_crop = 0
     could_crop = 0
     try:
         cropped = img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y))
-        cropped.save(
-            "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename)
+        cropped.save("C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename)
         could_crop += 1
     except:
         couldnt_crop += 1

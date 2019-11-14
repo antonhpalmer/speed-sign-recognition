@@ -3,7 +3,7 @@
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
 
 import re
-
+from classification.definitions import SIGN_TO_ID_SWITCHER
 from detection.pixy_serial_communication.serial_exception import SerialInputException
 
 
@@ -32,5 +32,6 @@ def get_serial_data(ser):
 
 
 def change_motor_speed(serial, data):
+    data = SIGN_TO_ID_SWITCHER.get(data)
     byte = str(data).encode('utf-8')
     serial.write(byte)

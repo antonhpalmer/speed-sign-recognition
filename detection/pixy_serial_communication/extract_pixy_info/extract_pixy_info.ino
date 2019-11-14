@@ -8,6 +8,7 @@ EVShield evshield(0x34,0x36);
 
 // This is the main Pixy object 
 Pixy2 pixy;
+int indexOfLastSeenObject = -1;
 
 void setup()
 {
@@ -57,27 +58,33 @@ void loop()
 void waitForSignal(){
   int data;
   while(true){
-    data = Serial.read();
     
+    data = Serial.read();
     if (data == '0')
       runMotor(20);
     else if (data == '1')
       runMotor(30);
     else if (data == '2')
-      runMotor(50);
+      runMotor(40);
     else if (data == '3')
-      runMotor(60);
+      runMotor(50);
     else if (data == '4')
-      runMotor(70);
+      runMotor(60);
     else if (data == '5')
-      runMotor(80);
+      runMotor(70);
     else if (data == '6')
-      runMotor(90);
+      runMotor(80);
     else if (data == '7')
+      runMotor(90);
+    else if (data == '8')
       runMotor(100);
     else if (data == '9')
       break;
   }
+  pixy.ccc.getBlocks();
+  if(pixy.ccc.numBlocks)  
+    indexOfLastSeenObject = pixy.ccc.blocks[0].m_index;
+  
 }
 
 void runMotor (int power)

@@ -5,6 +5,7 @@ from detection.pixy_serial_communication.serial_reader import change_motor_speed
 from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
+from classification.definitions import ID_TO_SIGN_SWITCHER
 
 
 def wakeup_arduino(ser):
@@ -39,6 +40,6 @@ def main(ser, classifier):
             change_motor_speed(ser, new_speed)
 
 
-serial_115200 = serial.Serial('/dev/ttyACM1', 115200)
-classifierModel = ModelTester(load_model("classification/models/cnn_model/cnn_model8.h5"))
+serial_115200 = serial.Serial('/dev/ttyACM0', 115200)
+classifierModel = ModelTester(load_model("new_model.h5"))
 main_print(serial_115200, classifierModel)

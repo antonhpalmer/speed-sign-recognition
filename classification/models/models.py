@@ -58,7 +58,7 @@ def get_model2():
     model = Sequential()
 
     model.add(Conv2D(32, (3, 3), padding='same',
-                     input_shape=(3, definitions.IMG_SIZE, definitions.IMG_SIZE),
+                     input_shape=(definitions.IMG_SIZE, definitions.IMG_SIZE, 3),
                      activation='relu'))
     model.add(Conv2D(64, (3, 3), activation='relu'))
 
@@ -111,3 +111,12 @@ def get_model5():
     model.add(Dense(definitions.NUM_CLASSES, activation='softmax'))
     return model
 
+
+def get_conv2d_layer(num_filters, kernel_size, activation):
+    return Conv2D(num_filters, kernel_size, activation=activation)
+
+def get_pooling_layer():
+    return MaxPooling2D((2, 2))
+
+def get_dropout_layer(rate):
+    return Dropout(rate)

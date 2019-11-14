@@ -19,6 +19,20 @@ class ModelTester:
     def __init__(self, model):
         self.model = model
 
+    def index_to_sign(self, index):
+        index_to_sign_switcher = {
+            0: 100,
+            1: 110,
+            2: 120,
+            3: 30,
+            4: 50,
+            5: 60,
+            6: 70,
+            7: 80,
+            8: 90
+        }
+        return index_to_sign_switcher.get(index)
+
     def __get_label_name(self, class_indexes):
         str = ""
         for i in class_indexes:
@@ -31,20 +45,15 @@ class ModelTester:
 
     def __transform_test_image(self, image_path):
         img = image.load_img(image_path, target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
-        #img = preprocessing.preprocess_img(img)
+        img = preprocessing.preprocess_img(img)
         img = np.expand_dims(img, axis=0)
         return img
 
     def classify_single_image(self, image_path):
-        classes = self.model.predict(self.__transform_test_image(image_path))
-        return np.argmax(classes[0])
-
-    def classify_multiple_images(self, *args):
-        imgs = []
-        for image_path in args:
-            imgs.append(self.__transform_test_image(image_path))
-        result = self.model.predict_classes(imgs)
-        return result
+        img = image.load_img(image_path, target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
+        img = np.expand_dims(img, axis=0)
+        classes = self.model.predict(img)
+        return self.index_to_sign(np.argmax(classes[0]))
 
     def test_using_dataset(self, dataset_path, csv_path):
         test = pd.read_csv(csv_path, sep=';')

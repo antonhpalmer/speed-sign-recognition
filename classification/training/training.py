@@ -1,6 +1,7 @@
 #  Copyright (c) 2019.
 #  AAU, Student project group sw504e19, 2019.
 #  Use this as reference to coding conventions in Python: https://github.com/kengz/python
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,7 +45,7 @@ class ModelTrainer:
                              ModelCheckpoint(new_model_path, save_best_only=False)]
                   )
 
-    def train(self, model, train_dir, val_dir):
+    def train(self, model, train_dir, val_dir, epochs):
         training_datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
@@ -59,7 +60,7 @@ class ModelTrainer:
                                                                  class_mode='categorical',
                                                                  batch_size=BATCH_SIZE,
                                                                  target_size=(IMG_SIZE, IMG_SIZE)
-                                                               )
+                                                                 )
 
         val_iterator = val_datagen.flow_from_directory(val_dir,
                                                        class_mode='categorical',
@@ -67,32 +68,33 @@ class ModelTrainer:
                                                        target_size=(IMG_SIZE, IMG_SIZE)
                                                        )
 
+        # TODO: Remove ModelCheckPoint as we dont want to save the model
         new_model_path = 'test_data/new_model.h5'
-        sgd = SGD(lr=self.learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
-        model.compile(loss='categorical_crossentropy',
-                      optimizer=sgd,
-                      metrics=['accuracy'])
-        history = model.fit_generator(training_iterator, epochs=20, shuffle=True,
+        history = model.fit_generator(training_iterator, epochs=epochs, shuffle=True,
                                       callbacks=[ModelCheckpoint(new_model_path, save_best_only=True)],
                                       validation_data=val_iterator
                                       )
 
+        return history
+
+    def plot_acc_and_loss(self, history, accuracy_plot_path, loss_plot_path):
         print(history.history.keys())
         # Plot training & validation accuracy values
         plt.plot(history.history['accuracy'])
         plt.plot(history.history['val_accuracy'])
-        plt.title('Model accuracy training vs validation')
+        plt.title('Model accuracy')
         plt.ylabel('Accuracy')
         plt.xlabel('Epoch')
         plt.legend(['Train', 'Val'], loc='upper left')
-        plt.show()
+        plt.savefig(accuracy_plot_path, bbox_inches='tight')
+        plt.clf()
 
         # Plot training & validation loss values
         plt.plot(history.history['loss'])
         plt.plot(history.history['val_loss'])
-        plt.title('Model loss training vs validation')
+        plt.title('Model loss')
         plt.ylabel('Loss')
         plt.xlabel('Epoch')
         plt.legend(['Train', 'Val'], loc='upper left')
-        plt.show()
-
+        plt.savefig(loss_plot_path, bbox_inches='tight')
+        plt.clf()

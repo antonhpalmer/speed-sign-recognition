@@ -1,33 +1,5 @@
-def color_recognizor(r, g, b):
+def red_validator(r, g, b):
     h, s, v = rgb_to_hsv(r, g, b)
-
-    if red_validator(h, s, v) is True:
-        return "Red"
-    else:
-        return "Black"
-
-
-def black_validator(x, y, pix_gray):
-    l = pix_gray[x, y]
-    bound = 80
-    if l < bound:
-        return True
-    else:
-        return False
-
-
-def gray_validator(x, y, pix_gray):
-    l = pix_gray[x, y]
-    lower_bound = 61
-    upper_bound = 150
-
-    if is_value_between(l, lower_bound, upper_bound):
-        return True
-    else:
-        return False
-
-
-def red_validator(h, s, v):
     red1_lower = [0, 50, 20]
     red1_upper = [10, 100, 100]
 

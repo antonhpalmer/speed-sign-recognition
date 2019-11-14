@@ -1,7 +1,7 @@
 from PIL import Image
 from PIL import ImageEnhance
-from ColorRecognizor import color_recognizor
-import math
+from ColorRecognizor import red_validator
+from otsu import apply_otsu_algorithm
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):
@@ -22,7 +22,7 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
         try:
             (x, y) = neighbour
             (r, g, b) = pix[x, y]
-            if color_recognizor(r, g, b) == "Red" and (x, y) not in red_pixels:
+            if red_validator(r, g, b) is True and (x, y) not in red_pixels:
                 red_pixels.append((x, y))
                 red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
         except IndexError:
@@ -36,11 +36,11 @@ def red_right(pix, x, y, loop_range):
     for i in range(loop_range):
         try:
             (r, g, b) = pix[x, y]
-            if color_recognizor(r, g, b) == "Red":
+            if red_validator(r, g, b) is True:
                 red_pixel_list.append((x, y))
                 l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
                 if l > 10:
-                    return x, y
+                    return x
             red_pixel_list.clear()
             x += 1
         except IndexError:
@@ -53,11 +53,11 @@ def red_left(pix, x, y):
     for i in range(x - 1):
         try:
             (r, g, b) = pix[x, y]
-            if color_recognizor(r, g, b) == "Red":
+            if red_validator(r, g, b) is True:
                 red_pixel_list.append((x, y))
                 l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
                 if l > 10:
-                    return x, y
+                    return x
             red_pixel_list.clear()
             x -= 1
         except IndexError:
@@ -70,11 +70,11 @@ def red_up(pix, x, y):
     for i in range(y - 1):
         try:
             (r, g, b) = pix[x, y]
-            if color_recognizor(r, g, b) == "Red":
+            if red_validator(r, g, b) is True:
                 red_pixel_list.append((x, y))
                 l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
                 if l > 10:
-                    return x, y
+                    return y
             red_pixel_list.clear()
             y -= 1
         except IndexError:
@@ -87,11 +87,11 @@ def red_bottom(pix, x, y, loop_range):
     for i in range(loop_range):
         try:
             (r, g, b) = pix[x, y]
-            if color_recognizor(r, g, b) == "Red":
+            if red_validator(r, g, b) is True:
                 red_pixel_list.append((x, y))
                 l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
                 if l > 10:
-                    return x, y
+                    return y
             red_pixel_list.clear()
             y += 1
         except IndexError:
@@ -131,7 +131,7 @@ def enhance_contrast(image):
     return "contraster1.ppm"
 
 
-def crop_image(image, center_coordinate, filename):
+def crop_image(image, center_coordinate):
     im = Image.open(enhance_contrast(image))
     pix = im.load()
 
@@ -148,13 +148,9 @@ def crop_image(image, center_coordinate, filename):
     up_red_y = red_up(pix, x, y)
     bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
 
-    couldnt_crop = 0
-    could_crop = 0
     try:
-        cropped = img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y))
-        cropped.save("C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/box_finder/digits/" + filename)
-        could_crop += 1
+        img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y)).save("cropped.ppm")
+        return apply_otsu_algorithm("cropped.ppm")
     except:
-        couldnt_crop += 1
-
-    return could_crop, couldnt_crop
+        print("fejl")
+        return None

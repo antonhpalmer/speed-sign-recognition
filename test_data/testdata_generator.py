@@ -10,10 +10,14 @@ def wakeup_arduino(ser):
     ser.write(b'9')
 
 
-ser = serial.Serial('/dev/ttyACM1', 115200)
+ser = serial.Serial('/dev/ttyACM0', 115200)
 
-with open('trainingdata_file.csv', mode='a+') as csv_file:
+with open('new_testdata_file.csv', mode='a+') as csv_file:
     file_writer = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+    # print("How many images do you want of each sign type: ")
+    # amt_of_each_sign = int(input())
+    amt_of_each_sign = 20
 
     print("Specify first sign type "
           "(30, 50, 60, 70, 80, 90, 100, 110, 120): ")
@@ -30,16 +34,19 @@ with open('trainingdata_file.csv', mode='a+') as csv_file:
         wakeup_arduino(ser)
         test_img = detect(ser)
 
-        file_name = current_environment + str(i) + ".ppm"
-        test_img.save("training_images/" + file_name)
+        validated, coordinates = validate(test_img)
 
-        file_writer.writerow([file_name, str(sign_type)])
-        i += 1
+        if validated:
+            file_name = current_environment + str(i) + ".ppm"
+            test_img.save("new_test_images/" + file_name)
 
-        print("current frame: ", i)
+            file_writer.writerow([file_name, str(sign_type)])
+            i += 1
 
-        if i % 250 == 0:
-            print("CHANGE SIGN")
-            print("Specify next sign type "
-                  "(30, 50, 60, 70, 80, 90, 100, 110, 120): ")
-            sign_type = int(input())
+            print("current frame: ", i)
+
+            if i % amt_of_each_sign == 0:
+                print("CHANGE SIGN")
+                print("Specify next sign type "
+                      "(30, 50, 60, 70, 80, 90, 100, 110, 120): ")
+                sign_type = int(input())

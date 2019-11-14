@@ -2,10 +2,7 @@ from PIL import Image
 from PIL import ImageEnhance
 from ColorRecognizor import color_recognizor
 from ColorRecognizor import black_validator
-from ColorRecognizor import gray_validator
-from ColorRecognizor import rgb_to_hsv
 import math
-import numpy
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):
@@ -273,6 +270,7 @@ def crop_image(image, center_coordinate, filename):
     # on each side.
     if right_x != None and left_most_x != right_x and top_most_y != bottom_y:
         cropped = img1.crop((left_most_x, top_most_y, right_x, bottom_y))
+
         cropped.save(
             "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/test_images_digits/" + filename)
     else:

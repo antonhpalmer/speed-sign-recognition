@@ -126,13 +126,12 @@ def center_calibration(center_coordinate, width, height, pix):
 
 def enhance_contrast(image):
     im = Image.open(image)
-    ImageEnhance.Contrast(im).enhance(1.5).save("contraster1.ppm")
-
-    return "contraster1.ppm"
+    ImageEnhance.Contrast(im).enhance(1.5)
+    return im
 
 
 def crop_image(image, center_coordinate):
-    im = Image.open(enhance_contrast(image))
+    im = enhance_contrast(image)
     pix = im.load()
 
     img1 = im.convert("L")

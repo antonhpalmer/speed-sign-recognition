@@ -77,12 +77,13 @@ class TestModelAccuracy:
             acc_plot_path = os.path.join(model_dir_path, model.name + '_acc.png')
             loss_plot_path = os.path.join(model_dir_path, model.name + '_loss.png')
             summary_file_path = os.path.join(model_dir_path, model.name + '_info.txt')
+            model_save_path = os.path.join(model_dir_path, model.name + '.h5')
 
             model.compile(optimizer='adam',
                           loss='categorical_crossentropy',
                           metrics=['accuracy'])
             trainer = ModelTrainer(model)
-            history = trainer.train(train_dir, val_dir, 80)
+            history = trainer.train(train_dir, val_dir, model_save_path, 80)
 
             trainer.plot_acc_and_loss(history, acc_plot_path, loss_plot_path)
 
@@ -100,7 +101,7 @@ class TestModelAccuracy:
 
 
 
-all_models_dir = 'classification/systematic_model_test/'
+all_models_dir = 'classification/systematic_model_test_w_saved_models/'
 os.makedirs(all_models_dir, exist_ok=True)
 train_dir_path = 'test_data/training_images/'
 val_dir_path = 'test_data/val_images/'

@@ -17,7 +17,7 @@ class ModelTrainer:
     def __init__(self, compiled_model):
         self.compiled_model = compiled_model
 
-    def train(self, train_dir, val_dir, epochs):
+    def train(self, train_dir, val_dir, model_save_path, epochs):
         training_datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
@@ -41,7 +41,9 @@ class ModelTrainer:
                                                        )
 
         history = self.compiled_model.fit_generator(training_iterator, epochs=epochs, shuffle=True,
-                                                    validation_data=val_iterator)
+                                                    validation_data=val_iterator,
+                                                    callbacks=[ModelCheckpoint(model_save_path, save_best_only=True,
+                                                                               monitor='val_accuracy', mode='max')])
         return history
 
     def plot_acc_and_loss(self, history, accuracy_plot_path, loss_plot_path):

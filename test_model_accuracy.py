@@ -81,7 +81,7 @@ class TestModelAccuracy:
                           loss='categorical_crossentropy',
                           metrics=['accuracy'])
             trainer = ModelTrainer(model)
-            history = trainer.train(train_dir, val_dir, 20)
+            history = trainer.train(train_dir, val_dir, 80)
 
             trainer.plot_acc_and_loss(history, acc_plot_path, loss_plot_path)
 

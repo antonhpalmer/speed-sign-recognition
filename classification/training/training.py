@@ -45,7 +45,6 @@ class ModelTrainer:
         return history
 
     def plot_acc_and_loss(self, history, accuracy_plot_path, loss_plot_path):
-        os.makedirs(accuracy_plot_path, exist_ok=True)
         # Plot training & validation accuracy values
         plt.plot(history.history['accuracy'])
         plt.plot(history.history['val_accuracy'])
@@ -56,7 +55,6 @@ class ModelTrainer:
         plt.savefig(accuracy_plot_path, bbox_inches='tight')
         plt.clf()
 
-        os.makedirs(loss_plot_path, exist_ok=True)
         # Plot training & validation loss values
         plt.plot(history.history['loss'])
         plt.plot(history.history['val_loss'])

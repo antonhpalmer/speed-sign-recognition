@@ -51,7 +51,6 @@ class TestModelAccuracy:
         model = Sequential()
         for i in (32, 64, 128, 256):
             model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-            print(model.layers)
             self.add_conv_and_pooling(model, i, i == 32)
             models.append(model)
 

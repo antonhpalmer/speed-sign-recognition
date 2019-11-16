@@ -71,6 +71,7 @@ class TestModelAccuracy:
 
 
         for model in models:
+            print('NOW TRAINING: ' + model.name)
             model_dir_path = os.path.join(all_models_dir, model.name)
             os.makedirs(model_dir_path, exist_ok=True)
             acc_plot_path = os.path.join(model_dir_path, model.name + '_acc.png')

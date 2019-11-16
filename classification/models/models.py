@@ -5,7 +5,7 @@
 from keras import backend as K
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
-from keras.layers.pooling import MaxPooling2D, AveragePooling2D
+from keras.layers.pooling import MaxPooling2D
 from keras.models import Sequential
 
 from classification import definitions

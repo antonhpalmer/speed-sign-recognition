@@ -7,24 +7,87 @@ from skimage import io
 from classification import preprocessing, definitions
 from classification.models import models
 from classification.test.test import ModelTester
+from keras.models import Sequential
 from classification.training.training import ModelTrainer
 from keras.preprocessing import image
 import numpy as np
 from keras.optimizers import SGD
 from keras_preprocessing.image import ImageDataGenerator
+from keras.layers.convolutional import Conv2D
+from keras.layers.core import Dense, Dropout, Flatten
+from keras.layers.pooling import MaxPooling2D
+from classification.definitions import IMG_SIZE, BATCH_SIZE, NUM_CLASSES
 
 class TestModelAccuracy:
+    def add_conv_and_pooling(self, model, filters, add_input_shape):
+        if add_input_shape:
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+        else:
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2), data_format='channels_last'))
+
+    def add_conv_and_pooling_w_dropout(self, model, filters, add_input_shape):
+        self.add_conv_and_pooling(model, filters, add_input_shape)
+        model.add(Dropout(0.2))
+
+    def add_two_conv_and_pooling_w_dropout(self, model, filters, add_input_shape):
+        if add_input_shape:
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+        else:
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
+        model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2), data_format='channels_last'))
+        model.add(Dropout(0.2))
+
+    def add_last_layers(self, model):
+        model.add(Flatten())
+        model.add(Dense(256, activation='relu'))
+        model.add(Dense(definitions.NUM_CLASSES, activation='softmax'))
+
     def create_systematic_test(self, all_models_dir, train_dir, val_dir, test_dir):
-        i = 0
-        for optimizer in ('sgd', 'adam', 'RMSprop', 'Adamax'):
-            for num_conv_layers in range(1, 9):
-                for num_pooling_layers in range(0, num_conv_layers):
-                    for num_dropout_layers in range(0, num_conv_layers):
-                        i += 1
+        models = []
+        param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+            print(model.layers)
+            self.add_conv_and_pooling(model, i, i == 32)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+            self.add_conv_and_pooling_w_dropout(model, i, i == 32)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+            self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
+            models.append(model)
+
+        for model in models:
+            self.add_last_layers(model)
 
 
-                        #models.get_conv2d_layer()
-        print(i)
+        for model in models:
+            model_dir_path = os.path.join(all_models_dir, model.name)
+            os.makedirs(model_dir_path, exist_ok=True)
+            acc_plot_path = os.path.join(model_dir_path, model.name + '_acc.png')
+            loss_plot_path = os.path.join(model_dir_path, model.name + '_loss.png')
+            summary_file_path = os.path.join(model_dir_path, model.name + '_info.txt')
+
+            model.compile(optimizer='adam',
+                          loss='categorical_crossentropy',
+                          metrics=['accuracy'])
+            trainer = ModelTrainer(model)
+            history = trainer.train(train_dir, val_dir, 20)
+
+            trainer.plot_acc_and_loss(history, acc_plot_path, loss_plot_path)
+
+            with open(summary_file_path, mode='w', newline='') as summary_file:
+                trainer.write_model_summary_to_file(summary_file)
 
 
 
@@ -35,12 +98,15 @@ class TestModelAccuracy:
 
 
 
-    all_models_dir = 'classification/systematic_model_test/'
-    train_dir_path = 'test_data/training_images/'
-    val_dir_path = 'test_data/val_images/'
-    test_dir_path = 'test_data/test_images/'
 
-    create_systematic_test(None, all_models_dir, train_dir_path, val_dir_path, test_dir_path)
+
+all_models_dir = 'classification/systematic_model_test/'
+os.makedirs(all_models_dir, exist_ok=True)
+train_dir_path = 'test_data/training_images/'
+val_dir_path = 'test_data/val_images/'
+test_dir_path = 'test_data/test_images/'
+test = TestModelAccuracy()
+test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path, test_dir_path)
 
 
 
@@ -68,6 +134,9 @@ class TestModelAccuracy:
     #                                             target_size=(definitions.IMG_SIZE, definitions.IMG_SIZE))
     # evaluation = model.evaluate(iterator)
     # print(evaluation)
+    # tester = ModelTester(model)
+    # with open('test_data/new_model_summary.txt', mode='w', newline='') as file:
+    #     tester.write_model_summary_to_file(file)
 
     # datagen = ImageDataGenerator()
     # iterator = datagen.flow_from_directory('test_data/test_images', target_size=(IMG_SIZE, IMG_SIZE))

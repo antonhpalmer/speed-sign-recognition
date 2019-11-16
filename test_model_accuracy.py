@@ -90,6 +90,28 @@ class TestModelAccuracy:
             with open(summary_file_path, mode='w', newline='') as summary_file:
                 trainer.write_model_summary_to_file(summary_file)
 
+    def evaluate_all_models_in_dir(self, models_path):
+        test_images_dir_path = 'test_data/test_images/'
+        new_test_images_dir_path = 'test_data/new_test_images_separated'
+        models = []
+        for root, dirs, files in os.walk(models_path):
+            for file in files:
+                if '.h5' in file:
+                    models.append(load_model(os.path.join(root, file)))
+
+        for model in models:
+            tester = ModelTester(model)
+            test_images_eval = tester.evaluate_model(test_images_dir_path)
+            print(test_images_eval)
+            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
+            print(new_test_images_eval)
+
+            os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
+            evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
+            with open(evaluation_file_path, mode='w') as evaluation_file:
+                evaluation_file.write('Evaluation_dataset;Accuracy\n')
+                evaluation_file.write('test_images;' + str(test_images_eval[1]) + '\n')
+                evaluation_file.write('new_test_images_separated;' + str(new_test_images_eval[1]) + '\n')
 
 
 
@@ -100,15 +122,21 @@ class TestModelAccuracy:
 
 
 
+# all_models_dir = 'classification/systematic_model_test_w_saved_models/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images/'
+# val_dir_path = 'test_data/val_images/'
+# test = TestModelAccuracy()
+# test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path, test_dir_path)
 
-all_models_dir = 'classification/systematic_model_test_w_saved_models/'
-os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images/'
-val_dir_path = 'test_data/val_images/'
-test_dir_path = 'test_data/test_images/'
+
+
+
+
+
+models_path = 'C:/Users/anton/Desktop/P5/'
 test = TestModelAccuracy()
-test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path, test_dir_path)
-
+test.evaluate_all_models_in_dir(models_path)
 
 
 

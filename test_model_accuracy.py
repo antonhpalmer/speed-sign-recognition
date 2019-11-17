@@ -48,17 +48,17 @@ class TestModelAccuracy:
         models = []
         param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
 
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-        #     self.add_conv_and_pooling(model, i, i == 32)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-        #     self.add_conv_and_pooling_w_dropout(model, i, i == 32)
-        #     models.append(model)
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+            self.add_conv_and_pooling(model, i, i == 32)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+            self.add_conv_and_pooling_w_dropout(model, i, i == 32)
+            models.append(model)
 
         model = Sequential()
         for i in (32, 64, 128, 256):
@@ -122,21 +122,21 @@ class TestModelAccuracy:
 
 
 
-all_models_dir = 'classification/systematic_model_test_w_saved_models/'
-os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images/'
-val_dir_path = 'test_data/val_images/'
-test = TestModelAccuracy()
-test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
-
-
-
-
-
-#
-# models_path = 'C:/Users/anton/Desktop/P5/'
+# all_models_dir = 'classification/systematic_model_test_w_saved_models/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images/'
+# val_dir_path = 'test_data/val_images/'
 # test = TestModelAccuracy()
-# test.evaluate_all_models_in_dir(models_path)
+# test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
+
+
+
+
+
+
+models_path = 'classification/systematic_model_test_w_saved_models/'
+test = TestModelAccuracy()
+test.evaluate_all_models_in_dir(models_path)
 
 
 

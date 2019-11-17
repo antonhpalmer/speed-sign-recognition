@@ -61,10 +61,10 @@ class TestModelAccuracy:
         #     models.append(model)
 
         model = Sequential()
-        for i in (256):
-            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-            self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
-            models.append(model)
+        i = 256
+        model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+        self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
+        models.append(model)
 
         for model in models:
             self.add_last_layers(model)

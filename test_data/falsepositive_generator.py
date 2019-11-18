@@ -1,5 +1,4 @@
-import csv
-
+import os
 import serial
 
 from detection.detect import detect
@@ -32,19 +31,18 @@ while True:
     wakeup_arduino(ser)
     test_img = detect(ser)
 
-    validated, coordinates = validate(test_img)
+    file_name = current_environment + str(i) + ".ppm"
+    dir_name = "new_false_positives/" + sign_type + "/"
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)
+    test_img.save(dir_name + file_name)
+    i += 1
+    print("current frame: ", i)
 
-    if validated:
-        file_name = current_environment + "_" + sign_type + str(i) + ".ppm"
-        test_img.save("new_false_positives/" + file_name)
-
-        i += 1
-
-        print("current frame: ", i)
-
-        if i % amt_of_each_sign == 0:
-            print("CHANGE SIGN")
-            print("Specify first sign type "
-                  "(triangle, stop etc.): ")
-            sign_type = str(input())
+    if i % amt_of_each_sign == 0:
+        print("CHANGE SIGN")
+        print("Specify the next sign type "
+              "(triangle, stop etc.): ")
+        sign_type = str(input())
+        i = 0
 

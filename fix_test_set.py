@@ -43,8 +43,8 @@ from classification.definitions import SIGN_TO_ID_SWITCHER
 #         writer.writerow([filename, SIGN_TO_ID_SWITCHER.get(class_id)])
 
 
-training_images_path = 'test_data/new_test_images/'
-training_output_path = 'test_data/new_test_images_separated/'
+input_images_path = 'test_data/new_test_images/'
+output_path = 'test_data/new_test_images_separated/'
 # test_images_path = 'test_data/test_images/'
 input_csv_path = 'test_data/new_testdata_file.csv'
 # test_output_csv_path = 'test_data/test_file.csv'
@@ -52,10 +52,10 @@ input_csv_path = 'test_data/new_testdata_file.csv'
 
 test = pd.read_csv(input_csv_path, sep=';')
 for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    if os.path.exists(training_images_path + filename):
-        output_dir = training_output_path + str(class_id) + '/'
+    if os.path.exists(input_images_path + filename):
+        output_dir = output_path + str(class_id) + '/'
         os.makedirs(output_dir, exist_ok=True)
-        os.replace(training_images_path + filename,
+        os.replace(input_images_path + filename,
                    output_dir + filename)
 
 

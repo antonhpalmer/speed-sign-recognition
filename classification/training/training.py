@@ -5,7 +5,7 @@ import os
 
 import numpy as np
 import matplotlib.pyplot as plt
-from keras.callbacks import LearningRateScheduler, ModelCheckpoint
+from keras.callbacks import LearningRateScheduler, ModelCheckpoint, EarlyStopping
 from keras.optimizers import SGD
 from keras_preprocessing.image import ImageDataGenerator
 
@@ -43,7 +43,8 @@ class ModelTrainer:
         history = self.compiled_model.fit_generator(training_iterator, epochs=epochs, shuffle=True,
                                                     validation_data=val_iterator,
                                                     callbacks=[ModelCheckpoint(model_save_path, save_best_only=True,
-                                                                               monitor='val_accuracy', mode='max')])
+                                                                               monitor='val_accuracy', verbose=1),
+                                                               EarlyStopping(monitor='val_accuracy', patience=20, verbose=1)])
         return history
 
     def plot_acc_and_loss(self, history, accuracy_plot_path, loss_plot_path):

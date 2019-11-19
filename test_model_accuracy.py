@@ -69,7 +69,6 @@ class TestModelAccuracy:
         for model in models:
             self.add_last_layers(model)
 
-
         for model in models:
             print('NOW TRAINING: ' + model.name)
             model_dir_path = os.path.join(all_models_dir, model.name)
@@ -83,7 +82,7 @@ class TestModelAccuracy:
                           loss='categorical_crossentropy',
                           metrics=['accuracy'])
             trainer = ModelTrainer(model)
-            history = trainer.train(train_dir, val_dir, model_save_path, 80)
+            history = trainer.train(train_dir, val_dir, model_save_path, 500)
 
             trainer.plot_acc_and_loss(history, acc_plot_path, loss_plot_path)
 
@@ -122,19 +121,19 @@ class TestModelAccuracy:
 
 
 
-# all_models_dir = 'classification/systematic_model_test_w_saved_models/'
-# os.makedirs(all_models_dir, exist_ok=True)
-# train_dir_path = 'test_data/training_images/'
-# val_dir_path = 'test_data/val_images/'
-# test = TestModelAccuracy()
-# test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
+all_models_dir = 'classification/systematic_model_test_earlystopping/'
+os.makedirs(all_models_dir, exist_ok=True)
+train_dir_path = 'test_data/training_images/'
+val_dir_path = 'test_data/val_images/'
+test = TestModelAccuracy()
+test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
 
 
 
 
 
 
-models_path = 'classification/systematic_model_test_w_saved_models/'
+models_path = 'classification/systematic_model_test_earlystopping/'
 test = TestModelAccuracy()
 test.evaluate_all_models_in_dir(models_path)
 

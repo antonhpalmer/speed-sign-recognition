@@ -25,7 +25,8 @@ current_environment = input()
 
 print("Specify the first image number "
       "(usually 0, unless appending to existing environment): ")
-i = int(input())
+intial = int(input())
+i = intial
 
 while True:
     wakeup_arduino(ser)
@@ -44,5 +45,5 @@ while True:
         print("Specify the next sign type "
               "(triangle, stop etc.): ")
         sign_type = str(input())
-        i = 0
+        i = intial
 

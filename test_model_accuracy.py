@@ -72,13 +72,13 @@ class TestModelAccuracy:
         self.add_two_conv_and_pooling_w_dropout(model1, 128, False)
         self.add_two_conv_and_pooling_w_dropout(model1, 256, False)
         model1.add(Flatten())
-        model1.add(Dense(256, activation='relu'))
+        model1.add(Dense(512, activation='relu'))
         model1.add(Dense(definitions.NUM_CLASSES, activation='softmax'))
         models.append(model1)
 
 
-        for model in models:
-            self.add_last_layers(model)
+        # for model in models:
+        #     self.add_last_layers(model)
 
         for model in models:
             print('NOW TRAINING: ' + model.name)

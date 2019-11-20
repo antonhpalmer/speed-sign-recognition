@@ -68,9 +68,9 @@ class TestModelAccuracy:
 
         model1 = Sequential(name='model_doubleconv_' + str(256) + param_str + '_dense=512')
         self.add_two_conv_and_pooling_w_dropout(model1, 32, True)
-        self.add_two_conv_and_pooling_w_dropout(model1, 64, True)
-        self.add_two_conv_and_pooling_w_dropout(model1, 128, True)
-        self.add_two_conv_and_pooling_w_dropout(model1, 256, True)
+        self.add_two_conv_and_pooling_w_dropout(model1, 64, False)
+        self.add_two_conv_and_pooling_w_dropout(model1, 128, False)
+        self.add_two_conv_and_pooling_w_dropout(model1, 256, False)
         model1.add(Flatten())
         model1.add(Dense(512, activation='relu'))
         model1.add(Dense(definitions.NUM_CLASSES, activation='softmax'))

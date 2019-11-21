@@ -1,7 +1,7 @@
 from PIL import Image
 from PIL import ImageEnhance
-from ColorRecognizor import red_validator
-from otsu import apply_otsu_algorithm
+from box_finder.ColorRecognizor import red_validator
+from box_finder.otsu import apply_otsu_algorithm
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):

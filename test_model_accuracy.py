@@ -48,26 +48,37 @@ class TestModelAccuracy:
         models = []
         param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
 
-        model = Sequential()
-        for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-            self.add_conv_and_pooling(model, i, i == 32)
-            models.append(model)
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+        #     self.add_conv_and_pooling(model, i, i == 32)
+        #     models.append(model)
+        #
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+        #     self.add_conv_and_pooling_w_dropout(model, i, i == 32)
+        #     models.append(model)
+        #
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+        #     self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
+        #     models.append(model)
 
-        model = Sequential()
-        for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-            self.add_conv_and_pooling_w_dropout(model, i, i == 32)
-            models.append(model)
+        model1 = Sequential(name='model_doubleconv_' + str(256) + param_str + '_dense=512')
+        self.add_two_conv_and_pooling_w_dropout(model1, 32, True)
+        self.add_two_conv_and_pooling_w_dropout(model1, 64, False)
+        self.add_two_conv_and_pooling_w_dropout(model1, 128, False)
+        self.add_two_conv_and_pooling_w_dropout(model1, 256, False)
+        model1.add(Flatten())
+        model1.add(Dense(512, activation='relu'))
+        model1.add(Dense(definitions.NUM_CLASSES, activation='softmax'))
+        models.append(model1)
 
-        model = Sequential()
-        for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-            self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
-            models.append(model)
 
-        for model in models:
-            self.add_last_layers(model)
+        # for model in models:
+        #     self.add_last_layers(model)
 
         for model in models:
             print('NOW TRAINING: ' + model.name)

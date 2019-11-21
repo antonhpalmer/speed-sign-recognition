@@ -21,7 +21,7 @@ from classification.definitions import IMG_SIZE, BATCH_SIZE, NUM_CLASSES
 class TestModelAccuracy:
     def add_conv_and_pooling(self, model, filters, add_input_shape):
         if add_input_shape:
-            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 1)))
         else:
             model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2), data_format='channels_last'))
@@ -32,7 +32,7 @@ class TestModelAccuracy:
 
     def add_two_conv_and_pooling_w_dropout(self, model, filters, add_input_shape):
         if add_input_shape:
-            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+            model.add(Conv2D(filters, (3, 3), padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 1)))
         else:
             model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
         model.add(Conv2D(filters, (3, 3), padding='same', activation='relu'))
@@ -48,37 +48,26 @@ class TestModelAccuracy:
         models = []
         param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
 
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-        #     self.add_conv_and_pooling(model, i, i == 32)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-        #     self.add_conv_and_pooling_w_dropout(model, i, i == 32)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-        #     self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
-        #     models.append(model)
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+            self.add_conv_and_pooling(model, i, i == 32)
+            models.append(model)
 
-        model1 = Sequential(name='model_doubleconv_' + str(256) + param_str + '_dense=512')
-        self.add_two_conv_and_pooling_w_dropout(model1, 32, True)
-        self.add_two_conv_and_pooling_w_dropout(model1, 64, False)
-        self.add_two_conv_and_pooling_w_dropout(model1, 128, False)
-        self.add_two_conv_and_pooling_w_dropout(model1, 256, False)
-        model1.add(Flatten())
-        model1.add(Dense(512, activation='relu'))
-        model1.add(Dense(definitions.NUM_CLASSES, activation='softmax'))
-        models.append(model1)
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+            self.add_conv_and_pooling_w_dropout(model, i, i == 32)
+            models.append(model)
 
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+            self.add_two_conv_and_pooling_w_dropout(model, i, i == 32)
+            models.append(model)
 
-        # for model in models:
-        #     self.add_last_layers(model)
+        for model in models:
+            self.add_last_layers(model)
 
         for model in models:
             print('NOW TRAINING: ' + model.name)
@@ -101,8 +90,8 @@ class TestModelAccuracy:
                 trainer.write_model_summary_to_file(summary_file)
 
     def evaluate_all_models_in_dir(self, models_path):
-        test_images_dir_path = 'test_data/test_images/'
-        new_test_images_dir_path = 'test_data/new_test_images_separated'
+        test_images_dir_path = 'test_data/test_images_binary/'
+        # new_test_images_dir_path = 'test_data/new_test_images_separated'
         models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
@@ -113,15 +102,15 @@ class TestModelAccuracy:
             tester = ModelTester(model)
             test_images_eval = tester.evaluate_model(test_images_dir_path)
             print(test_images_eval)
-            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
-            print(new_test_images_eval)
+            # new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
+            # print(new_test_images_eval)
 
             os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
             evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
             with open(evaluation_file_path, mode='w') as evaluation_file:
                 evaluation_file.write('Evaluation_dataset;Accuracy\n')
-                evaluation_file.write('test_images;' + str(test_images_eval[1]) + '\n')
-                evaluation_file.write('new_test_images_separated;' + str(new_test_images_eval[1]) + '\n')
+                evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
+                # evaluation_file.write('new_test_images_separated;' + str(new_test_images_eval[1]) + '\n')
 
 
 
@@ -132,10 +121,10 @@ class TestModelAccuracy:
 
 
 
-all_models_dir = 'classification/systematic_model_test_earlystopping/'
+all_models_dir = 'classification/systematic_model_test_earlystopping_binary/'
 os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images/'
-val_dir_path = 'test_data/val_images/'
+train_dir_path = 'test_data/training_images_binary/'
+val_dir_path = 'test_data/val_images_binary/'
 test = TestModelAccuracy()
 test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
 
@@ -144,7 +133,7 @@ test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
 
 
 
-models_path = 'classification/systematic_model_test_earlystopping/'
+models_path = 'classification/systematic_model_test_earlystopping_binary/'
 test = TestModelAccuracy()
 test.evaluate_all_models_in_dir(models_path)
 

@@ -30,14 +30,16 @@ class ModelTrainer:
         training_iterator = training_datagen.flow_from_directory(train_dir,
                                                                  class_mode='categorical',
                                                                  batch_size=BATCH_SIZE,
-                                                                 target_size=(IMG_SIZE, IMG_SIZE)
+                                                                 target_size=(IMG_SIZE, IMG_SIZE),
+                                                                 color_mode='grayscale'
                                                                  )
 
         val_datagen = ImageDataGenerator()
         val_iterator = val_datagen.flow_from_directory(val_dir,
                                                        class_mode='categorical',
                                                        batch_size=BATCH_SIZE,
-                                                       target_size=(IMG_SIZE, IMG_SIZE)
+                                                       target_size=(IMG_SIZE, IMG_SIZE),
+                                                       color_mode='grayscale'
                                                        )
 
         history = self.compiled_model.fit_generator(training_iterator, epochs=epochs, shuffle=True,

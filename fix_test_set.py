@@ -5,7 +5,7 @@
 import pandas as pd
 import csv
 import os
-from classification.definitions import SIGN_TO_ID_SWITCHER
+from classification.definitions import SIGN_TO_ID_SWITCHER, ID_TO_SIGN_SWITCHER
 
 # classIds = [0, 1, 2, 3, 4, 5]
 
@@ -43,20 +43,24 @@ from classification.definitions import SIGN_TO_ID_SWITCHER
 #         writer.writerow([filename, SIGN_TO_ID_SWITCHER.get(class_id)])
 
 
-input_images_path = 'test_data/new_test_images/'
-output_path = 'test_data/new_test_images_separated/'
+input_images_path = 'test_data/training_images_binary/'
+output_path = 'test_data/val_images_binary/'
 # test_images_path = 'test_data/test_images/'
-input_csv_path = 'test_data/new_testdata_file.csv'
+input_csv_path = 'test_data/trainingdata_file.csv'
 # test_output_csv_path = 'test_data/test_file.csv'
 
 
 test = pd.read_csv(input_csv_path, sep=';')
+count = 0
 for filename, class_id in zip(list(test['Filename']), list(test['ClassId'])):
-    if os.path.exists(input_images_path + filename):
-        output_dir = output_path + str(class_id) + '/'
-        os.makedirs(output_dir, exist_ok=True)
-        os.replace(input_images_path + filename,
-                   output_dir + filename)
+    input_path = input_images_path + str(class_id) + '/' + filename
+    if os.path.exists(input_path):
+        count += 1
+        if count % 5 == 0:
+            output_dir = output_path + str(class_id) + '/'
+            os.makedirs(output_dir, exist_ok=True)
+            os.replace(input_path,
+                       output_dir + filename)
 
 
 

@@ -44,8 +44,8 @@ def create_grayscaled_for_folder(input_folder, output_folder):
 
 training_images_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/training_images/"
 test_images_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/test_images/"
-training_images_gray_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/training_images_gray/"
-test_images_gray_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/test_images_gray/"
+training_images_gray_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/training_images_binary/"
+test_images_gray_path = "C:/Users/frede/OneDrive/Dokumenter/GitHub/speed-sign-recognition/test_data/test_images_binary/"
 cropped = 0
 not_cropped = 0
 removed = 0

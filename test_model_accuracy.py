@@ -67,9 +67,9 @@ class TestModelAccuracy:
 
     def create_systematic_architecture_test(self, all_models_dir, train_dir, val_dir, color_mode):
         if color_mode == 'grayscale':
-            color_channels = 3
-        else:
             color_channels = 1
+        else:
+            color_channels = 3
 
         models = []
         param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
@@ -125,9 +125,9 @@ class TestModelAccuracy:
 
     def create_systematic_parameter_test(self, all_models_dir, train_dir, val_dir, color_mode):
         if color_mode == 'grayscale':
-            color_channels = 3
-        else:
             color_channels = 1
+        else:
+            color_channels = 3
         models = []
         optimizers = {'sgd': SGD(momentum=0.9, nesterov=True), 'rmsprop': RMSprop(), 'adamax': Adamax()}
         kernel_sizes = [3, 5, 7]

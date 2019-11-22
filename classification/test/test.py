@@ -29,7 +29,7 @@ class ModelTester:
         return index_to_sign_switcher.get(index)
 
     def classify_single_image(self, image_path):
-        img = image.load_img(image_path, target_size=(IMG_SIZE, IMG_SIZE))
+        img = image.load_img(image_path, target_size=(IMG_SIZE, IMG_SIZE), grayscale=True)
         img = np.expand_dims(img, axis=0)
         classes = self.model.predict(img)
         return self.index_to_sign(np.argmax(classes[0]))

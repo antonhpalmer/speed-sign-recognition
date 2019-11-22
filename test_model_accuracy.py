@@ -11,7 +11,7 @@ from keras.models import Sequential
 from classification.training.training import ModelTrainer
 from keras.preprocessing import image
 import numpy as np
-from keras.optimizers import SGD, RMSprop, Adamax
+from keras.optimizers import SGD, RMSprop, Adamax, Adam
 from keras_preprocessing.image import ImageDataGenerator
 from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dense, Dropout, Flatten
@@ -32,7 +32,7 @@ class TestModelAccuracy:
         self.add_conv_and_pooling(model, filters, kernel_size, add_input_shape, color_channels)
         model.add(Dropout(dropout_rate))
 
-    def add_two_conv_and_pooling_w_dropout(self, model, filters, kernel_size, dropout_rate, add_input_shape, color_channels):
+    def add_two_conv_and_pooling(self, model, filters, kernel_size, add_input_shape, color_channels):
         if add_input_shape:
             model.add(Conv2D(filters, kernel_size=kernel_size,
                              padding='same', activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, color_channels)))
@@ -40,6 +40,9 @@ class TestModelAccuracy:
             model.add(Conv2D(filters, kernel_size=kernel_size, padding='same', activation='relu'))
         model.add(Conv2D(filters, kernel_size=kernel_size, padding='same', activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2), data_format='channels_last'))
+
+    def add_two_conv_and_pooling_w_dropout(self, model, filters, kernel_size, dropout_rate, add_input_shape, color_channels):
+        self.add_two_conv_and_pooling(model, filters, kernel_size, add_input_shape, color_channels)
         model.add(Dropout(dropout_rate))
 
     def add_last_layers(self, model):
@@ -72,24 +75,30 @@ class TestModelAccuracy:
             color_channels = 3
 
         models = []
-        param_str = '_act=relu_opt=adam_ker=3_pad=same_drop=20'
+        param_str = '_opt=adam_ker=3_drop=20'
+
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+        #     self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
+        #     models.append(model)
+        #
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+        #     self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+        #     models.append(model)
+        #
+        # model = Sequential()
+        # for i in (32, 64, 128, 256):
+        #     model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+        #     self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+        #     models.append(model)
 
         model = Sequential()
         for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-            self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
-            models.append(model)
-
-        model = Sequential()
-        for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-            self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
-            models.append(model)
-
-        model = Sequential()
-        for i in (32, 64, 128, 256):
-            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-            self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+            model = Sequential(model.layers, name='model_doubleconv_nodrop_' + str(i) + param_str)
+            self.add_two_conv_and_pooling(model, i, 3, i == 32, color_channels)
             models.append(model)
 
         for model in models:
@@ -100,9 +109,7 @@ class TestModelAccuracy:
 
         self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
 
-    def evaluate_all_models_in_dir(self, models_path):
-        test_images_dir_path = 'test_data/test_images_binary/'
-        new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
+    def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path):
         models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
@@ -129,9 +136,9 @@ class TestModelAccuracy:
         else:
             color_channels = 3
         models = []
-        optimizers = {'sgd': SGD(momentum=0.9, nesterov=True), 'rmsprop': RMSprop(), 'adamax': Adamax()}
+        optimizers = {'sgd': SGD(), 'rmsprop': RMSprop(), 'adamax': Adamax(), 'adam': Adam()}
         kernel_sizes = [3, 5, 7]
-        dropout_rates = [0.1, 0.3, 0.4, 0.5]
+        dropout_rates = [0.1, 0.2, 0.3, 0.4, 0.5]
 
         for optimizer in optimizers.keys():
             for kernel_size in kernel_sizes:
@@ -147,6 +154,10 @@ class TestModelAccuracy:
                                   metrics=['accuracy'])
                     models.append(model)
 
+        # making sure it does not train existing models
+        for model in models:
+            if os.path.exists(os.path.join(all_models_dir, model.name)):
+                models.remove(model)
         self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
 
 
@@ -156,7 +167,20 @@ class TestModelAccuracy:
 
 
 
+all_models_dir = 'classification/systematic_model_test_earlystopping/'
+os.makedirs(all_models_dir, exist_ok=True)
+train_dir_path = 'test_data/training_images/'
+val_dir_path = 'test_data/val_images/'
+test = TestModelAccuracy()
+test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'rgb')
+# test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
+
+test_images_dir_path = 'test_data/test_images/'
+new_test_images_dir_path = 'test_data/new_test_images_separated/'
+models_path = 'classification/systematic_model_test_earlystopping/'
+test = TestModelAccuracy()
+test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path)
 
 
 all_models_dir = 'classification/systematic_test_binary_params/'
@@ -167,14 +191,11 @@ test = TestModelAccuracy()
 # test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
-
-
-
-
-
+test_images_dir_path = 'test_data/test_images_binary/'
+new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
 models_path = 'classification/systematic_test_binary_params/'
 test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path)
+test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path)
 
 
 

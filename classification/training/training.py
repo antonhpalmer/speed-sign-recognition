@@ -13,11 +13,12 @@ from classification.models import models
 from classification import definitions, preprocessing
 from classification.definitions import IMG_SIZE, BATCH_SIZE
 
+
 class ModelTrainer:
     def __init__(self, compiled_model):
         self.compiled_model = compiled_model
 
-    def train(self, train_dir, val_dir, model_save_path, epochs):
+    def train(self, train_dir, val_dir, model_save_path, epochs, color_mode):
         training_datagen = ImageDataGenerator(
             rotation_range=15,
             zoom_range=0.15,
@@ -31,7 +32,7 @@ class ModelTrainer:
                                                                  class_mode='categorical',
                                                                  batch_size=BATCH_SIZE,
                                                                  target_size=(IMG_SIZE, IMG_SIZE),
-                                                                 color_mode='grayscale'
+                                                                 color_mode=color_mode
                                                                  )
 
         val_datagen = ImageDataGenerator()
@@ -39,7 +40,7 @@ class ModelTrainer:
                                                        class_mode='categorical',
                                                        batch_size=BATCH_SIZE,
                                                        target_size=(IMG_SIZE, IMG_SIZE),
-                                                       color_mode='grayscale'
+                                                       color_mode=color_mode
                                                        )
 
         history = self.compiled_model.fit_generator(training_iterator, epochs=epochs, shuffle=True,

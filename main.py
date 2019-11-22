@@ -1,5 +1,6 @@
 import serial
 from keras.models import load_model
+from box_finder.newboxfinder import crop_image
 
 from detection.pixy_serial_communication.serial_reader import change_motor_speed
 from classification.test.test import ModelTester
@@ -24,7 +25,10 @@ def main_print(ser, classifier):
         print("Object was validated: ", validated)
 
         if validated:
-            new_speed = classifier.classify_single_image(detected_img.filename)
+            path = "C:/Users/frede/PycharmProjects/speed-sign-recognition/cropped.ppm"
+            img = crop_image(detected_img, coordinates)
+            img.save(path)
+            new_speed = classifier.classify_single_image(path)
             print("detected sign is: ", new_speed)
             change_motor_speed(ser, new_speed)
 

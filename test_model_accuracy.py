@@ -91,7 +91,7 @@ class TestModelAccuracy:
 
     def evaluate_all_models_in_dir(self, models_path):
         test_images_dir_path = 'test_data/test_images_binary/'
-        # new_test_images_dir_path = 'test_data/new_test_images_separated'
+        new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
         models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
@@ -102,15 +102,15 @@ class TestModelAccuracy:
             tester = ModelTester(model)
             test_images_eval = tester.evaluate_model(test_images_dir_path)
             print(test_images_eval)
-            # new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
-            # print(new_test_images_eval)
+            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
+            print(new_test_images_eval)
 
             os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
             evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
             with open(evaluation_file_path, mode='w') as evaluation_file:
                 evaluation_file.write('Evaluation_dataset;Accuracy\n')
                 evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
-                # evaluation_file.write('new_test_images_separated;' + str(new_test_images_eval[1]) + '\n')
+                evaluation_file.write('new_test_images_separated_binary;' + str(new_test_images_eval[1]) + '\n')
 
 
 
@@ -121,19 +121,19 @@ class TestModelAccuracy:
 
 
 
-all_models_dir = 'classification/systematic_model_test_earlystopping_binary/'
-os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images_binary/'
-val_dir_path = 'test_data/val_images_binary/'
-test = TestModelAccuracy()
-test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
+# all_models_dir = 'classification/systematic_test_binary/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images_binary/'
+# val_dir_path = 'test_data/val_images_binary/'
+# test = TestModelAccuracy()
+# test.create_systematic_test(all_models_dir, train_dir_path, val_dir_path)
 
 
 
 
 
 
-models_path = 'classification/systematic_model_test_earlystopping_binary/'
+models_path = 'classification/systematic_test_binary/'
 test = TestModelAccuracy()
 test.evaluate_all_models_in_dir(models_path)
 

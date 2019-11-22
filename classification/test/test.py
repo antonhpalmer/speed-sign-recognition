@@ -28,11 +28,18 @@ class ModelTester:
         }
         return index_to_sign_switcher.get(index)
 
-    def classify_single_image(self, image_path):
-        img = image.load_img(image_path, target_size=(IMG_SIZE, IMG_SIZE), color_mode='grayscale')
-        img = np.expand_dims(img, axis=0)
+    def classify_single_image(self, image_path, color_mode):
+        img = image.load_img(image_path, target_size=(IMG_SIZE, IMG_SIZE), color_mode=color_mode)
+
+        if color_mode == 'grayscale':
+            img = image.img_to_array(img)
+            img = img.reshape((1, IMG_SIZE, IMG_SIZE, 1))
+        else:
+            img = np.expand_dims(img, axis=0)
+
         classes = self.model.predict(img)
         return self.index_to_sign(np.argmax(classes[0]))
+
 
     def evaluate_model(self, test_dir_path):
         test_datagen = ImageDataGenerator()

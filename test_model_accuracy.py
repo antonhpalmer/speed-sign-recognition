@@ -179,7 +179,6 @@ test.evaluate_all_models_in_dir(models_path)
 
 
 
-
     # trainer = ModelTrainer(train_dir_path, 0.01)
     # model = models.get_model2()
     # sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)

@@ -155,11 +155,12 @@ class TestModelAccuracy:
                     models.append(model)
 
         # making sure it does not train existing models
+        models_to_train = []
         for model in models:
-            if os.path.exists(os.path.join(all_models_dir, model.name)):
-                models.remove(model)
-        self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
+            if not os.path.exists(os.path.join(all_models_dir, model.name)):
+                models_to_train.append(model)
 
+        self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
 
 
 
@@ -176,11 +177,11 @@ class TestModelAccuracy:
 # # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
 
-test_images_dir_path = 'test_data/test_images/'
-new_test_images_dir_path = 'test_data/new_test_images_separated/'
-models_path = 'classification/systematic_model_test_earlystopping/'
-test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'rgb')
+# test_images_dir_path = 'test_data/test_images/'
+# new_test_images_dir_path = 'test_data/new_test_images_separated/'
+# models_path = 'classification/systematic_model_test_earlystopping/'
+# test = TestModelAccuracy()
+# test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'rgb')
 
 
 all_models_dir = 'classification/systematic_test_binary_params/'

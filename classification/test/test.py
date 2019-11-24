@@ -41,10 +41,10 @@ class ModelTester:
         return self.index_to_sign(np.argmax(classes[0]))
 
 
-    def evaluate_model(self, test_dir_path):
+    def evaluate_model(self, test_dir_path, color_mode):
         test_datagen = ImageDataGenerator()
         test_iterator = test_datagen.flow_from_directory(test_dir_path, target_size=(IMG_SIZE, IMG_SIZE), shuffle=False,
-                                                         color_mode='grayscale')
+                                                         color_mode=color_mode)
         return self.model.evaluate(test_iterator)
 
     def write_model_summary_to_file(self, file):

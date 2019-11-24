@@ -109,7 +109,7 @@ class TestModelAccuracy:
 
         self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
 
-    def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path):
+    def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path, color_mode):
         models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
@@ -118,9 +118,9 @@ class TestModelAccuracy:
 
         for model in models:
             tester = ModelTester(model)
-            test_images_eval = tester.evaluate_model(test_images_dir_path)
+            test_images_eval = tester.evaluate_model(test_images_dir_path, color_mode)
             print(test_images_eval)
-            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path)
+            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path, color_mode)
             print(new_test_images_eval)
 
             os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
@@ -167,20 +167,20 @@ class TestModelAccuracy:
 
 
 
-all_models_dir = 'classification/systematic_model_test_earlystopping/'
-os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images/'
-val_dir_path = 'test_data/val_images/'
-test = TestModelAccuracy()
-test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'rgb')
-# test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+# all_models_dir = 'classification/systematic_model_test_earlystopping/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images/'
+# val_dir_path = 'test_data/val_images/'
+# test = TestModelAccuracy()
+# test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'rgb')
+# # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
 
 test_images_dir_path = 'test_data/test_images/'
 new_test_images_dir_path = 'test_data/new_test_images_separated/'
 models_path = 'classification/systematic_model_test_earlystopping/'
 test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path)
+test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'rgb')
 
 
 all_models_dir = 'classification/systematic_test_binary_params/'
@@ -195,7 +195,7 @@ test_images_dir_path = 'test_data/test_images_binary/'
 new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
 models_path = 'classification/systematic_test_binary_params/'
 test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path)
+test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
 
 
 

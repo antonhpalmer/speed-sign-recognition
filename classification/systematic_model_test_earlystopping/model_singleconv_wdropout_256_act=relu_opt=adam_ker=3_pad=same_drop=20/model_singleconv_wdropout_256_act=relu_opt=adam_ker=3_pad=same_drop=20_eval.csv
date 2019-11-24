@@ -1,3 +1,3 @@
 Evaluation_dataset;Accuracy
-test_images;0.8873720169067383
-new_test_images_separated;0.6006339192390442
+test_images_binary;0.8873720169067383
+new_test_images_separated_binary;0.6069730520248413

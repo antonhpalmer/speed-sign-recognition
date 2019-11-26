@@ -1,7 +1,7 @@
 import serial
 from keras.models import load_model
-from box_finder.newboxfinder import preprocess_image
-from box_finder.wrong_center_exception import WrongCenterException
+from preprocessor.preproccesor import preprocess_image
+from preprocessor.wrong_center_exception import WrongCenterException
 
 from detection.pixy_serial_communication.serial_reader import update_speed
 from classification.test.test import ModelTester

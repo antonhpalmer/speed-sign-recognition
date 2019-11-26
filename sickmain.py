@@ -1,5 +1,5 @@
 from validation.validator import validate as validate
-from box_finder.newboxfinder import preprocess_image
+from preprocessor.preproccesor import preprocess_image
 import os
 from PIL import Image
 

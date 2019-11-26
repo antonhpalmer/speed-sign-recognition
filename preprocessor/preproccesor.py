@@ -1,8 +1,8 @@
 from PIL import Image
 from PIL import ImageEnhance
-from box_finder.ColorRecognizor import red_validator
-from box_finder.otsu import apply_otsu_algorithm
-from box_finder.wrong_center_exception import WrongCenterException
+from preprocessor.color_recognizor import red_validator
+from preprocessor.otsu import apply_otsu_algorithm
+from preprocessor.wrong_center_exception import WrongCenterException
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):

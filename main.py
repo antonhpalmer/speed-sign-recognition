@@ -26,8 +26,8 @@ def main_print(ser, classifier):
 
         if validated:
             try:
-                img = preprocess_image(detected_img, coordinates)
-                new_speed = classifier.classify_single_image(img.filename, "grayscale")
+                preprocessed_img = preprocess_image(detected_img, coordinates)
+                new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)
             except WrongCenterException:

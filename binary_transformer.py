@@ -3,6 +3,7 @@ from preprocessor.preproccesor import preprocess_image
 import os
 from PIL import Image
 
+
 def remove_wrong_images(folder):
     removed = 0
     for directive in os.listdir(folder):
@@ -19,6 +20,7 @@ def create_folders(input_folder, output_folder):
         if not os.path.exists(output_folder + directive):
             os.makedirs(output_folder + directive)
             print("created:", directive)
+
 
 def create_grayscaled_for_folder(input_folder, output_folder):
     cropped = 0
@@ -42,19 +44,18 @@ def create_grayscaled_for_folder(input_folder, output_folder):
     return cropped, not_cropped
 
 
-training_images_path = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated/"
-training_images_gray_path = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated_binary/"
-removed = 0
+input_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated/"
+output_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated_binary/"
 
 # Create directives if they do not exist with the same name in the output folder for the grayscaled images.
-create_folders(training_images_path, training_images_gray_path)
+create_folders(input_folder, output_folder)
 
 # Create a grayscaled image for every image in the folder training_images.
-cropped_a, not_cropped_a = create_grayscaled_for_folder(training_images_path, training_images_gray_path)
+cropped_yes, cropped_no = create_grayscaled_for_folder(input_folder, output_folder)
 
 # Removes wrongly cropped images
-removed_a = remove_wrong_images(training_images_gray_path)
+removed = remove_wrong_images(output_folder)
 
-print("Cropped:", cropped_a)
-print("Not cropped:", not_cropped_a)
-print("Removed:", removed_a)
+print("Cropped:", cropped_yes)
+print("Not cropped:", cropped_no)
+print("Removed:", removed)

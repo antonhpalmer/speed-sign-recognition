@@ -10,7 +10,7 @@ EXTRA_PIXELS = 15
 
 
 def snap_image():
-    subprocess.call(['./../detection/pixy_serial_communication/get_raw_frame'])
+    subprocess.call(['./detection/pixy_serial_communication/get_raw_frame'])
     return Image.open("out.ppm")
 
 

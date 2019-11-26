@@ -2,6 +2,7 @@ from PIL import Image
 from PIL import ImageEnhance
 from box_finder.ColorRecognizor import red_validator
 from box_finder.otsu import apply_otsu_algorithm
+from box_finder.wrong_center_exception import WrongCenterException
 
 
 def check_neighbour_pixels(pix, x, y, red_pixels):
@@ -125,16 +126,14 @@ def center_calibration(center_coordinate, width, height, pix):
 
 
 def enhance_contrast(image):
-    im = Image.open(image)
-    ImageEnhance.Contrast(im).enhance(1.5)
-    return im
+    # im = Image.open(image)
+    ImageEnhance.Contrast(image).enhance(1.5)
+    return image
 
 
-def crop_image(image, center_coordinate):
+def preprocess_image(image, center_coordinate):
     im = enhance_contrast(image)
     pix = im.load()
-
-    img1 = im.convert("L")
 
     (width, height) = im.size
     (x, y) = center_calibration(center_coordinate, width, height, pix)
@@ -148,8 +147,10 @@ def crop_image(image, center_coordinate):
     bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
 
     try:
+        img1 = im.convert("L")
         img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y)).save("cropped.ppm")
-        return apply_otsu_algorithm("cropped.ppm")
+        binary_img = apply_otsu_algorithm("cropped.ppm")
+        binary_img.save("binary.ppm")
+        return Image.open("binary.ppm")
     except:
-        print("fejl")
-        return None
+        raise WrongCenterException

@@ -1,12 +1,12 @@
 import serial
 from keras.models import load_model
-from box_finder.newboxfinder import crop_image
+from box_finder.newboxfinder import preprocess_image
+from box_finder.wrong_center_exception import WrongCenterException
 
-from detection.pixy_serial_communication.serial_reader import change_motor_speed
+from detection.pixy_serial_communication.serial_reader import update_speed
 from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
-from classification.definitions import ID_TO_SIGN_SWITCHER
 
 
 def wakeup_arduino(ser):
@@ -25,25 +25,32 @@ def main_print(ser, classifier):
         print("Object was validated: ", validated)
 
         if validated:
-            path = "C:/Users/frede/PycharmProjects/speed-sign-recognition/cropped.ppm"
-            img = crop_image(detected_img, coordinates)
-            img.save(path)
-            new_speed = classifier.classify_single_image(path)
-            print("detected sign is: ", new_speed)
-            change_motor_speed(ser, new_speed)
+            try:
+                img = preprocess_image(detected_img, coordinates)
+                new_speed = classifier.classify_single_image(img.filename, "grayscale")
+                print("detected sign is: ", new_speed)
+                update_speed(ser, new_speed)
+            except WrongCenterException:
+                print("Center coordinate is surrounded by red pixels")
 
 
 def main(ser, classifier):
     while True:
         wakeup_arduino(ser)
+
         detected_img = detect(ser)
 
-        validated = validate(detected_img)
+        validated, coordinates = validate(detected_img)
+
         if validated:
-            new_speed = classifier.classify_single_image(detected_img.filename)
-            change_motor_speed(ser, new_speed)
+            try:
+                preprocessed_img = preprocess_image(detected_img, coordinates)
+                new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
+                update_speed(ser, new_speed)
+            except WrongCenterException:
+                break
 
 
 serial_115200 = serial.Serial('/dev/ttyACM0', 115200)
-classifierModel = ModelTester(load_model("new_model.h5"))
+classifierModel = ModelTester(load_model("classification/systematic_test_binary/model_doubleconv_64_act=relu_opt=adam_ker=3_pad=same_drop=20/model_doubleconv_64_act=relu_opt=adam_ker=3_pad=same_drop=20.h5"))
 main_print(serial_115200, classifierModel)

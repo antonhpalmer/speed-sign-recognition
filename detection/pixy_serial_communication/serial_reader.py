@@ -31,7 +31,7 @@ def get_serial_data(ser):
             return int(x), int(y), int(w), int(h)
 
 
-def change_motor_speed(serial, data):
+def update_speed(serial, data):
     data = SIGN_TO_ID_SWITCHER.get(data)
     byte = str(data).encode('utf-8')
     serial.write(byte)

@@ -1,5 +1,5 @@
 from validation.validator import validate as validate
-from box_finder.newboxfinder import crop_image
+from box_finder.newboxfinder import preprocess_image
 import os
 from PIL import Image
 
@@ -30,7 +30,7 @@ def create_grayscaled_for_folder(input_folder, output_folder):
             image = Image.open(file_path)
             goodness, (x, y) = validate(image)
             if goodness is True:
-                cropped_image = crop_image(file_path, (x, y))
+                cropped_image = preprocess_image(file_path, (x, y))
                 if cropped_image is not None:
                     try:
                         cropped_image.save(output_folder + directive + "/" + str(img))

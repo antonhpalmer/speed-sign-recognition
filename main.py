@@ -30,7 +30,7 @@ def main_print(ser, classifier):
             try:
                 preprocessed_img = preprocess_image(detected_img, coordinates)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
-                ds.display_signs_func(detected_img, new_speed)
+                ds.display_signs_func(preprocessed_img, new_speed)
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)
             except WrongCenterException:

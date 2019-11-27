@@ -9,9 +9,12 @@ def display_signs_func(pixy_image, classified_sign):
     pixy_image = Image.open(pixy_image)
     pixy_image.save("pixy_image.png")
 
-    fig = plt.figure()
+    # fig = plt.figure()
     image1 = plt.subplot(121)
     image2 = plt.subplot(122)
+
+    image1.set_title("Preprocessed image")
+    image2.set_title("Network classifies the sign as")
 
     img_path_to_source2 = "speedsign" + str(classified_sign) + ".png"
     img_source1 = mpimg.imread('pixy_image.png')
@@ -24,3 +27,5 @@ def display_signs_func(pixy_image, classified_sign):
     image2.axis("off")
     plt.show()
 
+
+display_signs_func("speedsign30.png", 30)

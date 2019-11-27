@@ -8,6 +8,8 @@ from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
 
+from video_demo import display_signs as ds
+
 
 def wakeup_arduino(ser):
     ser.write(b'9')
@@ -28,6 +30,7 @@ def main_print(ser, classifier):
             try:
                 preprocessed_img = preprocess_image(detected_img, coordinates)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
+                ds.display_signs_func(detected_img, new_speed)
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)
             except WrongCenterException:

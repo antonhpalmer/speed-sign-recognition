@@ -30,8 +30,8 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
                 red_pixels.append((x, y))
                 red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
         except IndexError:
-            print("pixel out of bounds")
-
+            pass
+            # print("pixel out of bounds")
     return red_pixels
 
 
@@ -53,6 +53,7 @@ def detect_red_cluster(pix, x, y):
     if red_validator(r, g, b) is True:
         red_pixel_list.append((x, y))
         return len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+    return 0
 
 
 def find_red_pixel(pix, x, y, direction):
@@ -61,9 +62,11 @@ def find_red_pixel(pix, x, y, direction):
             size_of_cluster = detect_red_cluster(pix, x, y)
             if size_of_cluster > 10:
                 return x, y
+            x_old, y_old = x, y
             x, y = get_next_pixel_coordinate(x, y, direction)
         except IndexError:
-            raise NoRedPixelException("No red pixel found in the direction: " + direction)
+            # raise NoRedPixelException("No red pixel found in the direction:", direction)
+            return x_old, y_old
 
 
 def red_edge_detection(pix, x, y):
@@ -75,12 +78,12 @@ def red_edge_detection(pix, x, y):
     return left_pixel_x, right_pixel_x, up_pixel_y, down_pixel_y
 
 
-def center_calibration(center_coordinate, width, height, pix):
+def center_calibration(center_coordinate, pix):
     (x, y) = center_coordinate
     x = int(x)
     y = int(y)
 
-    left_x, right_x, up_y, down_y = red_edge_detection(pix,x,y)
+    left_x, right_x, up_y, down_y = red_edge_detection(pix, x, y)
 
     center_x = int((left_x + right_x) / 2)
     center_y = int((up_y + down_y) / 2)
@@ -88,25 +91,22 @@ def center_calibration(center_coordinate, width, height, pix):
 
 
 def enhance_contrast(image):
-    # im = Image.open(image)
     ImageEnhance.Contrast(image).enhance(1.5)
     return image
 
 
 def preprocess_image(image, center_coordinate):
-    im = enhance_contrast(image)
+    img = Image.open(image)
+    im = enhance_contrast(img)
     pix = im.load()
 
-    (width, height) = im.size
-    (x, y) = center_calibration(center_coordinate, width, height, pix)
+    x, y = center_calibration(center_coordinate, pix)
 
-    left_x, right_x, up_y, down_y = red_edge_detection(pix,x,y)
+    left_x, right_x, up_y, down_y = red_edge_detection(pix, x, y)
 
     try:
         img1 = im.convert("L")
         img1.crop((left_x, up_y, right_x, down_y)).save("cropped.ppm")
-        binary_img = apply_otsu_algorithm("cropped.ppm")
-        binary_img.save("binary.ppm")
-        return Image.open("binary.ppm")
+        return apply_otsu_algorithm("cropped.ppm")
     except:
-        raise WrongCenterException
+        pass

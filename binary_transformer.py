@@ -1,5 +1,5 @@
 from validation.validator import validate as validate
-from preprocessor.preproccesor import preprocess_image_tester
+from preprocessor.preproccesor import preprocess_image_test
 import os
 from PIL import Image
 
@@ -30,9 +30,9 @@ def create_grayscaled_for_folder(input_folder, output_folder):
         for img in os.listdir(input_folder + directive):
             file_path = input_folder + directive + "/" + img
             image = Image.open(file_path)
-            goodness, (x, y) = validate(image)
-            if goodness is True:
-                cropped_image = preprocess_image_tester(file_path, (x, y))
+            validated_image = validate(image)
+            if validated_image.is_valid is True:
+                cropped_image = preprocess_image_test(file_path, validated_image.circle_center)
                 if cropped_image is not None:
                     try:
                         cropped_image.save(output_folder + directive + "/" + str(img))
@@ -44,8 +44,8 @@ def create_grayscaled_for_folder(input_folder, output_folder):
     return cropped, not_cropped
 
 
-input_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated/"
-output_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/disasterfolder/"
+input_folder = "test_data/new_test_images_separated/"
+output_folder = "test_data/disasterfolder/"
 
 # Create directives if they do not exist with the same name in the output folder for the grayscaled images.
 create_folders(input_folder, output_folder)

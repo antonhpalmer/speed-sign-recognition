@@ -27,7 +27,7 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
                 red_pixels.append((x, y))
                 red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
         except IndexError:
-            print("pixel out of bounds")
+            pass
 
     return red_pixels
 
@@ -158,6 +158,7 @@ def preprocess_image(image, given_center_coordinate):
         return Image.open("binary.ppm")
     except:
         raise WrongCenterException
+
 
 def preprocess_image_test(image, given_center_coordinate):
     im = enhance_contrast(image)

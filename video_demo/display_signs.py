@@ -5,12 +5,12 @@ from PIL import Image
 from validation.circle_detection.CircleDetection import ValidatedImage
 
 
-def display_signs_func(detected_image, preprocessed_image, classified_sign):
+def display_signs(detected_image, preprocessed_image, classified_sign):
     validated_image = ValidatedImage(detected_image)
     validated_image.circle_detection()
-    validated_image.draw_circle("", "validated_image.png")
+    validated_image.draw_circle("", "video_demo/validated_image.png")
 
-    preprocessed_image.save("preprocessed_image.png")
+    preprocessed_image.save("video_demo/preprocessed_image.png")
 
     # fig = plt.figure()pixy
     image1 = plt.subplot(221)
@@ -25,8 +25,8 @@ def display_signs_func(detected_image, preprocessed_image, classified_sign):
 
     img_path_to_source2 = "video_demo/speedsign" + str(classified_sign) + ".png"
     img_source1 = mpimg.imread('out.ppm')
-    img_source2 = mpimg.imread('validated_image.png')
-    img_source3 = mpimg.imread('preprocessed_image.png')
+    img_source2 = mpimg.imread('video_demo/validated_image.png')
+    img_source3 = mpimg.imread('video_demo/preprocessed_image.png')
     img_source4 = mpimg.imread(img_path_to_source2)
 
     _ = image1.imshow(img_source1)

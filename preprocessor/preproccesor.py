@@ -96,8 +96,7 @@ def preprocess_image(image, center_coordinate):
     im = enhance_contrast(image)
     pix = im.load()
 
-    (width, height) = im.size
-    (x, y) = center_calibration(center_coordinate, width, height, pix)
+    (x, y) = center_calibration(center_coordinate, pix)
 
     left_x, right_x, up_y, down_y = red_edge_detection(pix,x,y)
 
@@ -109,3 +108,20 @@ def preprocess_image(image, center_coordinate):
         return Image.open("binary.ppm")
     except:
         raise WrongCenterException
+
+
+def preprocess_image_tester(image, center_coordinate):
+    img = Image.open(image)
+    im = enhance_contrast(img)
+    pix = im.load()
+
+    x, y = center_calibration(center_coordinate, pix)
+
+    left_x, right_x, up_y, down_y = red_edge_detection(pix, x, y)
+
+    try:
+        img1 = im.convert("L")
+        img1.crop((left_x, up_y, right_x, down_y)).save("cropped.ppm")
+        return apply_otsu_algorithm("cropped.ppm")
+    except:
+        pass

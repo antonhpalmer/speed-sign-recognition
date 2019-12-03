@@ -30,7 +30,6 @@ class ValidatedImage:
         for pt in detected_circles[0, :]:
             a, b, r = pt[0], pt[1], pt[2]
             if self.__is_inside_image(a, b, r) and r > r_max:
-
                 r_max, a_max, b_max = r, a, b
 
         if r_max == 0:
@@ -73,7 +72,6 @@ class ValidatedImage:
                                             cv2.HOUGH_GRADIENT, 1, min_distance, param1=param1,
                                             param2=param2, minRadius=min_radius, maxRadius=half_max_dim)
 
-        # Draw circles that are detected.
         if detected_circles is not None:
 
             # Convert the circle parameters a, b and r to integers.
@@ -87,6 +85,8 @@ class ValidatedImage:
                 self.radius = r
             else:
                 self.is_valid = False
+        else:
+            self.is_valid = False
 
     def draw_circle(self, dest_path, file_name):
         # Draw the circumference of the circle.

@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import math
 
 
 class ValidatedImage:
@@ -52,20 +53,26 @@ class ValidatedImage:
 
 
     def circle_detection(self):
-        self.circle_detection_with_params(14, 90, 27, 9, 0)
+        self.circle_detection_with_params(20, 202, 26, 8, 0)
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
         # Convert to grayscale.
         gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
+
         # Blur using 3 * 3 kernel.
-        gray_blurred = cv2.blur(gray, (3, 3))
+        #gray_blurred = cv2.blur(gray, (3, 3))
+        gray_blurred = cv2.medianBlur(gray, 5)
+
+        height, width, channels = self.img.shape
+        half_max_dim = math.ceil(max(height, width) / 2)
 
         # Apply Hough transform on the blurred image.
         detected_circles = cv2.HoughCircles(gray_blurred,
                                             cv2.HOUGH_GRADIENT, 1, min_distance, param1=param1,
-                                            param2=param2, minRadius=min_radius, maxRadius=max_radius)
+                                            param2=param2, minRadius=min_radius, maxRadius=half_max_dim)
+
         # Draw circles that are detected.
         if detected_circles is not None:
 

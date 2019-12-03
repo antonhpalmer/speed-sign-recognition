@@ -21,12 +21,12 @@ def main_print(ser, classifier):
         detected_img = detect(ser)
         print("Object was detected")
 
-        validated, coordinates = validate(detected_img)
-        print("Object was validated: ", validated)
+        validated_image = validate(detected_img)
+        print("Object was validated: ", validated_image.is_valid)
 
-        if validated:
+        if validated_image.is_valid:
             try:
-                preprocessed_img = preprocess_image(detected_img, coordinates)
+                preprocessed_img = preprocess_image(detected_img, validated_image.circle_center)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)

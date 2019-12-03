@@ -129,8 +129,7 @@ def center_calibration(center_coordinate, width, height, pix):
     return center_x, center_y
 
 
-def enhance_contrast(image_path):
-    image = Image.open(image_path)
+def enhance_contrast(image):
     ImageEnhance.Contrast(image).enhance(1.5)
     return image
 
@@ -160,7 +159,8 @@ def preprocess_image(image, given_center_coordinate):
         raise WrongCenterException
 
 
-def preprocess_image_test(image, given_center_coordinate):
+def preprocess_image_test(image_path, given_center_coordinate):
+    image = Image.open(image_path)
     im = enhance_contrast(image)
     pix = im.load()
 

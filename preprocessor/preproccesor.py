@@ -73,7 +73,7 @@ def red_edge_detection(pix, x, y):
     return left_pixel_x, right_pixel_x, up_pixel_y, down_pixel_y
 
 
-def center_calibration(center_coordinate, width, height, pix):
+def center_calibration(center_coordinate, pix):
     (x, y) = center_coordinate
     x = int(x)
     y = int(y)

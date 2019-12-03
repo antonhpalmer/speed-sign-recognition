@@ -184,17 +184,17 @@ class TestModelAccuracy:
 # test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'rgb')
 
 
-all_models_dir = 'classification/systematic_test_binary_params/'
+all_models_dir = 'classification/systematic_test_binary/'
 os.makedirs(all_models_dir, exist_ok=True)
 train_dir_path = 'test_data/training_images_binary/'
 val_dir_path = 'test_data/val_images_binary/'
 test = TestModelAccuracy()
-# test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
-test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+# test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
 test_images_dir_path = 'test_data/test_images_binary/'
 new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
-models_path = 'classification/systematic_test_binary_params/'
+models_path = 'classification/systematic_test_binary/'
 test = TestModelAccuracy()
 test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
 

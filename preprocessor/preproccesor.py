@@ -22,6 +22,7 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
     neighbours.append((x, y + 1))
     neighbours.append((x, y - 1))
 
+
     for neighbour in neighbours:
         try:
             (x, y) = neighbour
@@ -33,6 +34,14 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
             print("pixel out of bounds")
 
     return red_pixels
+
+def detect_red_cluster(pix, x, y):
+    red_pixel_list = []
+
+    (r, g, b) = pix[x, y]
+    if red_validator(r, g, b) is True:
+        red_pixel_list.append((x, y))
+        return len(check_neighbour_pixels(pix, x, y, red_pixel_list))
 
 
 def get_next_pixel_coordinate(x, y, direction):
@@ -46,13 +55,7 @@ def get_next_pixel_coordinate(x, y, direction):
         return x, y + 1
 
 
-def detect_red_cluster(pix, x, y):
-    red_pixel_list = []
 
-    (r, g, b) = pix[x, y]
-    if red_validator(r, g, b) is True:
-        red_pixel_list.append((x, y))
-        return len(check_neighbour_pixels(pix, x, y, red_pixel_list))
 
 
 def find_red_pixel(pix, x, y, direction):

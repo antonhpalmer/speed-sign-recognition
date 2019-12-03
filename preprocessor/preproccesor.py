@@ -98,7 +98,7 @@ def preprocess_image(image, center_coordinate):
 
     (x, y) = center_calibration(center_coordinate, pix)
 
-    left_x, right_x, up_y, down_y = red_edge_detection(pix,x,y)
+    left_x, right_x, up_y, down_y = red_edge_detection(pix, x, y)
 
     try:
         img1 = im.convert("L")

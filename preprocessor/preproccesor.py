@@ -41,6 +41,7 @@ def detect_red_cluster(pix, x, y):
         closed_set.append(current_pixel)
         return len(check_for_red_cluster(pix, current_pixel, cluster, closed_set))
 
+    return 0
 
 def get_next_pixel_coordinate(x, y, direction):
     if direction == Direction.LEFT:

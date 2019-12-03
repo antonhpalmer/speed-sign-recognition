@@ -1,37 +1,54 @@
 import validation.validator as validator
 from PIL import Image
 import os
-import os
+import validation.circle_detection.CircleDetection as cd
+import csv
 
+dest_path = 'circle_detection/optimization_results/second/'
+true_pos_path = 'C:/Users/sujee/PycharmProjects/speed-sign-recognition/validation/img/optimization/test/true/'
+false_pos_path = 'C:/Users/sujee/PycharmProjects/speed-sign-recognition/validation/img/optimization/test/false/'
 
-validated_counter = 0
-rejected_counter = 0
-"""for i in range (0, 700):
+with open(dest_path + 'test.csv', 'w', newline='') as write_file:
+    writer = csv.writer(write_file, delimiter=';')
+    writer.writerow(['param1', '#Validated (from true)', '#Rejected (from true)', '#Validated (from false)',
+                     '#Rejected (from false)', 'ErrorValue', 'ValidatedCorrectPercentage', 'RejectedCorrectPercentage' ])
 
-    if os.path.exists("C:/Users/sujee/Desktop/P5/Images/" + str(i) + ".ppm"):
-        #img = Image.open("C:/Users/sujee/PycharmProjects/speed-sign-recognition/testdata/Images/" + str(i) + ".ppm")
-        img = Image.open("C:/Users/sujee/Desktop/P5/Images/" + str(i) + ".ppm")
+    for param1 in range(200, 209):
+        print("Status : " + str(param1) + " / 210")
+        validated_from_true = 0
+        rejected_from_true = 0
+        validated_from_false = 0
+        rejected_from_false = 0
 
-        if validator.validate(img):
-            validated_counter += 1
-        else:
-            # img.save("rejected_images/" + str(i) + ".jpg")
-            rejected_counter += 1
+        for root, subdirs, files in os.walk(true_pos_path):
+            for file in files:
+                filepath = os.path.join(root, file)
+                image = Image.open(filepath)
+                validated_image = cd.ValidatedImage(image)
+                validated_image.circle_detection_with_params(20, param1, 26, 8, 0)
+                if validated_image.is_valid:
+                    validated_from_true += 1
+                else:
+                    rejected_from_true += 1
 
-print("Number of validated: " + str(validated_counter))
-print("Number of rejected: " + str(rejected_counter))
-"""
-path = 'C:/Users/sujee/PycharmProjects/speed-sign-recognition/test_data/training_images/'
-print(len(os.listdir(path)))
-for file in os.listdir(path):
-    image = Image.open(path + file)
+        for root, subdirs, files in os.walk(false_pos_path):
+            # os.chdir(false_pos_path)
+            for file in files:
+                filepath = os.path.join(root, file)
+                image = Image.open(filepath)
+                validated_image = cd.ValidatedImage(image)
+                validated_image.circle_detection_with_params(20, param1, 26, 8, 0)
+                if validated_image.is_valid:
+                    validated_from_false += 1
+                else:
+                    rejected_from_false += 1
 
-    validation_status, (a, b) = validator.validate(image, validated_counter)
+        error_value = rejected_from_true + validated_from_false
+        validated_correct_percentage = (100 * validated_from_true) / (validated_from_true + rejected_from_true)
+        rejected_correct_percentage = (100 * rejected_from_false) / (rejected_from_false + validated_from_false)
+        print(validated_correct_percentage)
+        print(rejected_correct_percentage)
+        writer.writerow([param1, validated_from_true, rejected_from_true, validated_from_false, rejected_from_false,
+                         error_value, validated_correct_percentage, rejected_correct_percentage])
+print("DONE")
 
-    if validation_status:
-        validated_counter += 1
-    else:
-        rejected_counter += 1
-
-print("Number of validated: " + str(validated_counter))
-print("Number of rejected: " + str(rejected_counter))

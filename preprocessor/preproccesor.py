@@ -115,13 +115,13 @@ def center_calibration(center_coordinate, width, height, pix):
     right_edge_distance = distance_to_right_edge(x, width)
     bottom_edge_distance = distance_to_bottom_edge(y, height)
 
-    right_red_x = red_right(pix, x, y, right_edge_distance)
-    left_red_x = red_left(pix, x, y)
-    up_red_y = red_up(pix, x, y)
-    bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
+    right_x = red_right(pix, x, y, right_edge_distance)
+    left_x = red_left(pix, x, y)
+    up_y = red_up(pix, x, y)
+    down_y = red_bottom(pix, x, y, bottom_edge_distance)
 
-    center_x = int((left_red_x + right_red_x) / 2)
-    center_y = int((up_red_y + bottom_red_y) / 2)
+    center_x = int((left_x + right_x) / 2)
+    center_y = int((up_y + down_y) / 2)
     return center_x, center_y
 
 

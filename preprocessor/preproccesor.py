@@ -8,40 +8,38 @@ from preprocessor.otsu import apply_otsu_algorithm
 from preprocessor.wrong_center_exception import WrongCenterException
 
 
-def check_neighbour_pixels(pix, x, y, red_pixels):
-    neighbours = []
+def get_neighbours(x, y):
+    neighbours = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    return neighbours
 
-    if red_pixels is None:
-        red_pixels = []
 
-    if len(red_pixels) >= 10:
-        return red_pixels
-
-    neighbours.append((x + 1, y))
-    neighbours.append((x - 1, y))
-    neighbours.append((x, y + 1))
-    neighbours.append((x, y - 1))
-
+def check_for_red_cluster(pix, current_pixel, cluster, closed_set):
+    neighbours = get_neighbours(current_pixel[0], current_pixel[1])
+    closed_set.append(neighbours)
 
     for neighbour in neighbours:
         try:
-            (x, y) = neighbour
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True and (x, y) not in red_pixels:
-                red_pixels.append((x, y))
-                red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
+            (r, g, b) = pix[neighbour[0], neighbour[1]]
+            if neighbour not in closed_set and red_validator(r, g, b) is True:
+                cluster.append(neighbour)
+                if len(cluster) >= 10:
+                    return cluster, closed_set
+                cluster, closed_set = check_for_red_cluster(pix, neighbour, cluster, closed_set)
         except IndexError:
-            print("pixel out of bounds")
+            pass  # Happens when we find a neighbour outside the image.
 
-    return red_pixels
+    return cluster, closed_set
+
 
 def detect_red_cluster(pix, x, y):
-    red_pixel_list = []
-
+    current_pixel = (x, y)
     (r, g, b) = pix[x, y]
     if red_validator(r, g, b) is True:
-        red_pixel_list.append((x, y))
-        return len(check_neighbour_pixels(pix, x, y, red_pixel_list))
+        cluster = []
+        closed_set = []
+        cluster.append(current_pixel)
+        closed_set.append(current_pixel)
+        return len(check_for_red_cluster(pix, current_pixel, cluster, closed_set))
 
 
 def get_next_pixel_coordinate(x, y, direction):
@@ -53,9 +51,6 @@ def get_next_pixel_coordinate(x, y, direction):
         return x, y - 1
     elif direction == Direction.DOWN:
         return x, y + 1
-
-
-
 
 
 def find_red_pixel(pix, x, y, direction):

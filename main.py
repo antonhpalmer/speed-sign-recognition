@@ -8,6 +8,8 @@ from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
 
+from video_demo.display_signs import display_signs
+
 
 def wakeup_arduino(ser):
     ser.write(b'9')
@@ -21,13 +23,14 @@ def main_print(ser, classifier):
         detected_img = detect(ser)
         print("Object was detected")
 
-        validated_image = validate(detected_img)
-        print("Object was validated: ", validated_image.is_valid)
+        validated_img = validate(detected_img)
+        print("Object was validated: ", validated_img.is_valid)
 
-        if validated_image.is_valid:
+        if validated_img.is_valid:
             try:
-                preprocessed_img = preprocess_image(detected_img, validated_image.circle_center)
+                preprocessed_img = preprocess_image(detected_img, validated_img.circle_center)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
+                display_signs(detected_img, preprocessed_img, new_speed)
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)
             except WrongCenterException:
@@ -40,11 +43,11 @@ def main(ser, classifier):
 
         detected_img = detect(ser)
 
-        validated, coordinates = validate(detected_img)
+        validated_img = validate(detected_img)
 
-        if validated:
+        if validated_img.is_valid:
             try:
-                preprocessed_img = preprocess_image(detected_img, coordinates)
+                preprocessed_img = preprocess_image(detected_img, validated_img.circle_center)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
                 update_speed(ser, new_speed)
             except WrongCenterException:

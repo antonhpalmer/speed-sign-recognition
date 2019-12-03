@@ -1,5 +1,5 @@
 from validation.validator import validate as validate
-from preprocessor.preproccesor import preprocess_image
+from preprocessor.binarytester import preprocess_image
 import os
 from PIL import Image
 
@@ -45,7 +45,7 @@ def create_grayscaled_for_folder(input_folder, output_folder):
 
 
 input_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated/"
-output_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/new_test_images_separated_binary/"
+output_folder = "C:/Users/frede/PycharmProjects/speed-sign-recognition/test_data/disasterfolder/"
 
 # Create directives if they do not exist with the same name in the output folder for the grayscaled images.
 create_folders(input_folder, output_folder)

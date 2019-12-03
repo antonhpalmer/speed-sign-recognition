@@ -107,61 +107,8 @@ def distance_to_right_edge(center_x, width):
 def distance_to_bottom_edge(center_y, height):
     return height - center_y
 
-
-def center_calibration(center_coordinate, width, height, pix):
-    (x, y) = center_coordinate
-    x = int(x)
-    y = int(y)
-    right_edge_distance = distance_to_right_edge(x, width)
-    bottom_edge_distance = distance_to_bottom_edge(y, height)
-
-    right_red_x = red_right(pix, x, y, right_edge_distance)
-    left_red_x = red_left(pix, x, y)
-    up_red_y = red_up(pix, x, y)
-    bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
-
-    center_x = int((left_red_x + right_red_x) / 2)
-    center_y = int((up_red_y + bottom_red_y) / 2)
-    return center_x, center_y
-
-
-def enhance_contrast(image):
-    # im = Image.open(image)
-    ImageEnhance.Contrast(image).enhance(1.5)
-    return image
-
-
-def preprocess_image(image, center_coordinate):
-    im = enhance_contrast(image)
-    pix = im.load()
-
-    (width, height) = im.size
-    (x, y) = center_calibration(center_coordinate, width, height, pix)
-
-    right_edge_distance = distance_to_right_edge(x, width)
-    bottom_edge_distance = distance_to_bottom_edge(y, height)
-
-    right_red_x = red_right(pix, x, y, right_edge_distance)
-    left_red_x = red_left(pix, x, y)
-    up_red_y = red_up(pix, x, y)
-    bottom_red_y = red_bottom(pix, x, y, bottom_edge_distance)
-
-    try:
-        img1 = im.convert("L")
-        img1.crop((left_red_x, up_red_y, right_red_x, bottom_red_y)).save("cropped.ppm")
-        binary_img = apply_otsu_algorithm("cropped.ppm")
-        binary_img.save("binary.ppm")
-        return Image.open("binary.ppm")
-    except:
-        raise WrongCenterException
-
-def preprocess_image_test(image, center_coordinate):
-    img = Image.open(image)
-    im = enhance_contrast(img)
-    pix = im.load()
-    (width, height) = im.size
-
-    x, y = center_calibration(center_coordinate, width, height, pix)
+def red_edge_detection(pix, centre_coordinate, width, height):
+    (x, y) = centre_coordinate
 
     right_edge_distance = distance_to_right_edge(x, width)
     bottom_edge_distance = distance_to_bottom_edge(y, height)
@@ -171,7 +118,61 @@ def preprocess_image_test(image, center_coordinate):
     up_y = red_up(pix, x, y)
     down_y = red_bottom(pix, x, y, bottom_edge_distance)
 
-    #  left_x, right_x, up_y, down_y = red_edge_detection(pix, x, y)
+    return right_x, left_x, down_y, up_y
+
+
+def center_calibration(center_coordinate, width, height, pix):
+    right_x, left_x, down_y, up_y = red_edge_detection(pix, center_coordinate, width, height)
+
+    center_x = int((left_x + right_x) / 2)
+    center_y = int((up_y + down_y) / 2)
+    return center_x, center_y
+
+
+def enhance_contrast(image_path):
+    image = Image.open(image_path)
+    ImageEnhance.Contrast(image).enhance(1.5)
+    return image
+
+
+def preprocess_image(image, given_center_coordinate):
+    im = enhance_contrast(image)
+    pix = im.load()
+
+    (width, height) = im.size
+
+    (x, y) = given_center_coordinate
+    x = int(x)
+    y = int(y)
+    int_centre_coordinate = (x, y)
+
+    new_centre_coordinate = center_calibration(int_centre_coordinate, width, height, pix)
+
+    right_x, left_x, down_y, up_y = red_edge_detection(pix, new_centre_coordinate, width, height)
+
+    try:
+        img1 = im.convert("L")
+        img1.crop((left_x, up_y, right_x, down_y)).save("cropped.ppm")
+        binary_img = apply_otsu_algorithm("cropped.ppm")
+        binary_img.save("binary.ppm")
+        return Image.open("binary.ppm")
+    except:
+        raise WrongCenterException
+
+def preprocess_image_test(image, given_center_coordinate):
+    im = enhance_contrast(image)
+    pix = im.load()
+
+    (width, height) = im.size
+
+    (x, y) = given_center_coordinate
+    x = int(x)
+    y = int(y)
+    int_centre_coordinate = (x, y)
+
+    new_centre_coordinate = center_calibration(int_centre_coordinate, width, height, pix)
+
+    right_x, left_x, down_y, up_y = red_edge_detection(pix, new_centre_coordinate, width, height)
 
     try:
         img1 = im.convert("L")
@@ -179,3 +180,4 @@ def preprocess_image_test(image, center_coordinate):
         return apply_otsu_algorithm("cropped.ppm")
     except:
         pass
+

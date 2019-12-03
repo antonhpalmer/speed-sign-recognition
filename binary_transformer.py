@@ -1,5 +1,5 @@
 from validation.validator import validate as validate
-from preprocessor.binarytester import preprocess_image
+from preprocessor.preproccesor import preprocess_image_tester
 import os
 from PIL import Image
 
@@ -32,7 +32,7 @@ def create_grayscaled_for_folder(input_folder, output_folder):
             image = Image.open(file_path)
             goodness, (x, y) = validate(image)
             if goodness is True:
-                cropped_image = preprocess_image(file_path, (x, y))
+                cropped_image = preprocess_image_tester(file_path, (x, y))
                 if cropped_image is not None:
                     try:
                         cropped_image.save(output_folder + directive + "/" + str(img))

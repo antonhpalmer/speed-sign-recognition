@@ -77,23 +77,23 @@ class TestModelAccuracy:
         models = []
         param_str = '_opt=adam_ker=3_drop=20'
 
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-        #     self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-        #     self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-        #     self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
-        #     models.append(model)
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+            self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+            self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+            self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+            models.append(model)
 
         model = Sequential()
         for i in (32, 64, 128, 256):

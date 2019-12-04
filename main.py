@@ -1,19 +1,15 @@
 import serial
+from PIL import Image
 from keras.models import load_model
 from preprocessor.preproccesor import preprocess_image
 from preprocessor.wrong_center_exception import WrongCenterException
 
-from detection.pixy_serial_communication.serial_reader import update_speed
+from detection.pixy_serial_communication.serial_communication import update_speed, wakeup_arduino
 from classification.test.test import ModelTester
 from detection.detect import detect
 from validation.validator import validate
 
 from video_demo.display_signs import display_signs
-
-
-def wakeup_arduino(ser):
-    ser.write(b'9')
-
 
 def main_print(ser, classifier):
     print("Ready to read from serial 115200")
@@ -35,6 +31,8 @@ def main_print(ser, classifier):
                 update_speed(ser, new_speed)
             except WrongCenterException:
                 print("Center coordinate is surrounded by red pixels")
+        else:
+            display_signs(validated_img, Image.open("video_demo/speedsign0.png"), 0)
 
 
 def main(ser, classifier):

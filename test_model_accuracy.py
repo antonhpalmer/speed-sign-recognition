@@ -112,8 +112,8 @@ class TestModelAccuracy:
         for model in models:
             if not os.path.exists(os.path.join(all_models_dir, model.name)):
                 models_to_train.append(model)
-
-        self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
+        print(len(models_to_train))
+        # self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
 
     def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path, color_mode):
         models = []
@@ -198,11 +198,11 @@ test = TestModelAccuracy()
 test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
-test_images_dir_path = 'test_data/test_images_binary/'
-new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
-models_path = 'classification/systematic_test_binary/'
-test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
+# test_images_dir_path = 'test_data/test_images_binary/'
+# new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
+# models_path = 'classification/systematic_test_binary/'
+# test = TestModelAccuracy()
+# test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
 
 
 

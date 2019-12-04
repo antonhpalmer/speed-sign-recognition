@@ -54,5 +54,5 @@ def main(ser, classifier):
 
 
 serial_115200 = serial.Serial('/dev/ttyACM0', 115200)
-classifierModel = ModelTester(load_model("classification/systematic_test_binary/model_doubleconv_64_act=relu_opt=adam_ker=3_pad=same_drop=20/model_doubleconv_64_act=relu_opt=adam_ker=3_pad=same_drop=20.h5"))
+classifierModel = ModelTester(load_model("classification/systematic_test_binary/model_doubleconv_64_opt=adam_ker=3_drop=20/model_doubleconv_64_opt=adam_ker=3_drop=20.h5"))
 main_print(serial_115200, classifierModel)

@@ -5,9 +5,7 @@ from PIL import Image
 from validation.circle_detection.CircleDetection import ValidatedImage
 
 
-def display_signs(detected_image, preprocessed_image, classified_sign):
-    validated_image = ValidatedImage(detected_image)
-    validated_image.circle_detection()
+def display_signs(validated_image, preprocessed_image, classified_sign):
     validated_image.draw_circle("", "video_demo/validated_image.png")
 
     preprocessed_image.save("video_demo/preprocessed_image.png")

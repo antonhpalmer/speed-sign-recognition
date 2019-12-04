@@ -30,7 +30,7 @@ def main_print(ser, classifier):
             try:
                 preprocessed_img = preprocess_image(detected_img, validated_img.circle_center)
                 new_speed = classifier.classify_single_image(preprocessed_img.filename, "grayscale")
-                display_signs(detected_img, preprocessed_img, new_speed)
+                display_signs(validated_img, preprocessed_img, new_speed)
                 print("detected sign is: ", new_speed)
                 update_speed(ser, new_speed)
             except WrongCenterException:

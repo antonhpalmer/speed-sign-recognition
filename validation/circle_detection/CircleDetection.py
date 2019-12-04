@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 import math
+from validation.circle_detection.extract_red_from_image import filter_red
 
 
 class ValidatedImage:
     def __init__(self, pil_image):
         self.img = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+        self.red_img = None
         self.is_valid = None
         self.circle_center = None
         self.radius = None
@@ -36,28 +38,17 @@ class ValidatedImage:
             r_max = None
         return a_max, b_max, r_max
 
-    #Extract only the red color pixels from the inputted image
-    def __extract_red(self):
-        image_orig = self.img
-        image_result = image_orig.copy()
-        image_orig = cv2.cvtColor(image_orig, cv2.COLOR_BGR2HSV)
-
-        mask1 = cv2.inRange(image_orig, (0,0,0), (20,255,255))
-        mask2 = cv2.inRange(image_orig, (150,0,0), (180,255,255))
-
-        mask = cv2.bitwise_or(mask1, mask2 )
-        image_result = cv2.bitwise_and(image_result, image_result, mask=mask)
-        self.img_red = image_result
-        return image_result
-
-
     def circle_detection(self):
         self.circle_detection_with_params(20, 202, 26, 8, 0)
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
+        #Extract only the red pixels from the original image
+        img_copy = self.img.copy()
+        self.red_img = filter_red(img_copy)
+
         # Convert to grayscale.
-        gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(self.red_img, cv2.COLOR_BGR2GRAY)
 
 
         # Blur using 3 * 3 kernel.
@@ -98,6 +89,3 @@ class ValidatedImage:
 
             cv2.imwrite(dest_path + file_name, self.img)
 
-    def draw_red_picture(self, dest_path, file_name):
-        self.__extract_red()
-        cv2.imwrite(dest_path + file_name, self.img_red)

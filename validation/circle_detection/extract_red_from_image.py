@@ -1,4 +1,3 @@
-from validation.circle_detection import CircleDetection
 from PIL import Image
 from preprocessor.color_recognizor import red_validator
 
@@ -21,17 +20,17 @@ def filter_red(input_img):
     return img
 
 
-def make_filtered_images_with_circles(input_folder):
 
-    for directive in os.listdir(input_folder):
-        for img in os.listdir(input_folder + directive):
-            file_path_plus_name = input_folder + directive + '/' + img
-            filtered_image = filter_red(file_path_plus_name)
-
-            validator_object = CircleDetection.ValidatedImage(filtered_image)
-            validator_object.circle_detection()
-            validator_object.draw_circle('/home/simkortet/PycharmProjects/speed-sign-recognition/validation'
-                                         '/circle_detection/red_filtered_with_circle/' + directive + '/', img)
-
+# def make_filtered_images_with_circles(input_folder):
+#
+#     for directive in os.listdir(input_folder):
+#         for img in os.listdir(input_folder + directive):
+#             file_path_plus_name = input_folder + directive + '/' + img
+#             filtered_image = filter_red(file_path_plus_name)
+#
+#             validator_object = CircleDetection.ValidatedImage(filtered_image)
+#             validator_object.circle_detection()
+#             validator_object.draw_circle('/home/simkortet/PycharmProjects/speed-sign-recognition/validation'
+#                                          '/circle_detection/red_filtered_with_circle/' + directive + '/', img)
 
 # make_filtered_images_with_circles('/home/simkortet/PycharmProjects/speed-sign-recognition/test_data/test_images/')

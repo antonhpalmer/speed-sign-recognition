@@ -1,17 +1,16 @@
 import cv2
 import numpy as np
 import math
-from validation.circle_detection.extract_red_from_image import filter_red
+from validation.circle_detection.extract_red_from_image import filter_red as red
 
 
 class ValidatedImage:
     def __init__(self, pil_image):
         self.img = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
-        self.red_img = None
+        self.red_img = cv2.cvtColor(np.array(red(pil_image)), cv2.COLOR_RGB2BGR)
         self.is_valid = None
         self.circle_center = None
         self.radius = None
-        self.img_red = None
 
     #Checks whether the inputted circle fits within the picture
     def __is_inside_image(self, a, b, r):
@@ -43,13 +42,8 @@ class ValidatedImage:
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
-        #Extract only the red pixels from the original image
-        img_copy = self.img.copy()
-        self.red_img = filter_red(img_copy)
-
         # Convert to grayscale.
         gray = cv2.cvtColor(self.red_img, cv2.COLOR_BGR2GRAY)
-
 
         # Blur using 3 * 3 kernel.
         #gray_blurred = cv2.blur(gray, (3, 3))
@@ -89,3 +83,5 @@ class ValidatedImage:
 
             cv2.imwrite(dest_path + file_name, self.img)
 
+        else:
+            cv2.imwrite(dest_path + file_name, self.red_img)

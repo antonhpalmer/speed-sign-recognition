@@ -113,7 +113,8 @@ class TestModelAccuracy:
             if not os.path.exists(os.path.join(all_models_dir, model.name)):
                 models_to_train.append(model)
         print(len(models_to_train))
-        # self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
+
+        self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
 
     def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path, color_mode):
         models = []

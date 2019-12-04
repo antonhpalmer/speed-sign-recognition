@@ -1,5 +1,5 @@
 from detection.pixy_serial_communication.pixy_snapper import get_cropped_image
-from detection.pixy_serial_communication.serial_reader import get_serial_data
+from detection.pixy_serial_communication.serial_communication import get_serial_data
 
 
 def detect(ser):

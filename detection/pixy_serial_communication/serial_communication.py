@@ -35,3 +35,7 @@ def update_speed(serial, data):
     data = SIGN_TO_ID_SWITCHER.get(data)
     byte = str(data).encode('utf-8')
     serial.write(byte)
+
+
+def wakeup_arduino(ser):
+    ser.write(b'9')

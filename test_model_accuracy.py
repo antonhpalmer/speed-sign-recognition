@@ -110,25 +110,22 @@ class TestModelAccuracy:
         self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
 
     def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path, color_mode):
-        models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
                 if '.h5' in file:
-                    models.append(load_model(os.path.join(root, file)))
+                    model = load_model(os.path.join(root, file))
+                    tester = ModelTester(model)
+                    test_images_eval = tester.evaluate_model(test_images_dir_path, color_mode)
+                    print(test_images_eval)
+                    new_test_images_eval = tester.evaluate_model(new_test_images_dir_path, color_mode)
+                    print(new_test_images_eval)
 
-        for model in models:
-            tester = ModelTester(model)
-            test_images_eval = tester.evaluate_model(test_images_dir_path, color_mode)
-            print(test_images_eval)
-            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path, color_mode)
-            print(new_test_images_eval)
-
-            os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
-            evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
-            with open(evaluation_file_path, mode='w') as evaluation_file:
-                evaluation_file.write('Evaluation_dataset;Accuracy\n')
-                evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
-                evaluation_file.write('new_test_images_separated_binary;' + str(new_test_images_eval[1]) + '\n')
+                    os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
+                    evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
+                    with open(evaluation_file_path, mode='w') as evaluation_file:
+                        evaluation_file.write('Evaluation_dataset;Accuracy\n')
+                        evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
+                        evaluation_file.write('new_test_images_separated_binary;' + str(new_test_images_eval[1]) + '\n')
 
     def create_systematic_parameter_test(self, all_models_dir, train_dir, val_dir, color_mode):
         if color_mode == 'grayscale':
@@ -192,11 +189,11 @@ class TestModelAccuracy:
 # test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 # # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
-test_images_dir_path = 'test_data/test_images_binary/'
-new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
-models_path = 'classification/systematic_test_binary/'
-test = TestModelAccuracy()
-test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
+# test_images_dir_path = 'test_data/test_images_binary/'
+# new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
+# models_path = 'classification/systematic_test_binary/'
+# test = TestModelAccuracy()
+# test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
 
 test_images_dir_path = 'test_data/test_images_binary/'
 new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'

@@ -1,5 +1,4 @@
 #include <SPI.h>
-
 #include <Pixy2.h>
 #include <Wire.h>
 #include <EVShield.h>
@@ -8,7 +7,6 @@ EVShield evshield(0x34,0x36);
 
 // This is the main Pixy object 
 Pixy2 pixy;
-int indexOfLastSeenObject = -1;
 
 void setup()
 {
@@ -16,7 +14,6 @@ void setup()
   pixy.init();
   
   evshield.init(); // the default is SH_HardwareI2C
-
   evshield.bank_a.motorReset();
   evshield.bank_b.motorReset();
 }
@@ -24,21 +21,18 @@ void setup()
 
 void loop()
 { 
-  int i; 
-  int ageNeeded = 50;
+  int ageNeeded = 25;
   // grab blocks!
   pixy.ccc.getBlocks();
   
- 
   // If there are detect blocks, print them!
   if (pixy.ccc.numBlocks)
   {
     Block detectedObject = pixy.ccc.blocks[0];
-    //We first send the data to the serial 
+    
+    //Data to the serial is sent 
     //when the block has been seen more than 
-    //age needed amount of frames.
-
-        
+    //ageNeeded amount of frames. 
     if(detectedObject.m_age > ageNeeded) { 
       Serial.print("x:");
       Serial.print(detectedObject.m_x);
@@ -49,42 +43,36 @@ void loop()
       Serial.print(", h:");
       Serial.print(detectedObject.m_height);
       Serial.print(",\n");
-      waitForSignal();
-      
+      sleepUntilSignal();
     }
   }  
 }
 
-void waitForSignal(){
-  int data;
+void sleepUntilSignal(){
+  int signal;
   while(true){
-    
-    data = Serial.read();
-    if (data == '0')
+    signal = Serial.read();
+    if (signal == '0') //30 km sign
       runMotor(20);
-    else if (data == '1')
+    else if (signal == '1') //50 km sign
       runMotor(30);
-    else if (data == '2')
+    else if (signal == '2') //60 km sign
       runMotor(40);
-    else if (data == '3')
+    else if (signal == '3') //70 km sign
       runMotor(50);
-    else if (data == '4')
+    else if (signal == '4') //80 km sign
       runMotor(60);
-    else if (data == '5')
+    else if (signal == '5') //90 km sign
       runMotor(70);
-    else if (data == '6')
+    else if (signal == '6') //100 km sign
       runMotor(80);
-    else if (data == '7')
+    else if (signal == '7') //110 km sign
       runMotor(90);
-    else if (data == '8')
+    else if (signal == '8') //120 km sign
       runMotor(100);
-    else if (data == '9')
-      break;
+    else if (signal == '9') //wakeup signal
+      return;
   }
-  pixy.ccc.getBlocks();
-  if(pixy.ccc.numBlocks)  
-    indexOfLastSeenObject = pixy.ccc.blocks[0].m_index;
-  
 }
 
 void runMotor (int power)

@@ -11,6 +11,7 @@ from validation.validator import validate
 
 from video_demo.display_signs import display_signs
 
+
 def main_print(ser, classifier):
     print("Ready to read from serial 115200")
     while True:

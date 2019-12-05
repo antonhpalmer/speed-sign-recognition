@@ -1,3 +1,11 @@
+def is_pixel_red(pixel, image):
+    x = pixel[0]
+    y = pixel[1]
+
+    (r, g, b) = image[x, y]
+    return red_validator(r, g, b)
+
+
 def red_validator(r, g, b):
     h, s, v = rgb_to_hsv(r, g, b)
     red1_lower = [0, 50, 20]

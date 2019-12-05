@@ -1,6 +1,7 @@
 from PIL import Image
 from PIL import ImageEnhance
-from preprocessor.color_recognizor import red_validator
+from preprocessor.color_recognizor import red_validator, is_pixel_red
+from preprocessor.no_red_pixel_exception import NoRedPixelException
 from preprocessor.otsu import apply_otsu_algorithm
 from preprocessor.wrong_center_exception import WrongCenterException
 
@@ -32,71 +33,84 @@ def check_neighbour_pixels(pix, x, y, red_pixels):
     return red_pixels
 
 
-def red_right(pix, x, y, loop_range):
-    red_pixel_list = []
+def get_neighbours(current_pixel):
+    x = current_pixel[0]
+    y = current_pixel[1]
+    neighbours = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    return neighbours
+
+
+def detect_red_cluster(image, current_pixel, cluster, closed_set):
+    neighbours = get_neighbours(current_pixel)
+
+    for neighbour in neighbours:
+        try:
+            if neighbour not in closed_set:
+                closed_set.append(neighbour)
+                if is_pixel_red(current_pixel, image) is True:
+                    cluster.append(neighbour)
+                    if len(cluster) >= 10:
+                        return cluster, closed_set
+                    cluster, closed_set = detect_red_cluster(image, neighbour, cluster, closed_set)
+        except IndexError:
+            pass  # Happens when we try to get a neighbour outside the image
+
+    return cluster, closed_set
+
+
+def check_current_pixel(x, y, image):
+    current_pixel = (x, y)
+    if is_pixel_red(current_pixel, image) is True:
+        cluster = [current_pixel]
+        closed_set = [current_pixel]
+        cluster, closed_set = detect_red_cluster(image, current_pixel, cluster, closed_set)
+        if len(cluster) >= 10:
+            return True
+
+    return False
+
+
+def red_right(image, x, y, loop_range):
     for i in range(loop_range):
         try:
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True:
-                red_pixel_list.append((x, y))
-                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-                if l > 10:
-                    return x
-            red_pixel_list.clear()
+            if (check_current_pixel(x, y, image)) is True:
+                return x
             x += 1
         except IndexError:
-            print("pixel out of bounds")
+            print("No red pixel found to the right")
     return x
 
 
-def red_left(pix, x, y):
-    red_pixel_list = []
+def red_left(image, x, y):
     for i in range(x - 1):
         try:
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True:
-                red_pixel_list.append((x, y))
-                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-                if l > 10:
-                    return x
-            red_pixel_list.clear()
+            if (check_current_pixel(x, y, image)) is True:
+                return x
             x -= 1
         except IndexError:
-            print("index out of bounds")
+            print("No red pixel found to the left")
     return x
 
 
-def red_up(pix, x, y):
-    red_pixel_list = []
+def red_up(image, x, y):
     for i in range(y - 1):
         try:
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True:
-                red_pixel_list.append((x, y))
-                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-                if l > 10:
-                    return y
-            red_pixel_list.clear()
+            if (check_current_pixel(x, y, image)) is True:
+                return y
             y -= 1
         except IndexError:
-            print("index out of bounds")
+            print("No red pixel found upwards")
     return y
 
 
-def red_bottom(pix, x, y, loop_range):
-    red_pixel_list = []
+def red_bottom(image, x, y, loop_range):
     for i in range(loop_range):
         try:
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True:
-                red_pixel_list.append((x, y))
-                l = len(check_neighbour_pixels(pix, x, y, red_pixel_list))
-                if l > 10:
-                    return y
-            red_pixel_list.clear()
+            if (check_current_pixel(x, y, image)) is True:
+                return y
             y += 1
         except IndexError:
-            print("out of bounds")
+            print("No red pixel found in the bottom")
     return y
 
 
@@ -106,6 +120,7 @@ def distance_to_right_edge(center_x, width):
 
 def distance_to_bottom_edge(center_y, height):
     return height - center_y
+
 
 def red_edge_detection(pix, centre_coordinate, width, height):
     (x, y) = centre_coordinate

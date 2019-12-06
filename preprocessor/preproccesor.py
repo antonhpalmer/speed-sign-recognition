@@ -6,33 +6,6 @@ from preprocessor.otsu import apply_otsu_algorithm
 from preprocessor.wrong_center_exception import WrongCenterException
 
 
-def check_neighbour_pixels(pix, x, y, red_pixels):
-    neighbours = []
-
-    if red_pixels is None:
-        red_pixels = []
-
-    if len(red_pixels) >= 10:
-        return red_pixels
-
-    neighbours.append((x + 1, y))
-    neighbours.append((x - 1, y))
-    neighbours.append((x, y + 1))
-    neighbours.append((x, y - 1))
-
-    for neighbour in neighbours:
-        try:
-            (x, y) = neighbour
-            (r, g, b) = pix[x, y]
-            if red_validator(r, g, b) is True and (x, y) not in red_pixels:
-                red_pixels.append((x, y))
-                red_pixels = check_neighbour_pixels(pix, x, y, red_pixels)
-        except IndexError:
-            pass
-
-    return red_pixels
-
-
 def get_neighbours(current_pixel):
     x = current_pixel[0]
     y = current_pixel[1]

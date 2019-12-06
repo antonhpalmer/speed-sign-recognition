@@ -47,7 +47,7 @@ class ModelTrainer:
                                                     validation_data=val_iterator,
                                                     callbacks=[ModelCheckpoint(model_save_path, save_best_only=True,
                                                                                monitor='val_accuracy', verbose=1),
-                                                               EarlyStopping(monitor='val_accuracy', patience=20, verbose=1)])
+                                                               EarlyStopping(monitor='val_accuracy', patience=40, verbose=1)])
         return history
 
     def plot_acc_and_loss(self, history, accuracy_plot_path, loss_plot_path):

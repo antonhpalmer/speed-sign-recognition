@@ -77,23 +77,23 @@ class TestModelAccuracy:
         models = []
         param_str = '_opt=adam_ker=3_drop=20'
 
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
-        #     self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
-        #     self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
-        #     models.append(model)
-        #
-        # model = Sequential()
-        # for i in (32, 64, 128, 256):
-        #     model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
-        #     self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
-        #     models.append(model)
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_' + str(i) + param_str)
+            self.add_conv_and_pooling(model, i, 3, i == 32, color_channels)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_singleconv_wdropout_' + str(i) + param_str)
+            self.add_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+            models.append(model)
+
+        model = Sequential()
+        for i in (32, 64, 128, 256):
+            model = Sequential(model.layers, name='model_doubleconv_' + str(i) + param_str)
+            self.add_two_conv_and_pooling_w_dropout(model, i, 3, 0.2, i == 32, color_channels)
+            models.append(model)
 
         model = Sequential()
         for i in (32, 64, 128, 256):
@@ -107,28 +107,32 @@ class TestModelAccuracy:
                           loss='categorical_crossentropy',
                           metrics=['accuracy'])
 
-        self.train_all_models(all_models_dir, models, train_dir, val_dir, color_mode)
+        # making sure it does not train existing models
+        models_to_train = []
+        for model in models:
+            if not os.path.exists(os.path.join(all_models_dir, model.name)):
+                models_to_train.append(model)
+        print(len(models_to_train))
+
+        self.train_all_models(all_models_dir, models_to_train, train_dir, val_dir, color_mode)
 
     def evaluate_all_models_in_dir(self, models_path, test_images_dir_path, new_test_images_dir_path, color_mode):
-        models = []
         for root, dirs, files in os.walk(models_path):
             for file in files:
                 if '.h5' in file:
-                    models.append(load_model(os.path.join(root, file)))
+                    model = load_model(os.path.join(root, file))
+                    tester = ModelTester(model)
+                    test_images_eval = tester.evaluate_model(test_images_dir_path, color_mode)
+                    print(test_images_eval)
+                    new_test_images_eval = tester.evaluate_model(new_test_images_dir_path, color_mode)
+                    print(new_test_images_eval)
 
-        for model in models:
-            tester = ModelTester(model)
-            test_images_eval = tester.evaluate_model(test_images_dir_path, color_mode)
-            print(test_images_eval)
-            new_test_images_eval = tester.evaluate_model(new_test_images_dir_path, color_mode)
-            print(new_test_images_eval)
-
-            os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
-            evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
-            with open(evaluation_file_path, mode='w') as evaluation_file:
-                evaluation_file.write('Evaluation_dataset;Accuracy\n')
-                evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
-                evaluation_file.write('new_test_images_separated_binary;' + str(new_test_images_eval[1]) + '\n')
+                    os.makedirs(os.path.join(models_path, model.name), exist_ok=True)
+                    evaluation_file_path = os.path.join(models_path, model.name, model.name + '_eval.csv')
+                    with open(evaluation_file_path, mode='w') as evaluation_file:
+                        evaluation_file.write('Evaluation_dataset;Accuracy\n')
+                        evaluation_file.write('test_images_binary;' + str(test_images_eval[1]) + '\n')
+                        evaluation_file.write('new_test_images_separated_binary;' + str(new_test_images_eval[1]) + '\n')
 
     def create_systematic_parameter_test(self, all_models_dir, train_dir, val_dir, color_mode):
         if color_mode == 'grayscale':
@@ -184,17 +188,31 @@ class TestModelAccuracy:
 # test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'rgb')
 
 
-all_models_dir = 'classification/systematic_test_binary/'
-os.makedirs(all_models_dir, exist_ok=True)
-train_dir_path = 'test_data/training_images_binary/'
-val_dir_path = 'test_data/val_images_binary/'
-test = TestModelAccuracy()
-test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+# all_models_dir = 'classification/systematic_test_binary/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images_binary/'
+# val_dir_path = 'test_data/val_images_binary/'
+# test = TestModelAccuracy()
+# test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+# # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
+
+# test_images_dir_path = 'test_data/test_images_binary/'
+# new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
+# models_path = 'classification/systematic_test_binary/'
+# test = TestModelAccuracy()
+# test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
+
+# all_models_dir = 'classification/systematic_test_binary_params/'
+# os.makedirs(all_models_dir, exist_ok=True)
+# train_dir_path = 'test_data/training_images_binary/'
+# val_dir_path = 'test_data/val_images_binary/'
+# test = TestModelAccuracy()
+# # test.create_systematic_architecture_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 # test.create_systematic_parameter_test(all_models_dir, train_dir_path, val_dir_path, 'grayscale')
 
 test_images_dir_path = 'test_data/test_images_binary/'
 new_test_images_dir_path = 'test_data/new_test_images_separated_binary/'
-models_path = 'classification/systematic_test_binary/'
+models_path = 'classification/systematic_test_binary_params/'
 test = TestModelAccuracy()
 test.evaluate_all_models_in_dir(models_path, test_images_dir_path, new_test_images_dir_path, 'grayscale')
 

@@ -18,34 +18,55 @@ void setup()
   evshield.bank_b.motorReset();
 }
 
+extern void *__bss_end;
+extern void *__brkval;
+
+int get_free_memory()
+{
+  int free_memory;
+
+  if((int)__brkval == 0)
+    free_memory = ((int)&free_memory) - ((int)&__bss_end);
+  else
+    free_memory = ((int)&free_memory) - ((int)__brkval);
+
+  return free_memory;
+}
+
 
 void loop()
 { 
-  int ageNeeded = 25;
+  /* Serial.print("Free memory:");
+  Serial.print(get_free_memory());
+  Serial.print("\n"); */
   // grab blocks!
   pixy.ccc.getBlocks();
-  
+  int ageNeeded = 25;
   // If there are detect blocks, print them!
   if (pixy.ccc.numBlocks)
   {
     Block detectedObject = pixy.ccc.blocks[0];
-    
     //Data to the serial is sent 
     //when the block has been seen more than 
     //ageNeeded amount of frames. 
     if(detectedObject.m_age > ageNeeded) { 
-      Serial.print("x:");
-      Serial.print(detectedObject.m_x);
-      Serial.print(", y:");
-      Serial.print(detectedObject.m_y);
-      Serial.print(", w:");
-      Serial.print(detectedObject.m_width);
-      Serial.print(", h:");
-      Serial.print(detectedObject.m_height);
-      Serial.print(",\n");
+      sendData(detectedObject.m_x, detectedObject.m_y, detectedObject.m_width, detectedObject.m_height);
       sleepUntilSignal();
     }
   }  
+}
+
+void sendData(int x, int y, int width, int height){
+  Serial.print("x:");
+  Serial.print(x);
+  Serial.print(", y:");
+  Serial.print(y);
+  Serial.print(", w:");
+  Serial.print(width);
+  Serial.print(", h:");
+  Serial.print(height);
+  Serial.print(",\n");
+
 }
 
 void sleepUntilSignal(){

@@ -3,6 +3,7 @@
 #include <Wire.h>
 #include <EVShield.h>
 #include <MemoryFree.h>
+#include <pgmStrToRAM.h>
 
 EVShield evshield(0x34,0x36);
 

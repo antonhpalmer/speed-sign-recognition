@@ -55,27 +55,38 @@ void sleepUntilSignal(){
   int signal;
   while(true){
     signal = Serial.read();
-    if (signal == '0') //30 km sign
-      runMotor(20);
-    else if (signal == '1') //50 km sign
-      runMotor(30);
-    else if (signal == '2') //60 km sign
-      runMotor(40);
-    else if (signal == '3') //70 km sign
-      runMotor(50);
-    else if (signal == '4') //80 km sign
-      runMotor(60);
-    else if (signal == '5') //90 km sign
-      runMotor(70);
-    else if (signal == '6') //100 km sign
-      runMotor(80);
-    else if (signal == '7') //110 km sign
-      runMotor(90);
-    else if (signal == '8') //120 km sign
-      runMotor(100);
-    else if (signal == '9') //wakeup signal
-      return;
-  }
+    switch (signal){
+        case '0':
+            runMotor(20);
+            break;
+        case '1':
+            runMotor(30);
+            break;
+        case '2':
+            runMotor(40);
+            break;
+        case '3':
+            runMotor(50);
+            break;
+        case '4':
+            runMotor(60);
+            break;
+        case '5':
+            runMotor(70);
+            break;
+        case '6':
+            runMotor(80);
+            break;
+        case '7':
+            runMotor(90);
+            break;
+        case '8':
+            runMotor(100);
+            break;
+        case '9':
+            return;
+        }
+    }
 }
 
 void runMotor (int power)

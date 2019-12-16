@@ -38,7 +38,7 @@ class ValidatedImage:
         return a_max, b_max, r_max
 
     def circle_detection(self):
-        self.circle_detection_with_params(20, 202, 26, 8, 0)
+        self.circle_detection_with_params(6, 52, 26, 8, 0)
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
@@ -46,8 +46,9 @@ class ValidatedImage:
         gray = cv2.cvtColor(self.red_img, cv2.COLOR_BGR2GRAY)
 
         # Blur using 3 * 3 kernel.
-        #gray_blurred = cv2.blur(gray, (3, 3))
-        gray_blurred = cv2.medianBlur(gray, 5)
+        gray_blurred = cv2.blur(gray, (3, 3))
+
+
 
         height, width, channels = self.img.shape
         half_max_dim = math.ceil(max(height, width) / 2)

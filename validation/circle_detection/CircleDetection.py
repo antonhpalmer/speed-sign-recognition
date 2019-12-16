@@ -38,7 +38,7 @@ class ValidatedImage:
         return a_max, b_max, r_max
 
     def circle_detection(self):
-        self.circle_detection_with_params(6, 52, 26, 8, 0)
+        self.circle_detection_with_params(6, 52, 27, 8, 0)
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):

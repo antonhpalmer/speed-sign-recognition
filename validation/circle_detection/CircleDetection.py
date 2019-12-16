@@ -42,10 +42,10 @@ class ValidatedImage:
 
 
     def circle_detection_with_params(self, min_distance, param1, param2, min_radius, max_radius):
-        # Convert to grayscale.
+        # Convert image to grayscale.
         gray = cv2.cvtColor(self.red_img, cv2.COLOR_BGR2GRAY)
 
-        # Blur using 3 * 3 kernel.
+        # Blur using a 3 * 3 kernel.
         gray_blurred = cv2.blur(gray, (3, 3))
 
 
@@ -53,14 +53,14 @@ class ValidatedImage:
         height, width, channels = self.img.shape
         half_max_dim = math.ceil(max(height, width) / 2)
 
-        # Apply Hough transform on the blurred image.
+        # Apply Hough Transform on the blurred image.
         detected_circles = cv2.HoughCircles(gray_blurred,
                                             cv2.HOUGH_GRADIENT, 1, min_distance, param1=param1,
                                             param2=param2, minRadius=min_radius, maxRadius=half_max_dim)
 
         if detected_circles is not None:
 
-            # Convert the circle parameters a, b and r to integers.
+            # Convert the parameters a, b and r to integers
             detected_circles = np.uint16(np.around(detected_circles))
 
             a, b, r = self.__find_largest_circle_within_image(detected_circles)
@@ -75,7 +75,7 @@ class ValidatedImage:
             self.is_valid = False
 
     def draw_circle(self, dest_path, file_name):
-        # Draw the circumference of the circle.
+        # Draw the circle.
         if self.radius is not None and self.circle_center is not None:
             cv2.circle(self.img, self.circle_center, self.radius, (0, 255, 0), 2)
 
